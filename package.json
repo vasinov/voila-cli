@@ -1,0 +1,61 @@
+{
+  "name": "voila",
+  "description": "Voila CLI",
+  "version": "0.0.1",
+  "author": "Vasily Vasinov @vasinov",
+  "bin": {
+    "voila": "./bin/run"
+  },
+  "bugs": "https://github.com/getvoila/cli/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.1",
+    "axios": "^0.19.0",
+    "chalk": "^2.4.2",
+    "cli-ux": "^5.3.3",
+    "date-fns": "^2.6.0",
+    "dockerfile-generator": "^3.2.2",
+    "dotenv": "^8.2.0",
+    "js-yaml": "^3.13.1",
+    "jsonschema": "^1.2.4",
+    "string-argv": "^0.3.1",
+    "tmp": "^0.1.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "globby": "^10.0.1"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/getvoila/cli",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "voila",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "hooks": {
+      "prerun": "./src/hooks/prerun/load-state"
+    }
+  },
+  "repository": "getvoila/cli",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
