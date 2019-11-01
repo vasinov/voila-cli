@@ -1,7 +1,7 @@
 {
   "name": "voila",
   "description": "Voila CLI",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Vasily Vasinov @vasinov",
   "bin": {
     "voila": "./bin/run"
@@ -11,6 +11,7 @@
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
     "@oclif/plugin-help": "^2.2.1",
+    "@oclif/plugin-update": "^1.3.9",
     "axios": "^0.19.0",
     "chalk": "^2.4.2",
     "cli-ux": "^5.3.3",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
+    "aws-sdk": "^2.562.0",
     "globby": "^10.0.1"
   },
   "engines": {
@@ -45,10 +47,16 @@
     "commands": "./src/commands",
     "bin": "voila",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-update"
     ],
     "hooks": {
       "prerun": "./src/hooks/prerun/load-state"
+    },
+    "update": {
+      "s3": {
+        "bucket": "voila-cli-tarballs"
+      }
     }
   },
   "repository": "getvoila/cli",

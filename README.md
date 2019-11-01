@@ -7,7 +7,12 @@
 Getting started with Voila is easy:
 
 - Install [Docker Desktop](https://www.docker.com/products/docker-desktop).
-- Download Voila CLI.
+- Download Voila CLI:
+  - [MacOS x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-darwin-x64.tar.gz)
+  - [Linux ARM](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-arm.tar.gz)
+  - [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz)
+  - [Windows x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x64.tar.gz)
+  - [Windows x86](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x86.tar.gz)
 - Initialize Voila in your project directory with `voila init`. That will generate a `.voila.yml` config file in the current directory.
 - In your project directory run `voila local:start` to start containers defined in `.voila.yml`.
 - In your project directory run `voila local:run COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila local:run ls -al`.
@@ -105,6 +110,7 @@ To debug any command run it with `DEBUG=* voila COMMAND`.
 * [`voila local-start`](#voila-local-start)
 * [`voila local-status`](#voila-local-status)
 * [`voila local-stop`](#voila-local-stop)
+* [`voila update [CHANNEL]`](#voila-update-channel)
 
 ## `voila config-init`
 
@@ -122,7 +128,7 @@ ALIASES
   $ voila config:init
 ```
 
-_See code: [src/commands/config-init.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/config-init.js)_
+_See code: [src/commands/config-init.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/config-init.js)_
 
 ## `voila help [COMMAND]`
 
@@ -157,7 +163,7 @@ ALIASES
   $ voila local:run
 ```
 
-_See code: [src/commands/local-run.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/local-run.js)_
+_See code: [src/commands/local-run.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-run.js)_
 
 ## `voila local-ssh`
 
@@ -174,7 +180,7 @@ ALIASES
   $ voila local:ssh
 ```
 
-_See code: [src/commands/local-ssh.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/local-ssh.js)_
+_See code: [src/commands/local-ssh.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-ssh.js)_
 
 ## `voila local-start`
 
@@ -192,7 +198,7 @@ ALIASES
   $ voila local:start
 ```
 
-_See code: [src/commands/local-start.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/local-start.js)_
+_See code: [src/commands/local-start.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-start.js)_
 
 ## `voila local-status`
 
@@ -206,7 +212,7 @@ ALIASES
   $ voila local:status
 ```
 
-_See code: [src/commands/local-status.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/local-status.js)_
+_See code: [src/commands/local-status.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-status.js)_
 
 ## `voila local-stop`
 
@@ -220,5 +226,16 @@ ALIASES
   $ voila local:stop
 ```
 
-_See code: [src/commands/local-stop.js](https://github.com/getvoila/cli/blob/v0.0.1/src/commands/local-stop.js)_
+_See code: [src/commands/local-stop.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-stop.js)_
+
+## `voila update [CHANNEL]`
+
+update the voila CLI
+
+```
+USAGE
+  $ voila update [CHANNEL]
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
 <!-- commandsstop -->
