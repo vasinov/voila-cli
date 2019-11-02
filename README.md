@@ -13,6 +13,7 @@ Getting started with Voila is easy:
   - [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz)
   - [Windows x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x64.tar.gz)
   - [Windows x86](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x86.tar.gz)
+- Set an alias for the executable. For example, in bash you can set `alias voila="/path/to/voila/bin/run"`.
 - Initialize Voila in your project directory with `voila init`. That will generate a `.voila.yml` config file in the current directory.
 - In your project directory run `voila local:start` to start containers defined in `.voila.yml`.
 - In your project directory run `voila local:run COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila local:run ls -al`.
