@@ -129,7 +129,7 @@ ALIASES
   $ voila config:init
 ```
 
-_See code: [src/commands/config-init.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/config-init.js)_
+_See code: [src/commands/config-init.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/config-init.js)_
 
 ## `voila help [COMMAND]`
 
@@ -164,7 +164,7 @@ ALIASES
   $ voila local:run
 ```
 
-_See code: [src/commands/local-run.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-run.js)_
+_See code: [src/commands/local-run.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-run.js)_
 
 ## `voila local-ssh`
 
@@ -181,7 +181,7 @@ ALIASES
   $ voila local:ssh
 ```
 
-_See code: [src/commands/local-ssh.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-ssh.js)_
+_See code: [src/commands/local-ssh.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-ssh.js)_
 
 ## `voila local-start`
 
@@ -199,7 +199,7 @@ ALIASES
   $ voila local:start
 ```
 
-_See code: [src/commands/local-start.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-start.js)_
+_See code: [src/commands/local-start.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-start.js)_
 
 ## `voila local-status`
 
@@ -213,7 +213,7 @@ ALIASES
   $ voila local:status
 ```
 
-_See code: [src/commands/local-status.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-status.js)_
+_See code: [src/commands/local-status.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-status.js)_
 
 ## `voila local-stop`
 
@@ -227,7 +227,7 @@ ALIASES
   $ voila local:stop
 ```
 
-_See code: [src/commands/local-stop.js](https://github.com/getvoila/cli/blob/v0.1.0/src/commands/local-stop.js)_
+_See code: [src/commands/local-stop.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-stop.js)_
 
 ## `voila update [CHANNEL]`
 
