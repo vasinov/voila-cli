@@ -7,13 +7,12 @@ const template = {
   "stages": {
     "build": {
       "images": [
-        "getvoila/base:latest",
-        "getvoila/build-essential:latest",
-        "getvoila/python:2-latest",
-        "getvoila/python:3-latest",
-        "getvoila/math-libs:latest",
-        "getvoila/gfortran:latest",
-        "getvoila/open-mpi:latest"
+        "getvoila/base:0.1.0",
+        "getvoila/build-essential:0.1.0",
+        "getvoila/python:0.1.0",
+        "getvoila/math-libs:0.1.0",
+        "getvoila/gfortran:0.1.0",
+        "getvoila/open-mpi:0.1.0"
       ],
       "env": [],
       "actions": []
