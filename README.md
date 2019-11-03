@@ -6,8 +6,11 @@
 
 Getting started with Voila is easy:
 
-- Install [Docker Desktop](https://www.docker.com/products/docker-desktop).
-- Download Voila CLI:
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop):
+  - [Stable Docker Desktop for MacOS download](https://download.docker.com/mac/stable/Docker.dmg)
+  - [Stable Docker Desktop for Windows download](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe)
+  - [Linux installation instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+- Download latest Voila CLI:
   - [MacOS x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-darwin-x64.tar.gz)
   - [Linux ARM](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-arm.tar.gz)
   - [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz)
