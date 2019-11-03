@@ -80,7 +80,7 @@ LocalRunCommand.aliases = ['local:run']
 
 LocalRunCommand.description = `Run a shell command inside of a running container.`
 
-LocalRunCommand.usage = `$ voila local-run [ARGS...]`
+LocalRunCommand.usage = `local-run [ARGS...]`
 
 LocalRunCommand.strict = false
 

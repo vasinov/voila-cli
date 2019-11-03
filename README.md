@@ -106,7 +106,7 @@ To debug any command run it with `DEBUG=* voila COMMAND`.
 <!-- commands -->
 * [`voila config-init`](#voila-config-init)
 * [`voila help [COMMAND]`](#voila-help-command)
-* [`voila $ voila local-run [ARGS...]`](#voila--voila-local-run-args)
+* [`voila local-run [ARGS...]`](#voila-local-run-args)
 * [`voila local-ssh`](#voila-local-ssh)
 * [`voila local-start`](#voila-local-start)
 * [`voila local-status`](#voila-local-status)
@@ -148,13 +148,13 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
 
-## `voila $ voila local-run [ARGS...]`
+## `voila local-run [ARGS...]`
 
 Run a shell command inside of a running container.
 
 ```
 USAGE
-  $ voila $ voila local-run [ARGS...]
+  $ voila local-run [ARGS...]
 
 OPTIONS
   --container-name=container-name  Specify container name.
