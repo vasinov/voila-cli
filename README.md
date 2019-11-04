@@ -108,12 +108,12 @@ To debug any command run it with `DEBUG=* voila COMMAND`.
 
 <!-- commands -->
 * [`voila $ [ARGS...]`](#voila--args)
-* [`voila config-init`](#voila-config-init)
+* [`voila config:init`](#voila-configinit)
 * [`voila help [COMMAND]`](#voila-help-command)
-* [`voila local-ssh`](#voila-local-ssh)
-* [`voila local-start`](#voila-local-start)
-* [`voila local-status`](#voila-local-status)
-* [`voila local-stop`](#voila-local-stop)
+* [`voila ssh`](#voila-ssh)
+* [`voila start`](#voila-start)
+* [`voila status`](#voila-status)
+* [`voila stop`](#voila-stop)
 * [`voila update [CHANNEL]`](#voila-update-channel)
 
 ## `voila $ [ARGS...]`
@@ -131,23 +131,22 @@ OPTIONS
 
 _See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/$.js)_
 
-## `voila config-init`
+## `voila config:init`
 
 create a new config file
 
 ```
 USAGE
-  $ voila config-init
+  $ voila config:init
 
 OPTIONS
   -f, --force  override existing config file
 
 ALIASES
   $ voila init
-  $ voila config:init
 ```
 
-_See code: [src/commands/config-init.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/config-init.js)_
+_See code: [src/commands/config/init.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/config/init.js)_
 
 ## `voila help [COMMAND]`
 
@@ -166,68 +165,56 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
 
-## `voila local-ssh`
+## `voila ssh`
 
 Connect to a container over SSH.
 
 ```
 USAGE
-  $ voila local-ssh
+  $ voila ssh
 
 OPTIONS
   --container-name=container-name  Specify container name.
-
-ALIASES
-  $ voila local:ssh
 ```
 
-_See code: [src/commands/local-ssh.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-ssh.js)_
+_See code: [src/commands/ssh.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/ssh.js)_
 
-## `voila local-start`
+## `voila start`
 
 Start containers locally.
 
 ```
 USAGE
-  $ voila local-start
+  $ voila start
 
 OPTIONS
   --no-cache  Don't use cache when building the image.
   --pull      Always attempt to pull a newer version of the image.
-
-ALIASES
-  $ voila local:start
 ```
 
-_See code: [src/commands/local-start.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-start.js)_
+_See code: [src/commands/start.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/start.js)_
 
-## `voila local-status`
+## `voila status`
 
 Local status of containers and jobs.
 
 ```
 USAGE
-  $ voila local-status
-
-ALIASES
-  $ voila local:status
+  $ voila status
 ```
 
-_See code: [src/commands/local-status.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-status.js)_
+_See code: [src/commands/status.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/status.js)_
 
-## `voila local-stop`
+## `voila stop`
 
 Stop containers locally.
 
 ```
 USAGE
-  $ voila local-stop
-
-ALIASES
-  $ voila local:stop
+  $ voila stop
 ```
 
-_See code: [src/commands/local-stop.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-stop.js)_
+_See code: [src/commands/stop.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/stop.js)_
 
 ## `voila update [CHANNEL]`
 

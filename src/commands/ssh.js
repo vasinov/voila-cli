@@ -7,9 +7,9 @@ const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
 const errorMessages = require('../lib/error/messages')
 
-class LocalSshCommand extends Command {
+class SshCommand extends Command {
   async run() {
-    const {flags} = this.parse(LocalSshCommand)
+    const {flags} = this.parse(SshCommand)
 
     const tasks = [
       {
@@ -66,14 +66,12 @@ class LocalSshCommand extends Command {
   }
 }
 
-LocalSshCommand.aliases = ['local:ssh']
+SshCommand.description = `Connect to a container over SSH.`
 
-LocalSshCommand.description = `Connect to a container over SSH.`
-
-LocalSshCommand.flags = {
+SshCommand.flags = {
   'container-name': flags.string({
     description: `Specify container name.`
   })
 }
 
-module.exports = LocalSshCommand
+module.exports = SshCommand

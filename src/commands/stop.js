@@ -5,7 +5,7 @@ const loadConfig = require('../lib/config/loader').loadConfig
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 
-class LocalStopCommand extends Command {
+class StopCommand extends Command {
   async run() {
     const cmd = this
 
@@ -46,8 +46,6 @@ class LocalStopCommand extends Command {
   }
 }
 
-LocalStopCommand.aliases = ['local:stop']
+StopCommand.description = `Stop containers locally.`
 
-LocalStopCommand.description = `Stop containers locally.`
-
-module.exports = LocalStopCommand
+module.exports = StopCommand

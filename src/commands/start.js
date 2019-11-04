@@ -6,10 +6,10 @@ const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
 
-class LocalStartCommand extends Command {
+class StartCommand extends Command {
   async run() {
     const cmd = this
-    const {flags} = this.parse(LocalStartCommand)
+    const {flags} = this.parse(StartCommand)
 
     const tasks = [
       {
@@ -66,11 +66,9 @@ class LocalStartCommand extends Command {
   }
 }
 
-LocalStartCommand.aliases = ['local:start']
+StartCommand.description = `Start containers locally.`
 
-LocalStartCommand.description = `Start containers locally.`
-
-LocalStartCommand.flags = {
+StartCommand.flags = {
   'no-cache': flags.boolean({
     description: `Don't use cache when building the image.`,
     default: false
@@ -81,4 +79,4 @@ LocalStartCommand.flags = {
   })
 }
 
-module.exports = LocalStartCommand
+module.exports = StartCommand

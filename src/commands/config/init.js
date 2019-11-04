@@ -2,13 +2,13 @@ const {Command, flags} = require('@oclif/command')
 const fs = require('fs')
 const yaml = require('js-yaml')
 
-const config = require('../lib/config/loader')
-const runTask = require('../lib/run-task')
-const VoilaError = require('../lib/error/voila-error')
+const config = require('../../lib/config/loader')
+const runTask = require('../../lib/run-task')
+const VoilaError = require('../../lib/error/voila-error')
 
-class ConfigInitCommand extends Command {
+class InitCommand extends Command {
   async run() {
-    const {flags} = this.parse(ConfigInitCommand)
+    const {flags} = this.parse(InitCommand)
     const cmd = this
     const ymlPath = config.yamlConfigPath
 
@@ -33,11 +33,11 @@ class ConfigInitCommand extends Command {
   }
 }
 
-ConfigInitCommand.aliases = ['init', 'config:init']
+InitCommand.aliases = ['init']
 
-ConfigInitCommand.description = `create a new config file`
+InitCommand.description = `create a new config file`
 
-ConfigInitCommand.flags = {
+InitCommand.flags = {
   force: flags.boolean({
     char: 'f',
     description: `override existing config file`,
@@ -45,4 +45,4 @@ ConfigInitCommand.flags = {
   })
 }
 
-module.exports = ConfigInitCommand
+module.exports = InitCommand

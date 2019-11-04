@@ -6,7 +6,7 @@ const loadConfig = require('../lib/config/loader').loadConfig
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 
-class LocalStatusCommand extends Command {
+class StatusCommand extends Command {
   async run() {
     const cmd = this
 
@@ -52,8 +52,6 @@ class LocalStatusCommand extends Command {
   }
 }
 
-LocalStatusCommand.aliases = ['local:status']
+StatusCommand.description = `Local status of containers and jobs.`
 
-LocalStatusCommand.description = `Local status of containers and jobs.`
-
-module.exports = LocalStatusCommand
+module.exports = StatusCommand
