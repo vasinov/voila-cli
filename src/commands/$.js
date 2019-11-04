@@ -7,9 +7,9 @@ const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
 const errorMessages = require('../lib/error/messages')
 
-class LocalRunCommand extends Command {
+class $Command extends Command {
   async run() {
-    const {argv, flags} = this.parse(LocalRunCommand)
+    const {argv, flags} = this.parse($Command)
 
     const tasks = [
       {
@@ -76,15 +76,13 @@ class LocalRunCommand extends Command {
   }
 }
 
-LocalRunCommand.aliases = ['local:run']
+$Command.description = `Run a shell command inside of a running container.`
 
-LocalRunCommand.description = `Run a shell command inside of a running container.`
+$Command.usage = `$ [ARGS...]`
 
-LocalRunCommand.usage = `local-run [ARGS...]`
+$Command.strict = false
 
-LocalRunCommand.strict = false
-
-LocalRunCommand.flags = {
+$Command.flags = {
   'container-name': flags.string({
     description: `Specify container name.`
   }),
@@ -94,4 +92,4 @@ LocalRunCommand.flags = {
   })
 }
 
-module.exports = LocalRunCommand
+module.exports = $Command

@@ -18,11 +18,11 @@ Getting started with Voila is easy:
   - [Windows x86](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x86.tar.gz)
 - Set an alias for the executable. For example, in bash you can set `alias voila="/path/to/voila/bin/voila"`. On Windows setup an alias to `/path/to/voila/bin/voila.cmd`.
 - Initialize Voila in your project directory with `voila init`. That will generate a `.voila.yml` config file in the current directory.
-- In your project directory run `voila local:start` to start containers defined in `.voila.yml`.
-- In your project directory run `voila local:run COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila local:run ls -al`.
-- To check container status run `voila local:status`.
-- To SSH into a running container run `voila local:ssh`.
-- To stop containers run `voila local:stop`.
+- In your project directory run `voila start` to start containers defined in `.voila.yml`.
+- In your project directory run `voila $ COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila run ls -al`.
+- To check container status run `voila status`.
+- To SSH into a running container run `voila ssh`.
+- To stop containers run `voila stop`.
 
 ## Config Format
 
@@ -107,14 +107,29 @@ To debug any command run it with `DEBUG=* voila COMMAND`.
 ## Commands
 
 <!-- commands -->
+* [`voila $ [ARGS...]`](#voila--args)
 * [`voila config-init`](#voila-config-init)
 * [`voila help [COMMAND]`](#voila-help-command)
-* [`voila local-run [ARGS...]`](#voila-local-run-args)
 * [`voila local-ssh`](#voila-local-ssh)
 * [`voila local-start`](#voila-local-start)
 * [`voila local-status`](#voila-local-status)
 * [`voila local-stop`](#voila-local-stop)
 * [`voila update [CHANNEL]`](#voila-update-channel)
+
+## `voila $ [ARGS...]`
+
+Run a shell command inside of a running container.
+
+```
+USAGE
+  $ voila $ [ARGS...]
+
+OPTIONS
+  --container-name=container-name  Specify container name.
+  --detach-command                 Run command asynchronously.
+```
+
+_See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/$.js)_
 
 ## `voila config-init`
 
@@ -150,24 +165,6 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
-
-## `voila local-run [ARGS...]`
-
-Run a shell command inside of a running container.
-
-```
-USAGE
-  $ voila local-run [ARGS...]
-
-OPTIONS
-  --container-name=container-name  Specify container name.
-  --detach-command                 Run command asynchronously.
-
-ALIASES
-  $ voila local:run
-```
-
-_See code: [src/commands/local-run.js](https://github.com/getvoila/cli/blob/v0.1.1/src/commands/local-run.js)_
 
 ## `voila local-ssh`
 
