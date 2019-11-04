@@ -1,6 +1,6 @@
 module.exports = {
   NO_VOILA_YML: `Can't find ".voila.yml". Initialize Voila with "voila init" first.`,
-  START_CONTAINER_LOCAL: `Start containers with "voila local:start" first.`,
+  START_CONTAINER_LOCAL: `Start containers with "voila start" first.`,
   DEFINE_CONTAINERS: `Define containers in ".voila.yml" first.`,
   SPECIFY_CONTAINER_NAME: `Specify container name.`,
   SPECIFY_COMMAND: `Specify command to run.`,

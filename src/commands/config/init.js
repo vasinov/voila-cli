@@ -10,16 +10,15 @@ class InitCommand extends Command {
   async run() {
     const {flags} = this.parse(InitCommand)
     const cmd = this
-    const ymlPath = config.yamlConfigPath
 
     const tasks = [
       {
         title: 'Generating a new config file',
         action: async () => {
-          if (fs.existsSync(ymlPath) && !flags.force) {
+          if (fs.existsSync(config.yamlName) && !flags.force) {
             throw new VoilaError("File already exists")
           } else {
-            fs.writeFileSync(ymlPath, yaml.safeDump(config.generateConfig()), (err) => {
+            fs.writeFileSync(config.yamlName, yaml.safeDump(config.generateConfig()), (err) => {
               throw new Error(err.message)
             })
 

@@ -5,11 +5,25 @@ const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 
 const containerTemplate = require('./container-template')
-const yamlConfigPath = './.voila.yml'
+const yamlName = '.voila.yml'
 
 const loadConfig = () => {
-  if (fs.existsSync(yamlConfigPath)) {
-    return yaml.safeLoad(fs.readFileSync(yamlConfigPath, 'utf8'))
+  let result = null
+  let pathToYaml = process.cwd().split('/')
+
+  while (pathToYaml.length > 0) {
+    const fp = fullPath(pathToYaml.join('/'))
+
+    if (fs.existsSync(fp)) {
+      result =  yaml.safeLoad(fs.readFileSync(fp, 'utf8'))
+      break;
+    } else {
+      pathToYaml.pop()
+    }
+  }
+
+  if (result) {
+    return result
   } else {
     throw new VoilaError(errorMessages.NO_VOILA_YML)
   }
@@ -27,8 +41,12 @@ const generateConfig = () => {
   return Object.assign(json, containers)
 }
 
+const fullPath = path => {
+  return `${path}/${yamlName}`
+}
+
 module.exports = {
-  yamlConfigPath,
+  yamlName,
   loadConfig,
   generateConfig
 }
