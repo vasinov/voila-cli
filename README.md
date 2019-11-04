@@ -2,21 +2,30 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/gitbucket/gitbucket/blob/master/LICENSE)
 
+Voila CLI is a command line tool for Mac and Linux that enables HPC engineers and researchers to run their experiments in local and remote containers effortlessly.
+
+## Installation
+
+### Mac
+
+- Download and install [Docker Desktop](https://download.docker.com/mac/stable/Docker.dmg).
+- Download the latest distribution of [Voila CLI](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-darwin-x64.tar.gz).
+- Set an alias for the executable: `alias voila="/path/to/voila/bin/voila"`.
+
+### Linux
+
+- Follow Docker [installation instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/) for your distro.
+- Download the latest distribution of Voila CLI: [Linux ARM](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-arm.tar.gz) or [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz).
+- Set an alias for the executable: `alias voila="/path/to/voila/bin/voila"`.
+
+### Windows
+
+We don't officially support Windows yet but you could use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) in order to start using Voila CLI.
+
 ## Getting Started
 
 Getting started with Voila is easy:
 
-- Install [Docker Desktop](https://www.docker.com/products/docker-desktop):
-  - [Stable Docker Desktop for MacOS download](https://download.docker.com/mac/stable/Docker.dmg)
-  - [Stable Docker Desktop for Windows download](https://download.docker.com/win/stable/Docker%20for%20Windows%20Installer.exe)
-  - [Linux installation instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-- Download latest Voila CLI:
-  - [MacOS x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-darwin-x64.tar.gz)
-  - [Linux ARM](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-arm.tar.gz)
-  - [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz)
-  - [Windows x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x64.tar.gz)
-  - [Windows x86](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-win32-x86.tar.gz)
-- Set an alias for the executable. For example, in bash you can set `alias voila="/path/to/voila/bin/voila"`. On Windows setup an alias to `/path/to/voila/bin/voila.cmd`.
 - Initialize Voila in your project directory with `voila init`. That will generate a `.voila.yml` config file in the current directory.
 - In your project directory run `voila start` to start containers defined in `.voila.yml`.
 - In your project directory run `voila $ COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila run ls -al`.
@@ -33,7 +42,7 @@ containers:
   - name: STRING
     env: ARRAY_OF_OBJECTS
     workdir: STRING
-    volumes: ARRAY_OF_OBJECTS
+    volumes: ARRAY_OF_STRINGS_AND_OBJECTS
     ports: ARRAY_OF_STRINGS
     stages:
       build:
@@ -60,7 +69,7 @@ Represents a directory in the Docker container where your current directory will
 
 ### `container.volumes` (optional)
 
-Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created.
+Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created. You can also use a string shortcut for one-to-one mappings. For example `/my/path` will map host `/my/path` to the container `/my/path`.
 
 ### `container.ports` (optional)
 
