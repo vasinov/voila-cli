@@ -22,7 +22,18 @@ const schema = {
         workdir: { type: 'string' },
         volumes: {
           type: 'array',
-          items: { type: 'object' },
+          items: {
+            type: {
+              oneOf: [
+                {
+                  type: "string"
+                },
+                {
+                  type: 'object'
+                }
+              ]
+            }
+          },
           uniqueItems: true
         },
         ports: {

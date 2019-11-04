@@ -68,8 +68,16 @@ class Manager {
       }
 
       if (container.volumes) {
-        container.volumes.forEach(v => {
-          volumes.push(`${Object.keys(v)[0]}:${Object.values(v)[0]}`)
+        container.volumes.forEach(volume => {
+            switch (typeof volume) {
+              case 'string':
+                volumes.push(`${volume}:${volume}`)
+                break
+              case 'object':
+                volumes.push(`${Object.keys(volume)[0]}:${Object.values(volume)[0]}`)
+                break
+              default:
+            }
         })
       }
 
