@@ -16,7 +16,9 @@ const template = {
         "julia:1.2-buster"
       ],
       "env": [],
-      "actions": []
+      "actions": [
+        { "execute": "apt-get update" }
+      ]
     },
     "run": {
       "command": ""
