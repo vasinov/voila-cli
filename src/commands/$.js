@@ -75,7 +75,7 @@ class $Command extends Command {
         })
       }
     } else {
-      throw new VoilaError(errorMessages.START_CONTAINER_LOCAL)
+      throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
     }
   }
 }

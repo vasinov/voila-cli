@@ -65,7 +65,7 @@ class SshCommand extends Command {
         this.log(errorMessages.containerError(containerName, code, 'SSH session'))
       })
     } else {
-      throw new VoilaError(errorMessages.START_CONTAINER_LOCAL)
+      throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
     }
   }
 }

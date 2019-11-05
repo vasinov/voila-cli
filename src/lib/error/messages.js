@@ -1,7 +1,7 @@
 module.exports = {
   VOILA_YML_ALREADY_EXISTS: `".voila.yml" already exists. Run "voila init --force" to overwrite.`,
   NO_VOILA_YML: `Can't find ".voila.yml". Initialize Voila with "voila init" first.`,
-  START_CONTAINER_LOCAL: `Start containers with "voila start" first.`,
+  NO_RUNNING_CONTAINER: `No containers are currently running. Start a container with "voila start" first.`,
   DEFINE_CONTAINERS: `Define containers in ".voila.yml" first.`,
   SPECIFY_CONTAINER_NAME: `Specify container name.`,
   SPECIFY_COMMAND: `Specify command to run.`,
