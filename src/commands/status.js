@@ -2,7 +2,7 @@ const {Command} = require('@oclif/command')
 const {cli} = require('cli-ux')
 
 const ConfigManager = require('../lib/config/manager')
-const loadConfig = require('../lib/config/loader').loadConfig
+const {loadConfig} = require('../lib/config/loader')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 
@@ -15,7 +15,11 @@ class StatusCommand extends Command {
         title: 'Loading config',
         silent: true,
         action: ctx => {
-          ctx.config = loadConfig()
+          const [message, config] = loadConfig()
+
+          ctx.config = config
+
+          if (message) cmd.warn(message)
         }
       },
       {

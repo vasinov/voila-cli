@@ -1,5 +1,4 @@
-const {exec, execSync} = require('child_process')
-const {spawn, spawnSync} = require('child_process')
+const {spawn, spawnSync, exec, execSync} = require('child_process')
 
 const defaultTag = "latest"
 
@@ -75,7 +74,6 @@ const sshContainer = (containerName) => {
 }
 
 module.exports = {
-  defaultTag,
   imageName,
   containerName,
   imageNameWithTag,

@@ -16,7 +16,11 @@ class $Command extends Command {
         title: 'Loading config',
         silent: true,
         action: ctx => {
-          ctx.config = loadConfig()
+          const [message, config] = loadConfig()
+
+          ctx.config = config
+
+          if (message) cmd.warn(message)
         }
       },
       {

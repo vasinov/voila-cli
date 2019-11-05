@@ -1,7 +1,7 @@
 {
   "name": "voila",
   "description": "Voila CLI",
-  "version": "0.1.1",
+  "version": "0.2.0-beta",
   "author": "Vasily Vasinov @vasinov",
   "bin": {
     "voila": "./bin/run"

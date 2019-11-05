@@ -1,7 +1,7 @@
 const {Command} = require('@oclif/command')
 
 const ConfigManager = require('../lib/config/manager')
-const loadConfig = require('../lib/config/loader').loadConfig
+const {loadConfig} = require('../lib/config/loader')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 
@@ -13,7 +13,11 @@ class StopCommand extends Command {
       {
         title: 'Loading config',
         action: ctx => {
-          ctx.config = loadConfig()
+          const [message, config] = loadConfig()
+
+          ctx.config = config
+
+          if (message) cmd.warn(message)
         }
       },
       {

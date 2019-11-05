@@ -1,10 +1,7 @@
 const {Command, flags} = require('@oclif/command')
-const fs = require('fs')
-const yaml = require('js-yaml')
 
-const config = require('../../lib/config/loader')
+const initializer = require('../../lib/config/initializer')
 const runTask = require('../../lib/run-task')
-const VoilaError = require('../../lib/error/voila-error')
 
 class InitCommand extends Command {
   async run() {
@@ -15,15 +12,9 @@ class InitCommand extends Command {
       {
         title: 'Generating a new config file',
         action: async () => {
-          if (fs.existsSync(config.yamlName) && !flags.force) {
-            throw new VoilaError("File already exists")
-          } else {
-            fs.writeFileSync(config.yamlName, yaml.safeDump(config.generateConfig()), (err) => {
-              throw new Error(err.message)
-            })
+          initializer.init(flags.force)
 
-            return `New ".voila.yml" file was successfully generated in the current directory`
-          }
+          return `New ".voila.yml" file was successfully generated in the current directory`
         }
       }
     ]
