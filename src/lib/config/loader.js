@@ -9,12 +9,11 @@ const yamlName = '.voila.yml'
 
 const loadConfig = () => {
   let config = null
-  let currentPath = process.cwd().split('/')
+  const currentPath = process.cwd().split('/')
   const allPaths = []
-  let message = null
 
   while (currentPath.length > 0) {
-    const fp = fullPath(currentPath.join('/'))
+    const fp = prefixYamlFile(currentPath.join('/'))
 
     if (fs.existsSync(fp)) {
       allPaths.push(currentPath.join('/'))
@@ -26,9 +25,9 @@ const loadConfig = () => {
   }
 
   if (config) {
-    if (allPaths.length > 1) {
-      message = errorMessages.multipleConfigsWarning(allPaths, fullPath(allPaths[allPaths.length - 1]))
-    }
+    const message = (allPaths.length > 1) ?
+      errorMessages.multipleConfigsWarning(allPaths, prefixYamlFile(allPaths[allPaths.length - 1])) :
+      null
 
     return [message, config]
   } else {
@@ -48,13 +47,31 @@ const generateConfig = () => {
   return Object.assign(json, containers)
 }
 
-const fullPath = path => {
+const prefixYamlFile = path => {
   return `${path}/${yamlName}`
+}
+
+const fullPathToConfig = () => {
+  let finalPath = null
+  let currentPath = process.cwd().split('/')
+
+  while (currentPath.length > 0) {
+    const currentPathString = currentPath.join('/')
+
+    if (fs.existsSync(prefixYamlFile(currentPathString))) {
+      finalPath = currentPathString
+    }
+
+    currentPath.pop()
+  }
+
+  return finalPath
 }
 
 module.exports = {
   yamlName,
   loadConfig,
   generateConfig,
-  fullPath
+  prefixYamlFile,
+  fullPathToConfig
 }

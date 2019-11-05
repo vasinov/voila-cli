@@ -9,6 +9,7 @@ const errorMessages = require('../lib/error/messages')
 
 class $Command extends Command {
   async run() {
+    const cmd = this
     const {argv, flags} = this.parse($Command)
 
     const tasks = [

@@ -9,6 +9,7 @@ const errorMessages = require('../lib/error/messages')
 
 class SshCommand extends Command {
   async run() {
+    const cmd = this
     const {flags} = this.parse(SshCommand)
 
     const tasks = [

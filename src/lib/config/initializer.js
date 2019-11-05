@@ -7,12 +7,12 @@ const errorMessages = require('../error/messages')
 
 const init = (force) => {
   let fileExistsInParents = false
-  let currentPath = process.cwd().split('/')
+  const currentPath = process.cwd().split('/')
 
   currentPath.pop()
 
   while (currentPath.length > 0) {
-    const fp = configLoader.fullPath(currentPath.join('/'))
+    const fp = configLoader.prefixYamlFile(currentPath.join('/'))
 
     if (fs.existsSync(fp)) {
       fileExistsInParents = true
@@ -25,7 +25,7 @@ const init = (force) => {
   if (fileExistsInParents) {
     throw new VoilaError(errorMessages.configExistsInParentError(currentPath.join('/')))
   } else {
-    if (fs.existsSync(configLoader.fullPath('.')) && !force) {
+    if (fs.existsSync(configLoader.prefixYamlFile('.')) && !force) {
       throw new VoilaError(errorMessages.VOILA_YML_ALREADY_EXISTS)
     } else {
       fs.writeFileSync(configLoader.yamlName, yaml.safeDump(configLoader.generateConfig()), (err) => {
