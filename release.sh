@@ -13,10 +13,13 @@ else
   echo "Updating README.md..."
   oclif-dev readme
 
-  echo "Committing and pushing changes to git..."
-  git add .
-  git commit -m "Releasing v$1"
-  git push origin master
+  if [ ! -z "$(git status --porcelain)" ]
+    then
+      echo "Committing and pushing changes to git..."
+      git add .
+      git commit -m "Releasing v$1"
+      git push origin master
+  fi
 
   echo "Packing tarballs..."
   oclif-dev pack -t linux-arm,linux-x64,darwin-x64
