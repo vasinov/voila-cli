@@ -45,10 +45,6 @@ class StartCommand extends Command {
           return ctx.config.containers.map((c) => {
             const imageName = dockerUtils.imageName(ctx.config.id, c.name)
             const containerName = dockerUtils.containerName(ctx.config.id, c.name)
-            const localdir = fullPathToConfig()
-            const workdir = ctx.config.getValue(c.name, 'working_dir')
-
-            c.volumes.push(`${localdir}:${workdir}`)
 
             if (dockerUtils.isContainerRunning(containerName)) {
               return `Container ${containerName} is already running`

@@ -1,6 +1,8 @@
 const generator = require('dockerfile-generator/lib/dockerGenerator')
+const {fullPathToConfig} = require('../../lib/config/loader')
+
 const Validator = require('jsonschema').Validator
-var { parseArgsStringToArgv } = require('string-argv')
+const {parseArgsStringToArgv} = require('string-argv')
 
 class Manager {
   constructor(config) {
@@ -26,7 +28,26 @@ class Manager {
 
       dockerfileData.push({ args: [] })
       dockerfileData.push({ env: {} })
-      dockerfileData.push({ working_dir: container.workdir })
+
+      const [hostWorkDir, containerWorkDir] = (() => {
+        switch (typeof container.workdir) {
+          case 'string':
+            dockerfileData.push({ working_dir: container.workdir })
+
+            return [
+              fullPathToConfig(),
+              container.workdir
+            ]
+          case 'object':
+            dockerfileData.push({ working_dir: Object.values(container.workdir)[0] })
+
+            return [
+              Object.keys(container.workdir)[0],
+              Object.values(container.workdir)[0]
+            ]
+          default:
+        }
+      })()
 
       if (globalEnv) {
         globalEnv.forEach((c) => {
@@ -80,6 +101,8 @@ class Manager {
             }
         })
       }
+
+      volumes.push(`${hostWorkDir}:${containerWorkDir}`)
 
       if (container.ports) container.ports.forEach(p => ports.push(p))
 

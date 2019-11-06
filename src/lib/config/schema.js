@@ -19,7 +19,16 @@ const schema = {
           items: { type: 'object' },
           uniqueItems: true
         },
-        workdir: { type: 'string' },
+        workdir: {
+          oneOf: [
+            {
+              type: "string"
+            },
+            {
+              type: 'object'
+            }
+          ]
+        },
         volumes: {
           type: 'array',
           items: {

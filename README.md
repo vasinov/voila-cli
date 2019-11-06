@@ -41,7 +41,7 @@ The YAML config file has the following structure (subject to change):
 containers:
   - name: STRING
     env: ARRAY_OF_OBJECTS
-    workdir: STRING
+    workdir: STRING_OR_OBJECT
     volumes: ARRAY_OF_STRINGS_AND_OBJECTS
     ports: ARRAY_OF_STRINGS
     stages:
@@ -65,7 +65,9 @@ Array of environmental variables set in the following format: `name:value`. Vari
 
 ### `container.workdir` (required)
 
-Represents a directory in the Docker container where your current directory will be copied to. Voila automatically attaches your current host directory to `workdir`. Think of it as a default attached volume.
+Represents a directory in the Docker container where your project host root directory will be mounted to. Voila automatically sets this directory to `workdir`. Think of it as a default attached volume.
+
+You can also use an object notation and mount any directory on your hard drive to the container `workdir`. This is useful for when you want to mount a specific project sub-directory inside of a module.
 
 ### `container.volumes` (optional)
 
