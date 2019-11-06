@@ -141,7 +141,7 @@ OPTIONS
   --detach-command                 Run command asynchronously.
 ```
 
-_See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/$.js)_
+_See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/$.js)_
 
 ## `voila config:init`
 
@@ -158,7 +158,7 @@ ALIASES
   $ voila init
 ```
 
-_See code: [src/commands/config/init.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/config/init.js)_
+_See code: [src/commands/config/init.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/config/init.js)_
 
 ## `voila help [COMMAND]`
 
@@ -189,7 +189,7 @@ OPTIONS
   --container-name=container-name  Specify container name.
 ```
 
-_See code: [src/commands/ssh.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/ssh.js)_
+_See code: [src/commands/ssh.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/ssh.js)_
 
 ## `voila start`
 
@@ -204,7 +204,7 @@ OPTIONS
   --pull      Always attempt to pull a newer version of the image.
 ```
 
-_See code: [src/commands/start.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/start.js)_
+_See code: [src/commands/start.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/start.js)_
 
 ## `voila status`
 
@@ -215,7 +215,7 @@ USAGE
   $ voila status
 ```
 
-_See code: [src/commands/status.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/status.js)_
+_See code: [src/commands/status.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/status.js)_
 
 ## `voila stop`
 
@@ -226,7 +226,7 @@ USAGE
   $ voila stop
 ```
 
-_See code: [src/commands/stop.js](https://github.com/getvoila/cli/blob/v0.2.0-beta/src/commands/stop.js)_
+_See code: [src/commands/stop.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/stop.js)_
 
 ## `voila update [CHANNEL]`
 
