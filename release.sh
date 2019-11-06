@@ -21,9 +21,6 @@ else
       git push origin master
   fi
 
-  echo "Packing tarballs..."
-  oclif-dev pack -t linux-arm,linux-x64,darwin-x64
-
   echo "Pushing tarballs to S3"
-  oclif-dev publish
+  oclif-dev publish -t linux-arm,linux-x64,darwin-x64
 fi
