@@ -29,7 +29,7 @@ class Manager {
       dockerfileData.push({ args: [] })
       dockerfileData.push({ env: {} })
 
-      const [hostWorkDir, containerWorkDir] = (() => {
+      const [hostWorkdir, containerWorkdir] = (() => {
         switch (typeof container.workdir) {
           case 'string':
             dockerfileData.push({ working_dir: container.workdir })
@@ -102,12 +102,13 @@ class Manager {
         })
       }
 
-      volumes.push(`${hostWorkDir}:${containerWorkDir}`)
+      volumes.push(`${hostWorkdir}:${containerWorkdir}`)
 
       if (container.ports) container.ports.forEach(p => ports.push(p))
 
       return {
         name: container.name,
+        hostDir: hostWorkdir,
         volumes: volumes,
         ports: ports,
         dockerfileData: dockerfileData
@@ -124,9 +125,14 @@ class Manager {
     return config
   }
 
-  getValue(containerName, key) {
+  getModule(moduleName) {
+    return this.containers.find((c) => c.name === moduleName)
+  }
+
+  findInDockerfileData(containerName, key) {
     const obj = this.containers
-      .find((c) => c.name === containerName).dockerfileData
+      .find((c) => c.name === containerName)
+      .dockerfileData
       .find((e) => Object.keys(e)[0] === key)
 
     return obj ? obj[key]: null

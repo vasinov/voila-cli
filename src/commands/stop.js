@@ -32,7 +32,7 @@ class StopCommand extends Command {
           return ctx.config.containers.map((c) => {
             const containerName = dockerUtils.containerName(ctx.config.id, c.name)
             const localdir = process.cwd()
-            const workdir = ctx.config.getValue(c.name, 'working_dir')
+            const workdir = ctx.config.findInDockerfileData(c.name, 'working_dir')
 
             if (dockerUtils.isContainerRunning(containerName)) {
               dockerUtils.stopContainer(localdir, workdir, containerName)

@@ -52,14 +52,16 @@ const stopContainer = (localdir, workdir, containerName) => {
   execSync(`docker container stop ${containerName}`)
 }
 
-const runCommand = (containerName, command) => {
-  return spawn(
-    `docker exec -it ${containerName} /bin/bash -c "${command}"`,
-    [], { shell: true, stdio: 'inherit' })
+const runCommand = (containerName, workdir, command) => {
+  const args = ['exec', '-it', '-w', workdir, containerName, '/bin/bash', '-c', command]
+
+  return spawn('docker', args, { stdio: 'inherit' })
 }
 
-const runCommandAsync = (containerName, command) => {
-  return spawn(`docker exec -d ${containerName} /bin/bash -c "${command}"`, [], { shell: true })
+const runCommandAsync = (containerName, workdir, command) => {
+  const args = ['exec', '-d', '-w', workdir, containerName, '/bin/bash', '-c', command]
+
+  return spawn('docker', args)
 }
 
 const buildImage = (imageName, dockerfile, isNoCache, isPull) => {
