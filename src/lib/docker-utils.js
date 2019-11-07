@@ -49,7 +49,9 @@ const startContainer = (volumes, ports, containerName, imageName) => {
 }
 
 const stopContainer = (localdir, workdir, containerName) => {
-  execSync(`docker container stop ${containerName}`)
+  const args = ['container', 'stop', containerName]
+
+  spawnSync('docker', args)
 }
 
 const runCommand = (containerName, workdir, command) => {
@@ -71,8 +73,10 @@ const buildImage = (imageName, dockerfile, isNoCache, isPull) => {
   return execSync(`docker build ${noCache} ${pull} -t ${imageName} -f- . <<EOF\n${dockerfile}\nEOF`)
 }
 
-const sshContainer = (containerName) => {
-  return spawn(`docker exec -it ${containerName} /bin/bash`, [], { shell: true, stdio: 'inherit' })
+const sshContainer = (containerName, workdir) => {
+  const args = ['exec', '-it', '-w', workdir, containerName, '/bin/bash']
+
+  return spawn('docker', args, { stdio: 'inherit' })
 }
 
 module.exports = {

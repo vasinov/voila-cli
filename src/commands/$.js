@@ -3,7 +3,7 @@ const chalk = require('chalk')
 
 const ConfigManager = require('../lib/config/manager')
 const {loadConfig} = require('../lib/config/loader')
-const {relativeModuleDir, isCurrentPathInModuleDir, moduleHostDir} = require('../lib/directories')
+const {relativeModulePath, moduleHostPath, doesPathIncludeCurrentPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -68,8 +68,8 @@ class $Command extends Command {
         '' :
         (argv.length === 0) ? commandFromConfig : argv.join(' ')
 
-      if (isCurrentPathInModuleDir(module)) {
-        const workdir = (executeIn) ? executeIn : relativeModuleDir(module)
+      if (executeIn || doesPathIncludeCurrentPath(moduleHostPath(module))) {
+        const workdir = (executeIn) ? executeIn : relativeModulePath(module).join('/')
 
         if (command === '') {
           throw new VoilaError(errorMessages.SPECIFY_COMMAND)
@@ -91,7 +91,7 @@ class $Command extends Command {
           })
         }
       } else {
-        throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostDir(module)))
+        throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
       }
     } else {
       throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
@@ -118,7 +118,7 @@ $Command.flags = {
     description: `Specify container name.`
   }),
   'execute-in': flags.string({
-    description: `Specify a directory inside the container that you'd like your command to be executed in.`
+    description: `Specify an absolute path inside the container that you'd like your command to be executed in.`
   }),
   'detach-command': flags.boolean({
     description: `Run command asynchronously.`,

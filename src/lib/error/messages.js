@@ -23,6 +23,6 @@ module.exports = {
   },
 
   wrongModuleHostDirError: directory => {
-    return `Command execution is only allowed inside of the mounted module directory: ${directory}`
+    return `Module access only allowed in the mounted module directory: ${directory}`
   }
 }
