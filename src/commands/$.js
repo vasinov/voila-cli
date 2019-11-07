@@ -38,13 +38,14 @@ class $Command extends Command {
         action: ctx => {
           const containerName = flags['container-name']
           const shouldDetach = flags['detach-command']
+          const executeIn = flags['execute-in']
 
           if (ctx.config.containers.length === 0) {
             throw new VoilaError(errorMessages.DEFINE_CONTAINERS)
           } else if (containerName) {
-            this.processCommand(ctx, argv, containerName, shouldDetach)
+            this.processCommand(ctx, argv, containerName, shouldDetach, executeIn)
           } else if (ctx.config.containers.length === 1) {
-            this.processCommand(ctx, argv, ctx.config.containers[0].name, shouldDetach)
+            this.processCommand(ctx, argv, ctx.config.containers[0].name, shouldDetach, executeIn)
           } else {
             throw new VoilaError(errorMessages.SPECIFY_CONTAINER_NAME)
           }
@@ -55,15 +56,19 @@ class $Command extends Command {
     await runTask(tasks, this)
   }
 
-  processCommand(ctx, argv, moduleName, shouldDetach) {
+  processCommand(ctx, argv, moduleName, shouldDetach, executeIn) {
     const containerName = dockerUtils.containerName(ctx.config.id, moduleName)
 
     if (dockerUtils.isContainerRunning(containerName)) {
       const commandFromConfig = ctx.config.findInDockerfileData(moduleName, 'cmd')
-      const command =
-        (argv.length === 0 && !commandFromConfig) ?
-          '' : (argv.length === 0) ? commandFromConfig : argv.join(' ')
-      const workdir = relativeModuleDir(ctx.config.getModule(moduleName))
+
+      const command = (argv.length === 0 && !commandFromConfig) ?
+        '' :
+        (argv.length === 0) ? commandFromConfig : argv.join(' ')
+
+      const workdir = (executeIn) ?
+        executeIn :
+        relativeModuleDir(ctx.config.getModule(moduleName))
 
       if (command === '') {
         throw new VoilaError(errorMessages.SPECIFY_COMMAND)
@@ -106,6 +111,9 @@ $Command.strict = false
 $Command.flags = {
   'container-name': flags.string({
     description: `Specify container name.`
+  }),
+  'execute-in': flags.string({
+    description: `Specify a directory inside the container that you'd like your command to be executed in.`
   }),
   'detach-command': flags.boolean({
     description: `Run command asynchronously.`,

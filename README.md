@@ -139,6 +139,9 @@ USAGE
 OPTIONS
   --container-name=container-name  Specify container name.
   --detach-command                 Run command asynchronously.
+
+  --execute-in=execute-in          Specify a directory inside the container that you'd like your command to be executed
+                                   in.
 ```
 
 _See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/$.js)_
