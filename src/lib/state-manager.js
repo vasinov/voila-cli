@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-class StateManager {
+module.exports = class StateManager {
   constructor(path) {
     this.path = path
     this.jsonName = 'state.json'
@@ -42,5 +42,3 @@ class StateManager {
     }
   }
 }
-
-module.exports = StateManager

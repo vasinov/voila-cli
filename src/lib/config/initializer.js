@@ -5,7 +5,7 @@ const configLoader = require('../config/loader')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 
-const init = (force) => {
+exports.init = (force) => {
   let fileExistsInParents = false
   const currentPath = process.cwd().split('/')
 
@@ -33,8 +33,4 @@ const init = (force) => {
       })
     }
   }
-}
-
-module.exports = {
-  init
 }

@@ -1,4 +1,4 @@
-const template = {
+exports.template = {
   "name": "default",
   "env": [],
   "workdir": "/project",
@@ -25,5 +25,3 @@ const template = {
     }
   }
 }
-
-module.exports = template

@@ -1,4 +1,4 @@
-const schema = {
+exports.schema = {
   id: '/Project',
   type: 'object',
   properties: {
@@ -104,5 +104,3 @@ const schema = {
   },
   required: ['id']
 }
-
-module.exports = schema

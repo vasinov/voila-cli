@@ -4,7 +4,7 @@ const {fullPathToConfig} = require('../../lib/config/loader')
 const Validator = require('jsonschema').Validator
 const {parseArgsStringToArgv} = require('string-argv')
 
-class Manager {
+module.exports = class Manager {
   constructor(config) {
     Manager.validate(config)
 
@@ -118,7 +118,7 @@ class Manager {
 
   static validate(config) {
     const validator = new Validator()
-    const schema = require('./schema')
+    const {schema} = require('./schema')
 
     validator.validate(config, schema, { throwError: true })
 
@@ -144,5 +144,3 @@ class Manager {
     )
   }
 }
-
-module.exports = Manager
