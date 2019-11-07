@@ -8,18 +8,6 @@ module.exports = class StateManager {
     this.createOrLoadJson()
   }
 
-  listContainers(projectId) {
-
-  }
-
-  addContainer(projectId, name) {
-
-  }
-
-  removeContainer(projectId, name) {
-
-  }
-
   fullPath() {
     return `${this.path}/${this.jsonName}`
   }

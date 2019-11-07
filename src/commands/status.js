@@ -35,17 +35,19 @@ class StatusCommand extends Command {
         action: ctx => {
           const data = []
 
-          ctx.config.containers.map((c) => {
+          ctx.config.modules.map((c) => {
             const containerName = dockerUtils.containerName(ctx.config.id, c.name)
 
             data.push({
-              name: containerName,
+              moduleName: c.name,
+              containerName: containerName,
               status: dockerUtils.containerStatus(containerName)
             })
           })
 
           cli.table(data, {
-            name: { header: 'Container Name' },
+            moduleName: { header: 'Module Name' },
+            containerName: { header: 'Container Name' },
             status: {}
           })
         }
@@ -56,6 +58,6 @@ class StatusCommand extends Command {
   }
 }
 
-StatusCommand.description = `Local status of containers and jobs.`
+StatusCommand.description = `Status of modules and containers.`
 
 module.exports = StatusCommand

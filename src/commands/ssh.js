@@ -38,14 +38,14 @@ class SshCommand extends Command {
           const containerName = flags['container-name']
           const executeIn = flags['execute-in']
 
-         if (ctx.config.containers.length === 0) {
-           throw new VoilaError(errorMessages.DEFINE_CONTAINERS)
+         if (ctx.config.modules.length === 0) {
+           throw new VoilaError(errorMessages.DEFINE_MODULES)
          } else if (containerName) {
            this.processSsh(ctx, containerName, executeIn)
-         } else if (ctx.config.containers.length === 1) {
-           this.processSsh(ctx, ctx.config.containers[0].name, executeIn)
+         } else if (ctx.config.modules.length === 1) {
+           this.processSsh(ctx, ctx.config.modules[0].name, executeIn)
          } else {
-           throw new VoilaError(errorMessages.SPECIFY_CONTAINER_NAME)
+           throw new VoilaError(errorMessages.SPECIFY_MODULE_NAME)
          }
         }
       }
@@ -75,7 +75,7 @@ class SshCommand extends Command {
         throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
+      throw new VoilaError(errorMessages.NO_RUNNING_MODULES)
     }
   }
 }

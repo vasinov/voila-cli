@@ -41,14 +41,14 @@ class $Command extends Command {
           const shouldDetach = flags['detach-command']
           const executeIn = flags['execute-in']
 
-          if (ctx.config.containers.length === 0) {
-            throw new VoilaError(errorMessages.DEFINE_CONTAINERS)
+          if (ctx.config.modules.length === 0) {
+            throw new VoilaError(errorMessages.DEFINE_MODULES)
           } else if (containerName) {
             this.processCommand(ctx, argv, containerName, shouldDetach, executeIn)
-          } else if (ctx.config.containers.length === 1) {
-            this.processCommand(ctx, argv, ctx.config.containers[0].name, shouldDetach, executeIn)
+          } else if (ctx.config.modules.length === 1) {
+            this.processCommand(ctx, argv, ctx.config.modules[0].name, shouldDetach, executeIn)
           } else {
-            throw new VoilaError(errorMessages.SPECIFY_CONTAINER_NAME)
+            throw new VoilaError(errorMessages.SPECIFY_MODULE_NAME)
           }
         }
       }
@@ -94,7 +94,7 @@ class $Command extends Command {
         throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
+      throw new VoilaError(errorMessages.NO_RUNNING_MODULES)
     }
   }
 

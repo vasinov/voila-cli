@@ -3,14 +3,14 @@ exports.schema = {
   type: 'object',
   properties: {
     id: { type: 'string' },
-    containers: {
+    modules: {
       type: 'array',
-      items: { '$ref': '#/definitions/container' },
+      items: { '$ref': '#/definitions/module' },
       uniqueItems: true
     }
   },
   definitions: {
-    container: {
+    module: {
       type: 'object',
       properties: {
         name: { type: 'string' },

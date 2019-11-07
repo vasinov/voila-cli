@@ -27,8 +27,8 @@ We don't officially support Windows yet but you could use the [Windows Subsystem
 
 Getting started with Voila is easy:
 
-- Initialize Voila in your project directory with `voila init`. That will generate a `.voila.yml` config file in the current directory.
-- In your project directory run `voila start` to start containers defined in `.voila.yml`.
+- Initialize Voila in your project directory with `voila init`. That will generate a `.voila` folder with config files for the whole project and individual modules in the current directory.
+- In your project directory run `voila start` to start containers defined in `.voila/modules`.
 - In your project directory run `voila $ COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila run ls -al`.
 - To check container status run `voila status`.
 - To SSH into a running container run `voila ssh`.

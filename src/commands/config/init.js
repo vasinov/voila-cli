@@ -10,11 +10,11 @@ class InitCommand extends Command {
 
     const tasks = [
       {
-        title: 'Generating a new config file',
+        title: 'Generating new config files',
         action: async () => {
           initializer.init(flags.force)
 
-          return `New ".voila.yml" file was successfully generated in the current directory`
+          return `New ".voila" folder with config files was successfully generated in the current directory.`
         }
       }
     ]
@@ -25,12 +25,12 @@ class InitCommand extends Command {
 
 InitCommand.aliases = ['init']
 
-InitCommand.description = `create a new config file`
+InitCommand.description = `Initialize Voila in the current directory. This command creates a ".voila" folder with YAML config files.`
 
 InitCommand.flags = {
   force: flags.boolean({
     char: 'f',
-    description: `override existing config file`,
+    description: `Override an existing config folder.`,
     default: false
   })
 }

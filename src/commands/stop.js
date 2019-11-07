@@ -27,9 +27,9 @@ class StopCommand extends Command {
         }
       },
       {
-        title: 'Stopping containers',
+        title: 'Stopping modules',
         action: ctx => {
-          return ctx.config.containers.map((c) => {
+          return ctx.config.modules.map((c) => {
             const containerName = dockerUtils.containerName(ctx.config.id, c.name)
             const localdir = process.cwd()
             const workdir = ctx.config.findInDockerfileData(c.name, 'working_dir')

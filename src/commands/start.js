@@ -31,7 +31,7 @@ class StartCommand extends Command {
       {
         title: 'Downloading dependencies and building images',
         action: ctx => {
-          ctx.config.containers.forEach((c) => {
+          ctx.config.modules.forEach((c) => {
             const imageName = dockerUtils.imageName(ctx.config.id, c.name)
             const dockerfile = ctx.config.toDockerfile(c.name)
 
@@ -40,9 +40,9 @@ class StartCommand extends Command {
         }
       },
       {
-        title: 'Starting containers',
+        title: 'Starting modules',
         action: ctx => {
-          return ctx.config.containers.map((c) => {
+          return ctx.config.modules.map((c) => {
             const imageName = dockerUtils.imageName(ctx.config.id, c.name)
             const containerName = dockerUtils.containerName(ctx.config.id, c.name)
 

@@ -9,15 +9,15 @@ module.exports = class Manager {
     Manager.validate(config)
 
     this.id = config.id
-    this.containers = Manager.configToJson(config)
+    this.modules = Manager.configToJson(config)
   }
 
   static configToJson(config) {
-    return config.containers.map(container => {
-      const globalEnv = container.env
-      const buildEnv = container.stages.build.env
-      const buildStage = container.stages.build
-      const runStage = container.stages.run
+    return config.modules.map(module => {
+      const globalEnv = module.env
+      const buildEnv = module.stages.build.env
+      const buildStage = module.stages.build
+      const runStage = module.stages.run
       const volumes = []
       const ports = []
       const dockerfileData = []
@@ -29,21 +29,21 @@ module.exports = class Manager {
       dockerfileData.push({ args: [] })
       dockerfileData.push({ env: {} })
 
-      const [hostWorkdir, containerWorkdir] = (() => {
-        switch (typeof container.workdir) {
+      const [hostWorkdir, moduleWorkdir] = (() => {
+        switch (typeof module.workdir) {
           case 'string':
-            dockerfileData.push({ working_dir: container.workdir })
+            dockerfileData.push({ working_dir: module.workdir })
 
             return [
               fullPathToConfig(),
-              container.workdir
+              module.workdir
             ]
           case 'object':
-            dockerfileData.push({ working_dir: Object.values(container.workdir)[0] })
+            dockerfileData.push({ working_dir: Object.values(module.workdir)[0] })
 
             return [
-              Object.keys(container.workdir)[0],
-              Object.values(container.workdir)[0]
+              Object.keys(module.workdir)[0],
+              Object.values(module.workdir)[0]
             ]
           default:
         }
@@ -88,8 +88,8 @@ module.exports = class Manager {
         dockerfileData.push({ cmd: runStage.command })
       }
 
-      if (container.volumes) {
-        container.volumes.forEach(volume => {
+      if (module.volumes) {
+        module.volumes.forEach(volume => {
             switch (typeof volume) {
               case 'string':
                 volumes.push(`${volume}:${volume}`)
@@ -102,12 +102,12 @@ module.exports = class Manager {
         })
       }
 
-      volumes.push(`${hostWorkdir}:${containerWorkdir}`)
+      volumes.push(`${hostWorkdir}:${moduleWorkdir}`)
 
-      if (container.ports) container.ports.forEach(p => ports.push(p))
+      if (module.ports) module.ports.forEach(p => ports.push(p))
 
       return {
-        name: container.name,
+        name: module.name,
         hostDir: hostWorkdir,
         volumes: volumes,
         ports: ports,
@@ -126,21 +126,21 @@ module.exports = class Manager {
   }
 
   getModule(moduleName) {
-    return this.containers.find((c) => c.name === moduleName)
+    return this.modules.find((c) => c.name === moduleName)
   }
 
-  findInDockerfileData(containerName, key) {
-    const obj = this.containers
-      .find((c) => c.name === containerName)
+  findInDockerfileData(moduleName, key) {
+    const obj = this.modules
+      .find((c) => c.name === moduleName)
       .dockerfileData
       .find((e) => Object.keys(e)[0] === key)
 
     return obj ? obj[key]: null
   }
 
-  toDockerfile(containerName) {
+  toDockerfile(moduleName) {
     return generator.generateDockerFileFromArray(
-      this.containers.find((c) => c.name === containerName).dockerfileData
+      this.modules.find((c) => c.name === moduleName).dockerfileData
     )
   }
 }
