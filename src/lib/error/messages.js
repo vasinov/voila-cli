@@ -20,5 +20,9 @@ module.exports = {
     return `Multiple ".voila.yml" files were detected in the following directories:\n\n` +
       `${pathList}\n\n` +
       `Loading the top level file: ${loadedFile}`
+  },
+
+  wrongModuleHostDirError: directory => {
+    return `Command execution is only allowed inside of the mounted module directory: ${directory}`
   }
 }

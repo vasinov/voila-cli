@@ -23,9 +23,23 @@ const relativeModuleDir = module => {
   return moduleContainerDir(module).split('/').concat(relativeHostDir).join('/')
 }
 
+const isCurrentPathInModuleDir = module => {
+  const current = process.cwd().split('/')
+  const moduleHost = moduleHostDir(module).split('/')
+
+  if (current.length < moduleHost.length) {
+    return false
+  } else {
+    return moduleHost.every((segment, index) => {
+      return segment === current[index]
+    })
+  }
+}
+
 module.exports = {
   projectHostDir,
   moduleContainerDir,
   moduleHostDir,
-  relativeModuleDir
+  relativeModuleDir,
+  isCurrentPathInModuleDir
 }

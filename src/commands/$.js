@@ -1,8 +1,9 @@
 const {Command, flags} = require('@oclif/command')
+const chalk = require('chalk')
 
 const ConfigManager = require('../lib/config/manager')
 const {loadConfig} = require('../lib/config/loader')
-const {relativeModuleDir} = require('../lib/directories')
+const {relativeModuleDir, isCurrentPathInModuleDir, moduleHostDir} = require('../lib/directories')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -60,33 +61,37 @@ class $Command extends Command {
     const containerName = dockerUtils.containerName(ctx.config.id, moduleName)
 
     if (dockerUtils.isContainerRunning(containerName)) {
+      const module = ctx.config.getModule(moduleName)
       const commandFromConfig = ctx.config.findInDockerfileData(moduleName, 'cmd')
 
       const command = (argv.length === 0 && !commandFromConfig) ?
         '' :
         (argv.length === 0) ? commandFromConfig : argv.join(' ')
 
-      const workdir = (executeIn) ?
-        executeIn :
-        relativeModuleDir(ctx.config.getModule(moduleName))
+      if (isCurrentPathInModuleDir(module)) {
+        const workdir = (executeIn) ? executeIn : relativeModuleDir(module)
 
-      if (command === '') {
-        throw new VoilaError(errorMessages.SPECIFY_COMMAND)
-      } else if (shouldDetach) {
-        this.announceCommand(moduleName, workdir, command, true)
-        dockerUtils.runCommandAsync(containerName, workdir, command)
+        if (command === '') {
+          throw new VoilaError(errorMessages.SPECIFY_COMMAND)
+        } else if (shouldDetach) {
+          this.announceCommand(moduleName, workdir, command, true)
+
+          dockerUtils.runCommandAsync(containerName, workdir, command)
+        } else {
+          this.announceCommand(moduleName, workdir, command, false)
+
+          const subProcess = dockerUtils.runCommand(containerName, workdir, command)
+
+          subProcess.on('exit', code => {
+            if (code === 1) this.log(errorMessages.EXEC_INTERRUPTED)
+          })
+
+          subProcess.on('error', code => {
+            this.log(errorMessages.containerError(containerName, code, command))
+          })
+        }
       } else {
-        this.announceCommand(moduleName, workdir, command, false)
-
-        const subProcess = dockerUtils.runCommand(containerName, workdir, command)
-
-        subProcess.on('exit', code => {
-          if (code === 1) this.log(errorMessages.EXEC_INTERRUPTED)
-        })
-
-        subProcess.on('error', code => {
-          this.log(errorMessages.containerError(containerName, code, command))
-        })
+        throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostDir(module)))
       }
     } else {
       throw new VoilaError(errorMessages.NO_RUNNING_CONTAINER)
@@ -95,9 +100,9 @@ class $Command extends Command {
 
   announceCommand(moduleName, workdir, command, isAsync) {
     if (isAsync) {
-      this.log(`Asynchronously executing command in ${moduleName}:${workdir}`)
+      this.log(chalk.dim(`Asynchronously executing "${command}" in ${moduleName}:${workdir}`))
     } else {
-      this.log(`Executing command in ${moduleName}:${workdir}`)
+      this.log(chalk.dim(`Executing "${command}" in ${moduleName}:${workdir}`))
     }
   }
 }
