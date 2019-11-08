@@ -23,35 +23,60 @@ Voila CLI is a command line tool for Mac and Linux that enables HPC engineers an
 
 We don't officially support Windows yet but you could use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) in order to start using Voila CLI.
 
+### Installing from Source
+
+You need to have [npm](https://nodejs.org/en/) to install the CLI from source.
+
+```shell
+# First, clone the repo
+
+git@github.com:getvoila/cli.git
+
+# Install package dependencies
+
+cd cli && npm up
+
+# To run the CLI directly 
+
+./cli/bin/run
+
+# To create a link for `voila`
+
+npm link
+
+# Voila!
+
+voila init
+```
+
 ## Getting Started
 
 Getting started with Voila is easy:
 
 - Initialize Voila in your project directory with `voila init`. That will generate a `.voila` folder with config files for the whole project and individual modules in the current directory.
-- In your project directory run `voila start` to start containers defined in `.voila/modules`.
-- In your project directory run `voila $ COMMAND` to run your project locally and generate result artifacts in the same directory without exiting the CLI (string output will show up sequentially). For example, `voila run ls -al`.
-- To check container status run `voila status`.
-- To SSH into a running container run `voila ssh`.
-- To stop containers run `voila stop`.
+- In your project directory run `voila start` to start the default module defined in `.voila/config.yml`.
+- In your project directory run `voila $ COMMAND` to run a command for your default module locally and generate result artifacts in the same directory. For example, `voila $ ls -al > files.txt`.
+- To check module status run `voila status`.
+- To SSH into the default running module run `voila ssh`.
+- To stop the default module run `voila stop`.
 
 ## Config Format
 
-The YAML config file has the following structure (subject to change):
+After running `voila init` a `.voila` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID and default module name. In the `.voila/modules` folder you'll find YAML config files for each module.
+
+All module config files have the following structure:
 
 ```yaml
-containers:
-  - name: STRING
+name: STRING
+env: ARRAY_OF_OBJECTS
+workdir: STRING_OR_OBJECT
+volumes: ARRAY_OF_STRINGS_AND_OBJECTS
+ports: ARRAY_OF_STRINGS
+stages:
+  build:
+    images: ARRAY_OF_OBJECTS
     env: ARRAY_OF_OBJECTS
-    workdir: STRING_OR_OBJECT
-    volumes: ARRAY_OF_STRINGS_AND_OBJECTS
-    ports: ARRAY_OF_STRINGS
-    stages:
-      build:
-        images: ARRAY_OF_OBJECTS
-        env: ARRAY_OF_OBJECTS
-        actions: ARRAY_OF_OBJECTS
-      run:
-        command: STRING
+    actions: ARRAY_OF_OBJECTS
 ```
 
 Each container represents an independent unit that has its own settings and execution context. Containers have names, environment variables, volumes, ports, and stages.
@@ -102,143 +127,7 @@ actions:
 
 `execute` actions can use exec and shell forms (i.e., array of strings or a single string).
 
-### `container.stages.run.command` (optional)
 
-Default command that you want to run. If you pass a command to the CLI directly it will override the command in the config file.
+## CLI Commands
 
-## Development
-
-We use the [oclif](https://oclif.io/) npm framework to setup the CLI.
-
-You need to have [npm](https://nodejs.org/en/) installed to develop the CLI. In the cloned repo run `npm up` to install package dependencies.
-
-To run the CLI directly run `./cli/bin/run`. To link the CLI locally simply run `npm link` inside the `cli` folder.
-
-To debug any command run it with `DEBUG=* voila COMMAND`.
-
-## Commands
-
-<!-- commands -->
-* [`voila $ [ARGS...]`](#voila--args)
-* [`voila config:init`](#voila-configinit)
-* [`voila help [COMMAND]`](#voila-help-command)
-* [`voila ssh`](#voila-ssh)
-* [`voila start`](#voila-start)
-* [`voila status`](#voila-status)
-* [`voila stop`](#voila-stop)
-* [`voila update [CHANNEL]`](#voila-update-channel)
-
-## `voila $ [ARGS...]`
-
-Run a shell command inside of a running container.
-
-```
-USAGE
-  $ voila $ [ARGS...]
-
-OPTIONS
-  --module=module  Specify container name.
-  --run-as-job                 Run command asynchronously.
-
-  --execute-in=execute-in          Specify a directory inside the container that you'd like your command to be executed
-                                   in.
-```
-
-_See code: [src/commands/$.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/$.js)_
-
-## `voila config:init`
-
-create a new config file
-
-```
-USAGE
-  $ voila config:init
-
-OPTIONS
-  -f, --force  override existing config file
-
-ALIASES
-  $ voila init
-```
-
-_See code: [src/commands/config/init.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/config/init.js)_
-
-## `voila help [COMMAND]`
-
-display help for voila
-
-```
-USAGE
-  $ voila help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
-
-## `voila ssh`
-
-Connect to a container over SSH.
-
-```
-USAGE
-  $ voila ssh
-
-OPTIONS
-  --module=module  Specify container name.
-```
-
-_See code: [src/commands/ssh.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/ssh.js)_
-
-## `voila start`
-
-Start containers locally.
-
-```
-USAGE
-  $ voila start
-
-OPTIONS
-  --no-cache  Don't use cache when building the image.
-  --pull      Always attempt to pull a newer version of the image.
-```
-
-_See code: [src/commands/start.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/start.js)_
-
-## `voila status`
-
-Local status of containers and jobs.
-
-```
-USAGE
-  $ voila status
-```
-
-_See code: [src/commands/status.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/status.js)_
-
-## `voila stop`
-
-Stop containers locally.
-
-```
-USAGE
-  $ voila stop
-```
-
-_See code: [src/commands/stop.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/stop.js)_
-
-## `voila update [CHANNEL]`
-
-update the voila CLI
-
-```
-USAGE
-  $ voila update [CHANNEL]
-```
-
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v1.3.9/src/commands/update.ts)_
-<!-- commandsstop -->
+Voila CLI documentation is part of the CLI itself. To get access to all available commands simply type `voila`. If you are interested in the details of a specific command add the `--help` flag to it. For example, `voila ssh --help`

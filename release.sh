@@ -17,9 +17,6 @@ else
   echo "Updating version in package.json..."
   jq ".version = \"$1\"" package.json > package.$$.json && mv package.$$.json package.json
 
-  echo "Updating README.md..."
-  oclif-dev readme
-
   if [ ! -z "$(git status --porcelain)" ]
     then
       echo "Committing and pushing changes to git..."
