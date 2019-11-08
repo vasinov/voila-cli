@@ -46,7 +46,7 @@ class StopCommand extends Command {
       }
     ]
 
-    await runTask(tasks, cmd)
+    await runTask(tasks)
   }
 }
 

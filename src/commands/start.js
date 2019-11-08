@@ -1,74 +1,111 @@
 const {Command, flags} = require('@oclif/command')
 
 const ConfigManager = require('../lib/config/manager')
-const {loadConfig, fullPathToConfig} = require('../lib/config/loader')
+const {loadConfig} = require('../lib/config/loader')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
+const errorMessages = require('../lib/error/messages')
+const logger = require('../lib/logger')
 
 class StartCommand extends Command {
   async run() {
-    const cmd = this
-    const {flags} = this.parse(StartCommand)
+    const {flags, args} = this.parse(StartCommand)
 
     const tasks = [
       {
-        title: 'Loading config',
         action: ctx => {
+          logger.infoWithTime('Loading config')
+
           const [message, config] = loadConfig()
 
           ctx.config = config
 
-          if (message) cmd.warn(message)
+          if (message) logger.warn(message)
         }
       },
       {
-        title: 'Parsing and validating config',
         action: ctx => {
+          logger.infoWithTime('Parsing and validating config')
+
           ctx.config = new ConfigManager(ctx.config)
         }
       },
       {
-        title: 'Downloading dependencies and building images',
         action: ctx => {
-          ctx.config.modules.forEach((c) => {
-            const imageName = dockerUtils.imageName(ctx.config.id, c.name)
-            const dockerfile = ctx.config.toDockerfile(c.name)
+          logger.infoWithTime('Downloading dependencies and building images')
+
+          this.executeAction(ctx, flags, args, (ctx, module) => {
+            const imageName = dockerUtils.imageName(ctx.config.id, module.name)
+            const dockerfile = ctx.config.toDockerfile(module.name)
 
             dockerUtils.buildImage(imageName, dockerfile, flags['no-cache'], flags['pull'])
+
+            logger.infoWithTime(`Built image for ${module.name}`, true)
           })
         }
       },
       {
-        title: 'Starting modules',
         action: ctx => {
-          return ctx.config.modules.map((c) => {
-            const imageName = dockerUtils.imageName(ctx.config.id, c.name)
-            const containerName = dockerUtils.containerName(ctx.config.id, c.name)
+          logger.infoWithTime('Starting modules')
 
-            if (dockerUtils.isContainerRunning(containerName)) {
-              return `Container ${containerName} is already running`
-            } else {
-              const result = dockerUtils.startContainer(c.volumes, c.ports, containerName, imageName)
-
-              if (result.stderr.length > 0) {
-                throw new VoilaError(result.stderr)
-              } else {
-                return `Started container ${containerName}`
-              }
-            }
-          })
+          this.executeAction(ctx, flags, args, StartCommand.startModule)
         }
       }
     ]
 
-    await runTask(tasks, cmd)
+    await runTask(tasks)
+  }
+
+  executeAction(ctx, flags, args, action) {
+    const defaultModule = ctx.config.getDefaultModule()
+
+    if (flags['all']) {
+      ctx.config.modules.map((module) => {
+        action(ctx, module)
+      })
+    } else if (args.module) {
+      action(ctx, ctx.config.getModule(args.module))
+    } else if (defaultModule) {
+      action(ctx, defaultModule)
+    } else {
+      throw new VoilaError(errorMessages.SPECIFY_MODULE_NAME)
+    }
+  }
+
+  static startModule(ctx, module) {
+    const imageName = dockerUtils.imageName(ctx.config.id, module.name)
+    const containerName = dockerUtils.containerName(ctx.config.id, module.name)
+
+    if (dockerUtils.isContainerRunning(containerName)) {
+      logger.infoWithTime(`Container ${containerName} is already running`, true)
+    } else {
+      const result = dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName)
+
+      if (result.stderr.length > 0) {
+        throw new VoilaError(result.stderr)
+      } else {
+        logger.infoWithTime(`Started container ${containerName} for module ${module.name}`, true)
+      }
+    }
   }
 }
 
-StartCommand.description = `Start containers locally.`
+StartCommand.description = `Start module containers.`
+
+StartCommand.args = [
+  {
+    name: 'module',
+    required: false,
+    description: 'Module name to start.'
+  }
+]
 
 StartCommand.flags = {
+  'all': flags.boolean({
+    description: `Start all modules in the project.`,
+    default: false
+  }),
   'no-cache': flags.boolean({
     description: `Don't use cache when building the image.`,
     default: false

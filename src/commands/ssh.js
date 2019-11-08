@@ -51,7 +51,7 @@ class SshCommand extends Command {
       }
     ]
 
-    await runTask(tasks, this)
+    await runTask(tasks)
   }
 
   processSsh(ctx, moduleName, executeIn) {

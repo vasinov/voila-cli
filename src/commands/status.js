@@ -1,10 +1,10 @@
 const {Command} = require('@oclif/command')
-const {cli} = require('cli-ux')
 
 const ConfigManager = require('../lib/config/manager')
 const {loadConfig} = require('../lib/config/loader')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
+const logger = require('../lib/logger')
 
 class StatusCommand extends Command {
   async run() {
@@ -12,8 +12,6 @@ class StatusCommand extends Command {
 
     const tasks = [
       {
-        title: 'Loading config',
-        silent: true,
         action: ctx => {
           const [message, config] = loadConfig()
 
@@ -23,15 +21,11 @@ class StatusCommand extends Command {
         }
       },
       {
-        title: 'Parsing and validating config',
-        silent: true,
         action: ctx => {
           ctx.config = new ConfigManager(ctx.config)
         }
       },
       {
-        title: 'Loading status',
-        silent: true,
         action: ctx => {
           const data = []
 
@@ -45,16 +39,16 @@ class StatusCommand extends Command {
             })
           })
 
-          cli.table(data, {
+          logger.table({
             moduleName: { header: 'Module Name' },
             containerName: { header: 'Container Name' },
             status: {}
-          })
+          }, data)
         }
       }
     ]
 
-    await runTask(tasks, cmd)
+    await runTask(tasks)
   }
 }
 

@@ -2,24 +2,26 @@ const {Command, flags} = require('@oclif/command')
 
 const initializer = require('../../lib/config/initializer')
 const runTask = require('../../lib/run-task')
+const logger = require('../../lib/logger')
 
 class InitCommand extends Command {
   async run() {
     const {flags} = this.parse(InitCommand)
-    const cmd = this
 
     const tasks = [
       {
-        title: 'Generating new config files',
         action: async () => {
+          logger.infoWithTime('Generating new config files')
+
           initializer.init(flags.force)
 
-          return `New ".voila" folder with config files was successfully generated in the current directory.`
+          logger.infoWithTime(
+            `New ".voila" folder with config files was successfully generated in the current directory.`, true)
         }
       }
     ]
 
-    await runTask(tasks, cmd)
+    await runTask(tasks)
   }
 }
 

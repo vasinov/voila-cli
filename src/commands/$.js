@@ -54,7 +54,7 @@ class $Command extends Command {
       }
     ]
 
-    await runTask(tasks, this)
+    await runTask(tasks)
   }
 
   processCommand(ctx, argv, moduleName, shouldDetach, executeIn) {
