@@ -1,11 +1,9 @@
 const {Command, flags} = require('@oclif/command')
 
-const ConfigManager = require('../lib/config/manager')
-const {loadConfig} = require('../lib/config/loader')
+const {loadConfig, parseConfig, executeModuleAction} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
-const {executeModuleAction} = require('../lib/tasks')
 const logger = require('../lib/logger')
 
 class StartCommand extends Command {
@@ -14,22 +12,10 @@ class StartCommand extends Command {
 
     const tasks = [
       {
-        action: ctx => {
-          logger.infoWithTime('Loading config')
-
-          const [message, config] = loadConfig()
-
-          ctx.config = config
-
-          if (message) logger.warn(message)
-        }
+        action: ctx => loadConfig(ctx)
       },
       {
-        action: ctx => {
-          logger.infoWithTime('Parsing and validating config')
-
-          ctx.config = new ConfigManager(ctx.config)
-        }
+        action: ctx => parseConfig(ctx)
       },
       {
         action: ctx => {

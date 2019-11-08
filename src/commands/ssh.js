@@ -1,7 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const ConfigManager = require('../lib/config/manager')
-const {loadConfig} = require('../lib/config/loader')
+const {loadConfig, parseConfig} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -10,33 +9,20 @@ const {relativeModulePath, moduleHostPath, doesPathIncludeCurrentPath} = require
 
 class SshCommand extends Command {
   async run() {
-    const cmd = this
     const {flags} = this.parse(SshCommand)
 
     const tasks = [
       {
-        title: 'Loading config',
-        silent: true,
-        action: ctx => {
-          const [message, config] = loadConfig()
-
-          ctx.config = config
-
-          if (message) cmd.warn(message)
-        }
+        action: ctx => loadConfig(ctx, false)
       },
       {
-        title: 'Parsing and validating config',
-        silent: true,
-        action: ctx => {
-          ctx.config = new ConfigManager(ctx.config)
-        }
+        action: ctx => parseConfig(ctx, false)
       },
       {
         title: 'Connecting over SSH',
         action: async ctx => {
-          const containerName = flags['container-name']
-          const executeIn = flags['execute-in']
+          const containerName = flags['module-name']
+          const executeIn = flags['module-path']
 
          if (ctx.config.modules.length === 0) {
            throw new VoilaError(errorMessages.DEFINE_MODULES)
@@ -75,7 +61,7 @@ class SshCommand extends Command {
         throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.NO_RUNNING_MODULES)
+      throw new VoilaError(errorMessages.moduleNotRunningError(moduleName))
     }
   }
 }
@@ -83,10 +69,10 @@ class SshCommand extends Command {
 SshCommand.description = `Connect to a container over SSH.`
 
 SshCommand.flags = {
-  'container-name': flags.string({
+  'module-name': flags.string({
     description: `Specify container name.`
   }),
-  'execute-in': flags.string({
+  'module-path': flags.string({
     description: `Specify an absolute path inside the container to SSH into.`
   })
 }

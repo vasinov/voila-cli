@@ -6,9 +6,13 @@ const timeLabel = () => {
   return chalk.dim(`[${format(new Date(), 'HH:mm:ss')}]`)
 }
 
+exports.dimInfo = text => {
+  console.log(chalk.dim(text))
+}
+
 exports.info = (text, sub = false) => {
   if (sub) {
-    console.log(chalk.dim(`↳ ${result}`))
+    console.log(chalk.dim(`↳ ${text}`))
   } else {
     console.log(text)
   }

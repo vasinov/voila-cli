@@ -1,7 +1,6 @@
 const {Command} = require('@oclif/command')
 
-const ConfigManager = require('../lib/config/manager')
-const {loadConfig} = require('../lib/config/loader')
+const {loadConfig, parseConfig} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
@@ -12,18 +11,10 @@ class StatusCommand extends Command {
 
     const tasks = [
       {
-        action: ctx => {
-          const [message, config] = loadConfig()
-
-          ctx.config = config
-
-          if (message) cmd.warn(message)
-        }
+        action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => {
-          ctx.config = new ConfigManager(ctx.config)
-        }
+        action: ctx => parseConfig(ctx, false)
       },
       {
         action: ctx => {

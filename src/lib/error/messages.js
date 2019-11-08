@@ -1,12 +1,15 @@
 module.exports = {
   VOILA_YML_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
   NO_VOILA_YML: `Can't find ".voila". Initialize Voila with "voila init" first.`,
-  NO_RUNNING_MODULES: `No modules are currently running. Start a module with "voila start" first.`,
   DEFINE_MODULES: `Define modules in ".voila/modules" first.`,
   SPECIFY_MODULE_NAME: `Specify module name.`,
   SPECIFY_COMMAND: `Specify command to run.`,
   SSH_SESSION_INTERRUPTED: `SSH session was interrupted unexpectedly.`,
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
+
+  moduleNotRunningError: (moduleName) => {
+    return `Module ${moduleName} is not running. Start it with "voila start ${moduleName}" first.`
+  },
 
   containerError: (containerName, code, reason) => {
     return `Error: Container ${containerName} returned error code ${code} during "${reason}".`

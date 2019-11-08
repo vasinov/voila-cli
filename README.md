@@ -137,7 +137,7 @@ USAGE
   $ voila $ [ARGS...]
 
 OPTIONS
-  --container-name=container-name  Specify container name.
+  --module=module  Specify container name.
   --detach-command                 Run command asynchronously.
 
   --execute-in=execute-in          Specify a directory inside the container that you'd like your command to be executed
@@ -189,7 +189,7 @@ USAGE
   $ voila ssh
 
 OPTIONS
-  --container-name=container-name  Specify container name.
+  --module=module  Specify container name.
 ```
 
 _See code: [src/commands/ssh.js](https://github.com/getvoila/cli/blob/v0.2.0/src/commands/ssh.js)_
