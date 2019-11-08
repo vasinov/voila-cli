@@ -23,7 +23,7 @@ class $Command extends Command {
       {
         action: ctx => {
           executeModuleAction(ctx, flags, argv, (ctx, module) => {
-            this.processCommand(ctx, argv, module.name, flags['detach-command'], flags['module-path'])
+            this.processCommand(ctx, argv, module.name, flags['run-as-job'], flags['module-path'])
           })
         }
       }
@@ -95,7 +95,7 @@ $Command.flags = {
   'module-path': flags.string({
     description: `Specify an absolute path inside the container that you'd like your command to be executed in.`
   }),
-  'detach-command': flags.boolean({
+  'run-as-job': flags.boolean({
     description: `Run command asynchronously.`,
     default: false
   })

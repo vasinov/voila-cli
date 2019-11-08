@@ -138,7 +138,7 @@ USAGE
 
 OPTIONS
   --module=module  Specify container name.
-  --detach-command                 Run command asynchronously.
+  --run-as-job                 Run command asynchronously.
 
   --execute-in=execute-in          Specify a directory inside the container that you'd like your command to be executed
                                    in.
