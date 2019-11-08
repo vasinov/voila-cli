@@ -25,27 +25,22 @@ We don't officially support Windows yet but you could use the [Windows Subsystem
 
 ### Installing from Source
 
-You need to have [npm](https://nodejs.org/en/) to install the CLI from source.
+You need [npm](https://nodejs.org/en/) to install the CLI from source.
 
 ```shell
 # First, clone the repo
-
 git@github.com:getvoila/cli.git
 
 # Install package dependencies
-
 cd cli && npm up
 
 # To run the CLI directly 
-
 ./cli/bin/run
 
 # To create a link for `voila`
-
 npm link
 
 # Voila!
-
 voila init
 ```
 
