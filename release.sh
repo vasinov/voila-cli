@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This script is used to build and push release artifacts to s3.
+#
+# For the script to work developers have to have jq, git, and oclif-dev
+# on their path.
+#
+# For the S3 push to work AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY have to be set.
+
 set -e
 
 if [ -z "$1" ]
