@@ -3,6 +3,7 @@ module.exports = {
   NO_VOILA_YML: `Can't find ".voila". Initialize Voila with "voila init" first.`,
   DEFINE_MODULES: `Define modules in ".voila/modules" first.`,
   SPECIFY_MODULE_NAME: `Specify module name.`,
+  MODULE_NOT_FOUND: `Module not found.`,
   SPECIFY_COMMAND: `Specify command to run.`,
   SSH_SESSION_INTERRUPTED: `SSH session was interrupted unexpectedly.`,
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,

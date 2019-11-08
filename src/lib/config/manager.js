@@ -1,5 +1,7 @@
 const generator = require('dockerfile-generator/lib/dockerGenerator')
 const {fullPathToConfig} = require('../../lib/config/loader')
+const VoilaError = require('../error/voila-error')
+const errorMessages = require('../error/messages')
 
 const Validator = require('jsonschema').Validator
 const {parseArgsStringToArgv} = require('string-argv')
@@ -126,7 +128,13 @@ module.exports = class Manager {
   }
 
   getModule(moduleName) {
-    return this.modules.find((c) => c.name === moduleName)
+    const module = this.modules.find((c) => c.name === moduleName)
+
+    if (module) {
+      return module
+    } else {
+      throw new VoilaError(errorMessages.MODULE_NOT_FOUND)
+    }
   }
 
   findInDockerfileData(moduleName, key) {
