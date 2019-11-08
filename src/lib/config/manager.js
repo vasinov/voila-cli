@@ -9,7 +9,6 @@ module.exports = class Manager {
     Manager.validate(config)
 
     this.id = config.id
-    this.defaultModuleName = config.defaultModuleName
     this.modules = Manager.parseModules(config.modules)
   }
 
@@ -124,18 +123,6 @@ module.exports = class Manager {
     validator.validate(config, schema, { throwError: true })
 
     return config
-  }
-
-  hasDefaultModule() {
-    return this.defaultModuleName !== undefined && this.defaultModuleName !== ''
-  }
-
-  getDefaultModule() {
-    if (this.hasDefaultModule()) {
-      return this.modules.find((c) => c.name === this.defaultModuleName)
-    } else {
-      return null
-    }
   }
 
   getModule(moduleName) {

@@ -11,7 +11,6 @@ const {moduleTemplate} = require('./templates/module')
 exports.configFolderName = '.voila'
 exports.modulesFolderName = 'modules'
 exports.projectConfigFileName = 'config.yml'
-exports.defaultModuleName = 'python'
 
 exports.loadConfig = () => {
   let config = null
@@ -36,7 +35,6 @@ exports.loadConfig = () => {
 
       config = {
         id: projectConfig.id,
-        defaultModuleName: projectConfig['default-module'],
         modules: modules
       }
     }
@@ -56,10 +54,7 @@ exports.loadConfig = () => {
 }
 
 exports.generateProjectConfig = () => {
-  return projectTemplate(
-    crypto.randomBytes(5).toString('hex'),
-    this.defaultModuleName
-  )
+  return projectTemplate(crypto.randomBytes(5).toString('hex'))
 }
 
 exports.generateModuleConfig = (name, images) => {

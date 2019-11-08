@@ -1,6 +1,5 @@
-exports.projectTemplate = (id, defaultModule) => {
+exports.projectTemplate = (id) => {
   return {
-    id: id,
-    'default-module': defaultModule
+    id: id
   }
 }
