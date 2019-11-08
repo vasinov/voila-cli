@@ -1,5 +1,4 @@
 const {Command, flags} = require('@oclif/command')
-const chalk = require('chalk')
 
 const {loadConfig, parseConfig, executeModuleAction} = require('../lib/tasks')
 const {relativeModulePath, moduleHostPath, doesPathIncludeCurrentPath} = require('../lib/paths')
@@ -23,7 +22,7 @@ class $Command extends Command {
       {
         action: ctx => {
           executeModuleAction(ctx, flags, argv, (ctx, module) => {
-            this.processCommand(ctx, argv, module.name, flags['run-as-job'], flags['module-path'])
+            this.processCommand(ctx, argv, module, flags['run-as-job'], flags['module-path'])
           })
         }
       }
@@ -32,12 +31,11 @@ class $Command extends Command {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, moduleName, shouldDetach, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.id, moduleName)
+  processCommand(ctx, argv, module, shouldDetach, executeIn) {
+    const containerName = dockerUtils.containerName(ctx.config.id, module.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
-      const module = ctx.config.getModule(moduleName)
-      const commandFromConfig = ctx.config.findInDockerfileData(moduleName, 'cmd')
+      const commandFromConfig = ctx.config.findInDockerfileData(module.name, 'cmd')
 
       const command = (argv.length === 0 && !commandFromConfig) ?
         '' :
@@ -49,11 +47,11 @@ class $Command extends Command {
         if (command === '') {
           throw new VoilaError(errorMessages.SPECIFY_COMMAND)
         } else if (shouldDetach) {
-          $Command.log(moduleName, workdir, command, true)
+          $Command.log(module.name, workdir, command, true)
 
           dockerUtils.runCommandAsync(containerName, workdir, command)
         } else {
-          $Command.log(moduleName, workdir, command, false)
+          $Command.log(module.name, workdir, command, false)
 
           const subProcess = dockerUtils.runCommand(containerName, workdir, command)
 
@@ -69,7 +67,7 @@ class $Command extends Command {
         throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.moduleNotRunningError(moduleName))
+      throw new VoilaError(errorMessages.moduleNotRunningError(module.name))
     }
   }
 

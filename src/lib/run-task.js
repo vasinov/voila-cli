@@ -23,6 +23,8 @@ const runTask = async (tasks, ctx = {}) => {
     } else {
       logger.error(error.stack)
     }
+
+    process.exit(1)
   }
 }
 
