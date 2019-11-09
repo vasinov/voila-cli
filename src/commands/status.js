@@ -32,7 +32,7 @@ class StatusCommand extends Command {
           })
 
           logger.table({
-            moduleName: { header: 'Module Name' },
+            moduleName: { header: 'Module' },
             mountedHostDir: { header: 'Mounted Directory' },
             containerName: { header: 'Docker Container Name' },
             containerStatus: { header: 'Status' }
