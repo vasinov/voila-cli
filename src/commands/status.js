@@ -20,20 +20,22 @@ class StatusCommand extends Command {
         action: ctx => {
           const data = []
 
-          ctx.config.modules.map((c) => {
-            const containerName = dockerUtils.containerName(ctx.config.id, c.name)
+          ctx.config.modules.map((module) => {
+            const containerName = dockerUtils.containerName(ctx.config.id, module.name)
 
             data.push({
-              moduleName: c.name,
+              moduleName: module.name,
+              mountedHostDir: module.hostDir,
               containerName: containerName,
-              status: dockerUtils.containerStatus(containerName)
+              containerStatus: dockerUtils.containerStatus(containerName)
             })
           })
 
           logger.table({
             moduleName: { header: 'Module Name' },
-            containerName: { header: 'Container Name' },
-            status: {}
+            mountedHostDir: { header: 'Mounted Directory' },
+            containerName: { header: 'Docker Container Name' },
+            containerStatus: { header: 'Status' }
           }, data)
         }
       }
