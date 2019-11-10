@@ -1,11 +1,11 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, parseConfig, executeModuleAction} = require('../lib/tasks')
+const {loadConfig, loadModules} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
 const errorMessages = require('../lib/error/messages')
-const {relativeModulePath, moduleHostPath, doesPathIncludeCurrentPath} = require('../lib/paths')
+const {relativeModulePath, moduleHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const logger = require('../lib/logger')
 
 class SshCommand extends Command {
@@ -17,12 +17,12 @@ class SshCommand extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => parseConfig(ctx, false)
+        action: ctx => loadModules(ctx, flags, args, false, false)
       },
       {
         title: 'Connecting over SSH',
         action: async ctx => {
-          executeModuleAction(ctx, flags, args, (ctx, module) => {
+          ctx.modules.forEach(module => {
             this.processSsh(ctx, module, flags['module-path'])
           })
         }
@@ -37,7 +37,7 @@ class SshCommand extends Command {
 
     if (dockerUtils.isContainerRunning(containerName)) {
 
-      if (executeIn || doesPathIncludeCurrentPath(moduleHostPath(module))) {
+      if (executeIn || doesCurrentPathContainPath(moduleHostPath(module))) {
         const workdir = (executeIn) ? executeIn : relativeModulePath(module).join('/')
         const subProcess = dockerUtils.sshContainer(containerName, workdir)
 

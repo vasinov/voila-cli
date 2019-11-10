@@ -1,7 +1,7 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, parseConfig, executeModuleAction} = require('../lib/tasks')
-const {relativeModulePath, moduleHostPath, doesPathIncludeCurrentPath} = require('../lib/paths')
+const {loadConfig, loadModules} = require('../lib/tasks')
+const {relativeModulePath, moduleHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -17,11 +17,11 @@ class $Command extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => parseConfig(ctx, false)
+        action: ctx => loadModules(ctx, flags, argv, false, false)
       },
       {
         action: ctx => {
-          executeModuleAction(ctx, flags, argv, (ctx, module) => {
+          ctx.modules.forEach(module => {
             this.processCommand(ctx, argv, module, flags['run-as-job'], flags['module-path'])
           })
         }
@@ -41,7 +41,7 @@ class $Command extends Command {
         '' :
         (argv.length === 0) ? commandFromConfig : argv.join(' ')
 
-      if (executeIn || doesPathIncludeCurrentPath(moduleHostPath(module))) {
+      if (executeIn || doesCurrentPathContainPath(moduleHostPath(module))) {
         const workdir = (executeIn) ? executeIn : relativeModulePath(module).join('/')
 
         if (command === '') {

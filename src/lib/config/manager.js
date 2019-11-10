@@ -7,11 +7,11 @@ const Validator = require('jsonschema').Validator
 const {parseArgsStringToArgv} = require('string-argv')
 
 module.exports = class Manager {
-  constructor(config) {
-    Manager.validate(config)
+  constructor(configFile) {
+    Manager.validate(configFile)
 
-    this.id = config.id
-    this.modules = Manager.parseModules(config.modules)
+    this.id = configFile.id
+    this.allModules = Manager.parseModules(configFile.modules)
   }
 
   static parseModules(modules) {
@@ -87,7 +87,7 @@ module.exports = class Manager {
       }
 
       if (runStage && runStage.command) {
-        dockerfileData.push({ entrypoint: ["/bin/bash", "-c", runStage.command] })
+        dockerfileData.push({ entrypoint: ["bash", "-c", runStage.command] })
       }
 
       if (module.volumes) {
@@ -128,7 +128,7 @@ module.exports = class Manager {
   }
 
   getModule(moduleName) {
-    const module = this.modules.find((c) => c.name === moduleName)
+    const module = this.allModules.find((c) => c.name === moduleName)
 
     if (module) {
       return module
@@ -138,7 +138,7 @@ module.exports = class Manager {
   }
 
   findInDockerfileData(moduleName, key) {
-    const obj = this.modules
+    const obj = this.allModules
       .find((c) => c.name === moduleName)
       .dockerfileData
       .find((e) => Object.keys(e)[0] === key)
@@ -148,7 +148,7 @@ module.exports = class Manager {
 
   toDockerfile(moduleName) {
     return generator.generateDockerFileFromArray(
-      this.modules.find((c) => c.name === moduleName).dockerfileData
+      this.allModules.find((c) => c.name === moduleName).dockerfileData
     )
   }
 }

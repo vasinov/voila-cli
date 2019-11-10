@@ -55,13 +55,13 @@ exports.stopContainer = (localdir, workdir, containerName) => {
 }
 
 exports.runCommand = (containerName, workdir, command) => {
-  const args = ['exec', '-it', '-w', workdir, containerName, '/bin/bash', '-c', command]
+  const args = ['exec', '-it', '-w', workdir, containerName, 'bash', '-c', command]
 
   return spawn('docker', args, { stdio: 'inherit' })
 }
 
 exports.runCommandAsync = (containerName, workdir, command) => {
-  const args = ['exec', '-d', '-w', workdir, containerName, '/bin/bash', '-c', command]
+  const args = ['exec', '-d', '-w', workdir, containerName, 'bash', '-c', command]
 
   return spawn('docker', args)
 }
@@ -74,7 +74,7 @@ exports.buildImage = (imageName, dockerfile, isNoCache, isPull) => {
 }
 
 exports.sshContainer = (containerName, workdir) => {
-  const args = ['exec', '-it', '-w', workdir, containerName, '/bin/bash']
+  const args = ['exec', '-it', '-w', workdir, containerName, 'bash']
 
   return spawn('docker', args, { stdio: 'inherit' })
 }

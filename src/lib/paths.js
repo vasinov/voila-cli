@@ -24,16 +24,20 @@ exports.relativeModulePath = module => {
   return this.moduleContainerPath(module).concat(relativeHostDir)
 }
 
-exports.doesPathIncludePath = (path1, path2) => {
-  if (path2.length < path1.length) {
+exports.doesPath1ContainPath2 = (path1, path2) => {
+  if (path1.length < path2.length) {
     return false
   } else {
-    return path1.every((segment, index) => {
-      return segment === path2[index]
+    return path2.every((segment, index) => {
+      return segment === path1[index]
     })
   }
 }
 
-exports.doesPathIncludeCurrentPath = path => {
-  return this.doesPathIncludePath(path, process.cwd().split('/'))
+exports.doesPathContainCurrentPath = path => {
+  return this.doesPath1ContainPath2(path, process.cwd().split('/'))
+}
+
+exports.doesCurrentPathContainPath = path => {
+  return this.doesPath1ContainPath2(process.cwd().split('/'), path)
 }

@@ -3,7 +3,7 @@ const VoilaError = require('./error/voila-error')
 const logger = require('../lib/logger')
 
 const runTask = async (tasks, ctx = {}) => {
-  ctx.output = []
+  if (!ctx.hasOwnProperty('modules')) ctx.modules = []
 
   try {
     for (const task of tasks) {
@@ -13,8 +13,6 @@ const runTask = async (tasks, ctx = {}) => {
         await task.action(ctx)
       }
     }
-
-    return ctx.output
   } catch (error) {
     if (error instanceof ValidationError) {
       logger.error(`YAML config validation failed: ${error.stack.replace(/instance/g, 'root')}`)

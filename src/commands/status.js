@@ -1,26 +1,26 @@
 const {Command} = require('@oclif/command')
 
-const {loadConfig, parseConfig} = require('../lib/tasks')
+const {loadConfig, loadModules} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
 
 class StatusCommand extends Command {
   async run() {
-    const cmd = this
+    const {flags, args} = this.parse(StatusCommand)
 
     const tasks = [
       {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => parseConfig(ctx, false)
+        action: ctx => loadModules(ctx, flags, args, true, false)
       },
       {
         action: ctx => {
           const data = []
 
-          ctx.config.modules.map((module) => {
+          ctx.config.allModules.map(module => {
             const containerName = dockerUtils.containerName(ctx.config.id, module.name)
 
             data.push({

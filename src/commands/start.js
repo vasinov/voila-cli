@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, parseConfig, executeModuleAction} = require('../lib/tasks')
+const {loadConfig, loadModules} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -15,13 +15,13 @@ class StartCommand extends Command {
         action: ctx => loadConfig(ctx)
       },
       {
-        action: ctx => parseConfig(ctx)
+        action: ctx => loadModules(ctx, flags, args)
       },
       {
         action: ctx => {
           logger.infoWithTime('Downloading dependencies and building images')
 
-          executeModuleAction(ctx, flags, args, (ctx, module) => {
+          ctx.modules.forEach(module => {
             const imageName = dockerUtils.imageName(ctx.config.id, module.name)
             const dockerfile = ctx.config.toDockerfile(module.name)
 
@@ -35,7 +35,7 @@ class StartCommand extends Command {
         action: ctx => {
           logger.infoWithTime('Starting modules')
 
-          executeModuleAction(ctx, flags, args, StartCommand.startModule)
+          ctx.modules.forEach((module) => StartCommand.startModule(ctx, module))
         }
       }
     ]
