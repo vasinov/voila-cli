@@ -116,11 +116,8 @@ There is currently one type of `action` called `execute`. Here's an example of h
 
 ```yaml
 actions:
-  - execute: ["apt-get", "update"]
   - execute: apt-get -y install gfortran
 ```
-
-`execute` actions can use exec and shell forms (i.e., array of strings or a single string).
 
 
 ## CLI Commands

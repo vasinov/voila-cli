@@ -71,15 +71,7 @@ module.exports = class Manager {
         buildStage.actions.forEach(action => {
           switch (Object.keys(action)[0]) {
             case "execute":
-              switch (typeof action.execute) {
-                case 'string':
-                  dockerfileData.push({ run: parseArgsStringToArgv(action.execute) })
-                  break
-                case 'object':
-                  dockerfileData.push({ run: action.execute })
-                  break
-                default:
-              }
+              dockerfileData.push({ run: ["bash", "-c", action.execute] })
               break
             default:
           }
