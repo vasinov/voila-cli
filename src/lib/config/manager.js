@@ -28,8 +28,8 @@ module.exports = class Manager {
         from: i
       }))
 
-      dockerfileData.push({ args: [] })
-      dockerfileData.push({ env: {} })
+      if (buildEnv && buildEnv.length > 0) dockerfileData.push({ args: [] })
+      if (globalEnv && globalEnv.length > 0) dockerfileData.push({ env: {} })
 
       const [hostWorkdir, moduleWorkdir] = (() => {
         switch (typeof module.workdir) {
@@ -87,7 +87,7 @@ module.exports = class Manager {
       }
 
       if (runStage && runStage.command) {
-        dockerfileData.push({ cmd: runStage.command })
+        dockerfileData.push({ entrypoint: ["/bin/bash", "-c", runStage.command] })
       }
 
       if (module.volumes) {
