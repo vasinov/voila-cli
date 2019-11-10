@@ -61,7 +61,7 @@ SshCommand.description = `Connect to a container over SSH.`
 
 SshCommand.args = [
   {
-    name: 'module',
+    name: 'module-name',
     required: false,
     description: 'Module name to SSH into.'
   }

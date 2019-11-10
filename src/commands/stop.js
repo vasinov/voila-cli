@@ -45,7 +45,7 @@ StopCommand.description = `Stop containers locally.`
 
 StopCommand.args = [
   {
-    name: 'module',
+    name: 'module-name',
     required: false,
     description: 'Module name to stop.'
   }

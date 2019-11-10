@@ -65,7 +65,7 @@ StartCommand.description = `Start module containers.`
 
 StartCommand.args = [
   {
-    name: 'module',
+    name: 'module-name',
     required: false,
     description: 'Module name to start.'
   }
