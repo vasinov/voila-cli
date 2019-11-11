@@ -1,13 +1,13 @@
 const {Command} = require('@oclif/command')
 
-const {loadConfig, loadStacks} = require('../lib/tasks')
-const runTask = require('../lib/run-task')
-const dockerUtils = require('../lib/docker-utils')
-const logger = require('../lib/logger')
+const {loadConfig, loadStacks} = require('../../lib/tasks')
+const runTask = require('../../lib/run-task')
+const dockerUtils = require('../../lib/docker-utils')
+const logger = require('../../lib/logger')
 
-class StatusCommand extends Command {
+class ListCommand extends Command {
   async run() {
-    const {flags, args} = this.parse(StatusCommand)
+    const {flags, args} = this.parse(ListCommand)
 
     const tasks = [
       {
@@ -45,6 +45,6 @@ class StatusCommand extends Command {
   }
 }
 
-StatusCommand.description = `Status of stacks and containers.`
+ListCommand.description = `List all project stacks.`
 
-module.exports = StatusCommand
+module.exports = ListCommand
