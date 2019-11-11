@@ -31,8 +31,10 @@ exports.containerStatus = (containerName) => {
   }
 }
 
-exports.startContainer = (volumes, ports, containerName, imageName, isAttached) => {
-  const args = ['run', '--rm']
+exports.startContainer = (volumes, ports, containerName, imageName, isAttached, persistAfterStop) => {
+  const args = ['run']
+
+  if (!persistAfterStop) args.push('--rm')
 
   if (isAttached) args.push('-t')
   else args.push('-dt')

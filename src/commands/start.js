@@ -35,7 +35,7 @@ class StartCommand extends Command {
         action: ctx => {
           logger.infoWithTime('Initializing modules')
 
-          ctx.modules.forEach((module) => StartCommand.initModule(ctx, module))
+          ctx.modules.forEach((module) => StartCommand.initModule(ctx, module, flags))
         }
       }
     ]
@@ -43,7 +43,7 @@ class StartCommand extends Command {
     await runTask(tasks)
   }
 
-  static initModule(ctx, module) {
+  static initModule(ctx, module, flags) {
     const imageName = dockerUtils.imageName(ctx.config.id, module.name)
     const containerName = dockerUtils.containerName(ctx.config.id, module.name)
 
@@ -51,10 +51,14 @@ class StartCommand extends Command {
       logger.infoWithTime(`Module "${module.name}" is already running`, true)
     } else if (module.shouldStartAttached()) {
       logger.infoWithTime(`Module "${module.name}" running`, true)
-      dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName, true)
+
+      dockerUtils.startContainer(
+        module.volumes, module.ports, containerName, imageName, true, flags['persist'])
+
       logger.infoWithTime(`Module "${module.name}" stopped`, true)
     } else {
-      const result = dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName, false)
+      const result = dockerUtils.startContainer(
+        module.volumes, module.ports, containerName, imageName, false, flags['persist'])
 
       if (result.stderr.length > 0) {
         throw new VoilaError(result.stderr)
@@ -81,11 +85,15 @@ StartCommand.flags = {
     default: false
   }),
   'no-cache': flags.boolean({
-    description: `Don't use cache when building the image.`,
+    description: `Don't use cache when building module images.`,
     default: false
   }),
   'pull': flags.boolean({
-    description: `Always attempt to pull a newer version of the image.`,
+    description: `Always attempt to pull newer versions of Docker images.`,
+    default: false
+  }),
+  'persist': flags.boolean({
+    description: `Don't remove the container when it exits.`,
     default: false
   })
 }
