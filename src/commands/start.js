@@ -33,9 +33,9 @@ class StartCommand extends Command {
       },
       {
         action: ctx => {
-          logger.infoWithTime('Starting modules')
+          logger.infoWithTime('Initializing modules')
 
-          ctx.modules.forEach((module) => StartCommand.startModule(ctx, module))
+          ctx.modules.forEach((module) => StartCommand.initModule(ctx, module))
         }
       }
     ]
@@ -43,14 +43,18 @@ class StartCommand extends Command {
     await runTask(tasks)
   }
 
-  static startModule(ctx, module) {
+  static initModule(ctx, module) {
     const imageName = dockerUtils.imageName(ctx.config.id, module.name)
     const containerName = dockerUtils.containerName(ctx.config.id, module.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
       logger.infoWithTime(`Module "${module.name}" is already running`, true)
+    } else if (module.shouldStartAttached()) {
+      logger.infoWithTime(`Module "${module.name}" running`, true)
+      dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName, true)
+      logger.infoWithTime(`Module "${module.name}" stopped`, true)
     } else {
-      const result = dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName)
+      const result = dockerUtils.startContainer(module.volumes, module.ports, containerName, imageName, false)
 
       if (result.stderr.length > 0) {
         throw new VoilaError(result.stderr)

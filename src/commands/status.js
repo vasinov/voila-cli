@@ -34,7 +34,7 @@ class StatusCommand extends Command {
           logger.table({
             moduleName: { header: 'Module' },
             mountedHostDir: { header: 'Mounted Directory' },
-            containerName: { header: 'Docker Container Name' },
+            containerName: { header: 'Image Name' },
             containerStatus: { header: 'Status' }
           }, data)
         }

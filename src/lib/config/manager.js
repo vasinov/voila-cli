@@ -105,7 +105,10 @@ module.exports = class Manager {
         hostDir: hostWorkdir,
         volumes: volumes,
         ports: ports,
-        dockerfileData: dockerfileData
+        dockerfileData: dockerfileData,
+        shouldStartAttached: () => {
+          return !!(runStage && runStage.command)
+        }
       }
     })
   }

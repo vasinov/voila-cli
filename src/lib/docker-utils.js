@@ -31,8 +31,11 @@ exports.containerStatus = (containerName) => {
   }
 }
 
-exports.startContainer = (volumes, ports, containerName, imageName) => {
-  const args = ['run', '--rm', '-dt']
+exports.startContainer = (volumes, ports, containerName, imageName, isAttached) => {
+  const args = ['run', '--rm']
+
+  if (isAttached) args.push('-t')
+  else args.push('-dt')
 
   volumes.forEach(v => {
     args.push(`--volume=${v}`)
@@ -45,7 +48,9 @@ exports.startContainer = (volumes, ports, containerName, imageName) => {
   args.push(`--name=${containerName}`)
   args.push(imageName)
 
-  return spawnSync('docker', args)
+  return spawnSync('docker', args, {
+    stdio: isAttached ? ['pipe', 'inherit', 'pipe'] : 'pipe'
+  })
 }
 
 exports.stopContainer = (localdir, workdir, containerName) => {
