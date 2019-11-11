@@ -1,15 +1,15 @@
 module.exports = {
   VOILA_YML_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
   NO_VOILA_YML: `Can't find ".voila". Initialize Voila with "voila init" first.`,
-  DEFINE_MODULES: `Define modules in ".voila/modules" first.`,
-  SPECIFY_MODULE_NAME: `Specify module name.`,
-  MODULE_NOT_FOUND: `Module not found.`,
+  DEFINE_STACKS: `Define stacks in ".voila/stacks" first.`,
+  SPECIFY_STACK_NAME: `Specify stack name.`,
+  STACK_NOT_FOUND: `Stack not found.`,
   SPECIFY_COMMAND: `Specify command to run.`,
   SSH_SESSION_INTERRUPTED: `SSH session was interrupted unexpectedly.`,
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
 
-  moduleNotRunningError: (moduleName) => {
-    return `Module ${moduleName} is not running. Start it with "voila start ${moduleName}" first.`
+  stackNotRunningError: (stackName) => {
+    return `Stack ${stackName} is not running. Start it with "voila start ${stackName}" first.`
   },
 
   containerError: (containerName, code, reason) => {
@@ -26,7 +26,7 @@ module.exports = {
       `Loading the top level file: ${loadedFile}`
   },
 
-  wrongModuleHostDirError: directory => {
-    return `Module access only allowed in the mounted module directory: ${directory}`
+  wrongStackHostDirError: directory => {
+    return `Stack access only allowed in the mounted stack directory: ${directory}`
   }
 }

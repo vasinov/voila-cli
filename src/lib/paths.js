@@ -4,24 +4,24 @@ exports.projectHostDirPath = () => {
   return fullPathToConfig().split('/')
 }
 
-exports.moduleHostPath = module => {
-  return module.hostDir.split('/')
+exports.stackHostPath = stack => {
+  return stack.hostDir.split('/')
 }
 
-exports.moduleContainerPath = module => {
-  return module.dockerfileData
+exports.stackContainerPath = stack => {
+  return stack.dockerfileData
     .find((e) => Object.keys(e)[0] === 'working_dir')['working_dir']
     .split('/')
 }
 
-exports.relativeModulePath = module => {
+exports.relativeStackPath = stack => {
   const absoluteHostDir = process.cwd().split('/')
   const relativeHostDir = absoluteHostDir.slice(
-    this.moduleHostPath(module).length,
+    this.stackHostPath(stack).length,
     absoluteHostDir.length
   )
 
-  return this.moduleContainerPath(module).concat(relativeHostDir)
+  return this.stackContainerPath(stack).concat(relativeHostDir)
 }
 
 exports.doesPath1ContainPath2 = (path1, path2) => {

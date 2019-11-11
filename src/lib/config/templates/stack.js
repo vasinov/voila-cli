@@ -1,4 +1,4 @@
-exports.moduleTemplate = (name, images) => {
+exports.stackTemplate = (name, images) => {
   return {
     "name": name,
     "env": [],

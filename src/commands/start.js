@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, loadModules} = require('../lib/tasks')
+const {loadConfig, loadStacks} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -15,27 +15,27 @@ class StartCommand extends Command {
         action: ctx => loadConfig(ctx)
       },
       {
-        action: ctx => loadModules(ctx, flags, args)
+        action: ctx => loadStacks(ctx, flags, args)
       },
       {
         action: ctx => {
           logger.infoWithTime('Downloading dependencies and building images')
 
-          ctx.modules.forEach(module => {
-            const imageName = dockerUtils.imageName(ctx.config.id, module.name)
-            const dockerfile = ctx.config.toDockerfile(module.name)
+          ctx.stacks.forEach(stack => {
+            const imageName = dockerUtils.imageName(ctx.config.id, stack.name)
+            const dockerfile = ctx.config.toDockerfile(stack.name)
 
             dockerUtils.buildImage(imageName, dockerfile, flags['no-cache'], flags['pull'])
 
-            logger.infoWithTime(`Image for ${module.name} built`, true)
+            logger.infoWithTime(`Image for ${stack.name} built`, true)
           })
         }
       },
       {
         action: ctx => {
-          logger.infoWithTime('Initializing modules')
+          logger.infoWithTime('Initializing stacks')
 
-          ctx.modules.forEach((module) => StartCommand.initModule(ctx, module, flags))
+          ctx.stacks.forEach((stack) => StartCommand.initStack(ctx, stack, flags))
         }
       }
     ]
@@ -43,49 +43,49 @@ class StartCommand extends Command {
     await runTask(tasks)
   }
 
-  static initModule(ctx, module, flags) {
-    const imageName = dockerUtils.imageName(ctx.config.id, module.name)
-    const containerName = dockerUtils.containerName(ctx.config.id, module.name)
+  static initStack(ctx, stack, flags) {
+    const imageName = dockerUtils.imageName(ctx.config.id, stack.name)
+    const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
-      logger.infoWithTime(`Module "${module.name}" is already running`, true)
-    } else if (module.shouldStartAttached()) {
-      logger.infoWithTime(`Module "${module.name}" running`, true)
+      logger.infoWithTime(`Stack "${stack.name}" is already running`, true)
+    } else if (stack.shouldStartAttached()) {
+      logger.infoWithTime(`Stack "${stack.name}" running`, true)
 
       dockerUtils.startContainer(
-        module.volumes, module.ports, containerName, imageName, true, flags['persist'])
+        stack.volumes, stack.ports, containerName, imageName, true, flags['persist'])
 
-      logger.infoWithTime(`Module "${module.name}" stopped`, true)
+      logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
     } else {
       const result = dockerUtils.startContainer(
-        module.volumes, module.ports, containerName, imageName, false, flags['persist'])
+        stack.volumes, stack.ports, containerName, imageName, false, flags['persist'])
 
       if (result.stderr.length > 0) {
         throw new VoilaError(result.stderr)
       } else {
-        logger.infoWithTime(`Module "${module.name}" started`, true)
+        logger.infoWithTime(`Stack "${stack.name}" started`, true)
       }
     }
   }
 }
 
-StartCommand.description = `Start module containers.`
+StartCommand.description = `Start stack containers.`
 
 StartCommand.args = [
   {
-    name: 'module-name',
+    name: 'stack-name',
     required: false,
-    description: 'Module name to start.'
+    description: 'Stack name to start.'
   }
 ]
 
 StartCommand.flags = {
   'all': flags.boolean({
-    description: `Start all modules in the project.`,
+    description: `Start all stacks in the project.`,
     default: false
   }),
   'no-cache': flags.boolean({
-    description: `Don't use cache when building module images.`,
+    description: `Don't use cache when building stack images.`,
     default: false
   }),
   'pull': flags.boolean({

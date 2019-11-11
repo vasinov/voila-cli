@@ -3,7 +3,7 @@ const VoilaError = require('./error/voila-error')
 const logger = require('../lib/logger')
 
 const runTask = async (tasks, ctx = {}) => {
-  if (!ctx.hasOwnProperty('modules')) ctx.modules = []
+  if (!ctx.hasOwnProperty('stacks')) ctx.stacks = []
 
   try {
     for (const task of tasks) {

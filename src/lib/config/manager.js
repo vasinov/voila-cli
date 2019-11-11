@@ -11,15 +11,15 @@ module.exports = class Manager {
     Manager.validate(configFile)
 
     this.id = configFile.id
-    this.allModules = Manager.parseModules(configFile.modules)
+    this.allStacks = Manager.parseStacks(configFile.stacks)
   }
 
-  static parseModules(modules) {
-    return modules.map(module => {
-      const globalEnv = module.env
-      const buildEnv = module.stages.build.env
-      const buildStage = module.stages.build
-      const runStage = module.stages.run
+  static parseStacks(stacks) {
+    return stacks.map(stack => {
+      const globalEnv = stack.env
+      const buildEnv = stack.stages.build.env
+      const buildStage = stack.stages.build
+      const runStage = stack.stages.run
       const volumes = []
       const ports = []
       const dockerfileData = []
@@ -31,21 +31,21 @@ module.exports = class Manager {
       if (buildEnv && buildEnv.length > 0) dockerfileData.push({ args: [] })
       if (globalEnv && globalEnv.length > 0) dockerfileData.push({ env: {} })
 
-      const [hostWorkdir, moduleWorkdir] = (() => {
-        switch (typeof module.workdir) {
+      const [hostWorkdir, stackWorkdir] = (() => {
+        switch (typeof stack.workdir) {
           case 'string':
-            dockerfileData.push({ working_dir: module.workdir })
+            dockerfileData.push({ working_dir: stack.workdir })
 
             return [
               fullPathToConfig(),
-              module.workdir
+              stack.workdir
             ]
           case 'object':
-            dockerfileData.push({ working_dir: Object.values(module.workdir)[0] })
+            dockerfileData.push({ working_dir: Object.values(stack.workdir)[0] })
 
             return [
-              Object.keys(module.workdir)[0],
-              Object.values(module.workdir)[0]
+              Object.keys(stack.workdir)[0],
+              Object.values(stack.workdir)[0]
             ]
           default:
         }
@@ -82,8 +82,8 @@ module.exports = class Manager {
         dockerfileData.push({ entrypoint: ["bash", "-c", runStage.command] })
       }
 
-      if (module.volumes) {
-        module.volumes.forEach(volume => {
+      if (stack.volumes) {
+        stack.volumes.forEach(volume => {
             switch (typeof volume) {
               case 'string':
                 volumes.push(`${volume}:${volume}`)
@@ -96,12 +96,12 @@ module.exports = class Manager {
         })
       }
 
-      volumes.push(`${hostWorkdir}:${moduleWorkdir}`)
+      volumes.push(`${hostWorkdir}:${stackWorkdir}`)
 
-      if (module.ports) module.ports.forEach(p => ports.push(p))
+      if (stack.ports) stack.ports.forEach(p => ports.push(p))
 
       return {
-        name: module.name,
+        name: stack.name,
         hostDir: hostWorkdir,
         volumes: volumes,
         ports: ports,
@@ -122,28 +122,28 @@ module.exports = class Manager {
     return config
   }
 
-  getModule(moduleName) {
-    const module = this.allModules.find((c) => c.name === moduleName)
+  getStack(stackName) {
+    const stack = this.allStacks.find((c) => c.name === stackName)
 
-    if (module) {
-      return module
+    if (stack) {
+      return stack
     } else {
-      throw new VoilaError(errorMessages.MODULE_NOT_FOUND)
+      throw new VoilaError(errorMessages.STACK_NOT_FOUND)
     }
   }
 
-  findInDockerfileData(moduleName, key) {
-    const obj = this.allModules
-      .find((c) => c.name === moduleName)
+  findInDockerfileData(stackName, key) {
+    const obj = this.allStacks
+      .find((c) => c.name === stackName)
       .dockerfileData
       .find((e) => Object.keys(e)[0] === key)
 
     return obj ? obj[key]: null
   }
 
-  toDockerfile(moduleName) {
+  toDockerfile(stackName) {
     return generator.generateDockerFileFromArray(
-      this.allModules.find((c) => c.name === moduleName).dockerfileData
+      this.allStacks.find((c) => c.name === stackName).dockerfileData
     )
   }
 }

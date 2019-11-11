@@ -1,7 +1,7 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, loadModules} = require('../lib/tasks')
-const {relativeModulePath, moduleHostPath, doesCurrentPathContainPath} = require('../lib/paths')
+const {loadConfig, loadStacks} = require('../lib/tasks')
+const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const VoilaError = require('../lib/error/voila-error')
@@ -17,12 +17,12 @@ class $Command extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => loadModules(ctx, flags, argv, false, false)
+        action: ctx => loadStacks(ctx, flags, argv, false, false)
       },
       {
         action: ctx => {
-          ctx.modules.forEach(module => {
-            this.processCommand(ctx, argv, module, flags['run-as-job'], flags['module-path'])
+          ctx.stacks.forEach(stack => {
+            this.processCommand(ctx, argv, stack, flags['run-as-job'], flags['stack-path'])
           })
         }
       }
@@ -31,27 +31,27 @@ class $Command extends Command {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, module, shouldDetach, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.id, module.name)
+  processCommand(ctx, argv, stack, shouldDetach, executeIn) {
+    const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
-      const commandFromConfig = ctx.config.findInDockerfileData(module.name, 'cmd')
+      const commandFromConfig = ctx.config.findInDockerfileData(stack.name, 'cmd')
 
       const command = (argv.length === 0 && !commandFromConfig) ?
         '' :
         (argv.length === 0) ? commandFromConfig : argv.join(' ')
 
-      if (executeIn || doesCurrentPathContainPath(moduleHostPath(module))) {
-        const workdir = (executeIn) ? executeIn : relativeModulePath(module).join('/')
+      if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
+        const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
 
         if (command === '') {
           throw new VoilaError(errorMessages.SPECIFY_COMMAND)
         } else if (shouldDetach) {
-          $Command.log(module.name, workdir, command, true)
+          $Command.log(stack.name, workdir, command, true)
 
           dockerUtils.runCommandAsync(containerName, workdir, command)
         } else {
-          $Command.log(module.name, workdir, command, false)
+          $Command.log(stack.name, workdir, command, false)
 
           const subProcess = dockerUtils.runCommand(containerName, workdir, command)
 
@@ -64,33 +64,33 @@ class $Command extends Command {
           })
         }
       } else {
-        throw new VoilaError(errorMessages.wrongModuleHostDirError(moduleHostPath(module).join('/')))
+        throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.moduleNotRunningError(module.name))
+      throw new VoilaError(errorMessages.stackNotRunningError(stack.name))
     }
   }
 
-  static log(moduleName, workdir, command, isAsync) {
+  static log(stackName, workdir, command, isAsync) {
     if (isAsync) {
-      logger.dimInfo(`Asynchronously executing "${command}" in ${moduleName}:${workdir}`)
+      logger.dimInfo(`Asynchronously executing "${command}" in ${stackName}:${workdir}`)
     } else {
-      logger.dimInfo(`Executing "${command}" in ${moduleName}:${workdir}`)
+      logger.dimInfo(`Executing "${command}" in ${stackName}:${workdir}`)
     }
   }
 }
 
-$Command.description = `Run a shell command inside of a running module.`
+$Command.description = `Run a shell command inside of a running stack.`
 
 $Command.usage = `$ [ARGS...]`
 
 $Command.strict = false
 
 $Command.flags = {
-  'module-name': flags.string({
-    description: `Specify module name.`
+  'stack-name': flags.string({
+    description: `Specify stack name.`
   }),
-  'module-path': flags.string({
+  'stack-path': flags.string({
     description: `Specify an absolute path inside the container that you'd like your command to be executed in.`
   }),
   'run-as-job': flags.boolean({

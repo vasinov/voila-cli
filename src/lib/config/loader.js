@@ -6,12 +6,12 @@ const path = require('path')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 const {projectTemplate} = require('./templates/project')
-const {moduleTemplate} = require('./templates/module')
+const {stackTemplate} = require('./templates/stack')
 
 exports.configFolderName = '.voila'
-exports.modulesFolderName = 'modules'
+exports.stacksFolderName = 'stacks'
 exports.projectConfigFileName = 'config.yml'
-exports.moduleFileExtension = '.yml'
+exports.stackFileExtension = '.yml'
 
 exports.loadConfig = () => {
   let config = null
@@ -24,17 +24,17 @@ exports.loadConfig = () => {
     if (fs.existsSync(fp)) {
       allPaths.push(currentPath.join('/'))
       const projectConfigPath = path.join(fp, this.projectConfigFileName)
-      const modulesPath = path.join(fp, this.modulesFolderName)
+      const stacksPath = path.join(fp, this.stacksFolderName)
 
       const projectConfig = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
 
-      const modules = fs.readdirSync(modulesPath)
-        .filter(file => file.endsWith(this.moduleFileExtension))
-        .map(file => yaml.safeLoad(fs.readFileSync(path.join(modulesPath, file), 'utf8')))
+      const stacks = fs.readdirSync(stacksPath)
+        .filter(file => file.endsWith(this.stackFileExtension))
+        .map(file => yaml.safeLoad(fs.readFileSync(path.join(stacksPath, file), 'utf8')))
 
       config = {
         id: projectConfig.id,
-        modules: modules
+        stacks: stacks
       }
     }
 
@@ -56,8 +56,8 @@ exports.generateProjectConfig = () => {
   return projectTemplate(crypto.randomBytes(5).toString('hex'))
 }
 
-exports.generateModuleConfig = (name, images) => {
-  return moduleTemplate(name, images)
+exports.generateStackConfig = (name, images) => {
+  return stackTemplate(name, images)
 }
 
 exports.prefixConfigFolder = path => {

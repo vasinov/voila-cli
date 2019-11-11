@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, loadModules} = require('../lib/tasks')
+const {loadConfig, loadStacks} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
@@ -14,23 +14,23 @@ class StopCommand extends Command {
         action: ctx => loadConfig(ctx)
       },
       {
-        action: ctx => loadModules(ctx, flags, args)
+        action: ctx => loadStacks(ctx, flags, args)
       },
       {
         action: ctx => {
-          logger.infoWithTime('Stopping modules')
+          logger.infoWithTime('Stopping stacks')
 
-          ctx.modules.forEach(module => {
-            const containerName = dockerUtils.containerName(ctx.config.id, module.name)
+          ctx.stacks.forEach(stack => {
+            const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
             const localdir = process.cwd()
-            const workdir = ctx.config.findInDockerfileData(module.name, 'working_dir')
+            const workdir = ctx.config.findInDockerfileData(stack.name, 'working_dir')
 
             if (dockerUtils.isContainerRunning(containerName)) {
               dockerUtils.stopContainer(localdir, workdir, containerName)
 
-              logger.infoWithTime(`Module "${module.name}" stopped`, true)
+              logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
             } else {
-              logger.infoWithTime(`Module "${module.name}" was not running`, true)
+              logger.infoWithTime(`Stack "${stack.name}" was not running`, true)
             }
           })
         }
@@ -45,15 +45,15 @@ StopCommand.description = `Stop containers locally.`
 
 StopCommand.args = [
   {
-    name: 'module-name',
+    name: 'stack-name',
     required: false,
-    description: 'Module name to stop.'
+    description: 'Stack name to stop.'
   }
 ]
 
 StopCommand.flags = {
   'all': flags.boolean({
-    description: `Stop all modules in the project.`,
+    description: `Stop all stacks in the project.`,
     default: false
   })
 }

@@ -48,18 +48,18 @@ voila init
 
 Getting started with Voila is easy:
 
-- Initialize Voila in your project directory with `voila init`. That will generate a `.voila` folder with config files for the whole project and individual modules in the current directory.
-- In your project directory run `voila start` to start the default module defined in `.voila/config.yml`.
-- In your project directory run `voila $ COMMAND` to run a command for your default module locally and generate result artifacts in the same directory. For example, `voila $ ls -al > files.txt`.
-- To check module status run `voila status`.
-- To SSH into the default running module run `voila ssh`.
-- To stop the default module run `voila stop`.
+- Initialize Voila in your project directory with `voila init`. That will generate a `.voila` folder with config files for the whole project and individual stacks in the current directory.
+- In your project directory run `voila start` to start the default stack defined in `.voila/config.yml`.
+- In your project directory run `voila $ COMMAND` to run a command for your default stack locally and generate result artifacts in the same directory. For example, `voila $ ls -al > files.txt`.
+- To check stack status run `voila status`.
+- To SSH into the default running stack run `voila ssh`.
+- To stop the default stack run `voila stop`.
 
 ## Config Format
 
-After running `voila init` a `.voila` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID and default module name. In the `.voila/modules` folder you'll find YAML config files for each module.
+After running `voila init` a `.voila` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID and default stack name. In the `.voila/stacks` folder you'll find YAML config files for each stack.
 
-All module config files have the following structure:
+All stack config files have the following structure:
 
 ```yaml
 name: STRING
@@ -88,7 +88,7 @@ Array of environmental variables set in the following format: `name:value`. Vari
 
 Represents a directory in the Docker container where your project host root directory will be mounted to. Voila automatically sets this directory to `workdir`. Think of it as a default attached volume.
 
-You can also use an object notation and mount any directory on your hard drive to the container `workdir`. This is useful for when you want to mount a specific project sub-directory inside of a module.
+You can also use an object notation and mount any directory on your hard drive to the container `workdir`. This is useful for when you want to mount a specific project sub-directory inside of a stack.
 
 ### `container.volumes` (optional)
 
