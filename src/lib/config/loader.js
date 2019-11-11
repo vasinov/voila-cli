@@ -11,6 +11,7 @@ const {moduleTemplate} = require('./templates/module')
 exports.configFolderName = '.voila'
 exports.modulesFolderName = 'modules'
 exports.projectConfigFileName = 'config.yml'
+exports.moduleFileExtension = '.yml'
 
 exports.loadConfig = () => {
   let config = null
@@ -27,11 +28,9 @@ exports.loadConfig = () => {
 
       const projectConfig = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
 
-      const modules = fs.readdirSync(modulesPath).map(file => {
-        const pathToFile = path.join(modulesPath, file)
-
-        return yaml.safeLoad(fs.readFileSync(pathToFile, 'utf8'))
-      })
+      const modules = fs.readdirSync(modulesPath)
+        .filter(file => file.endsWith(this.moduleFileExtension))
+        .map(file => yaml.safeLoad(fs.readFileSync(path.join(modulesPath, file), 'utf8')))
 
       config = {
         id: projectConfig.id,
