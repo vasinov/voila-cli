@@ -57,7 +57,7 @@ class SshCommand extends Command {
   }
 }
 
-SshCommand.description = `Connect to a container over SSH.`
+SshCommand.description = `Connect to a stack over SSH.`
 
 SshCommand.args = [
   {

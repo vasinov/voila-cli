@@ -45,7 +45,7 @@ class StopCommand extends Command {
   }
 }
 
-StopCommand.description = `Stop containers locally.`
+StopCommand.description = `Stop running stacks.`
 
 StopCommand.args = [
   {

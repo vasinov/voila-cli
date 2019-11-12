@@ -62,6 +62,9 @@
       "s3": {
         "bucket": "voila-cli-tarballs"
       }
+    },
+    "topics": {
+      "stacks": { "description": "Show additional information and modify stacks." }
     }
   },
   "repository": "getvoila/cli",

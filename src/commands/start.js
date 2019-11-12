@@ -75,7 +75,7 @@ class StartCommand extends Command {
   }
 }
 
-StartCommand.description = `Start stack containers.`
+StartCommand.description = `Start stacks.`
 
 StartCommand.args = [
   {
