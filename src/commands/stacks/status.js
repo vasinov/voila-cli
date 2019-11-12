@@ -5,9 +5,9 @@ const runTask = require('../../lib/run-task')
 const dockerUtils = require('../../lib/docker-utils')
 const logger = require('../../lib/logger')
 
-class ListCommand extends Command {
+class StatusCommand extends Command {
   async run() {
-    const {flags, args} = this.parse(ListCommand)
+    const {flags, args} = this.parse(StatusCommand)
 
     const tasks = [
       {
@@ -17,7 +17,7 @@ class ListCommand extends Command {
         action: ctx => {
           flags['all'] = true
 
-          loadStacks(ctx, flags, args)
+          return loadStacks(ctx, flags, args)
         }
       },
       {
@@ -49,6 +49,6 @@ class ListCommand extends Command {
   }
 }
 
-ListCommand.description = `List all project stacks.`
+StatusCommand.description = `List all project stacks and their status details.`
 
-module.exports = ListCommand
+module.exports = StatusCommand

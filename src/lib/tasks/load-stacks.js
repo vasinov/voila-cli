@@ -22,8 +22,8 @@ exports.task = async (ctx, flags, args, showAll = false) => {
     selectedStacks.push(stackHostPath(stacksInCurrentPath[0]))
   } else if (stacksInCurrentPath.length > 1) {
     const choices = showAll ?
-      ctx.config.allStacks.map(m => { return { name: m.name } }) :
-      stacksInCurrentPath.map(m => { return { name: m.name } })
+      ctx.config.allStacks.map(s => { return { name: s.name } }) :
+      stacksInCurrentPath.map(s => { return { name: s.name } })
 
     const response = await inquirer.prompt([{
       name: 'stack',
@@ -32,7 +32,7 @@ exports.task = async (ctx, flags, args, showAll = false) => {
       choices: choices,
     }])
 
-    selectedStacks.push(stacksInCurrentPath.find(m => m.name === response.stack))
+    selectedStacks.push(stacksInCurrentPath.find(s => s.name === response.stack))
   } else {
     throw new VoilaError(errorMessages.SPECIFY_STACK_NAME)
   }

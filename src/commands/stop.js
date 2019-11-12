@@ -17,7 +17,7 @@ class StopCommand extends Command {
         action: ctx => {
           logger.infoWithTime('Loading stacks')
 
-          loadStacks(ctx, flags, args)
+          return loadStacks(ctx, flags, args)
         }
       },
       {

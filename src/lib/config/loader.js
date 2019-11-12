@@ -14,7 +14,7 @@ exports.projectConfigFileName = 'config.yml'
 exports.stackFileExtension = '.yml'
 
 exports.loadConfig = () => {
-  let config = null
+  let projectConfig = null
   const currentPath = process.cwd().split('/')
   const allPaths = []
 
@@ -26,27 +26,27 @@ exports.loadConfig = () => {
       const projectConfigPath = path.join(fp, this.projectConfigFileName)
       const stacksPath = path.join(fp, this.stacksFolderName)
 
-      const projectConfig = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
+      const projectConfigPart = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
 
-      const stacks = fs.readdirSync(stacksPath)
+      const stackConfigParts = fs.readdirSync(stacksPath)
         .filter(file => file.endsWith(this.stackFileExtension))
         .map(file => yaml.safeLoad(fs.readFileSync(path.join(stacksPath, file), 'utf8')))
 
-      config = {
-        id: projectConfig.id,
-        stacks: stacks
+      projectConfig = {
+        id: projectConfigPart.id,
+        stacks: stackConfigParts
       }
     }
 
     currentPath.pop()
   }
 
-  if (config) {
+  if (projectConfig) {
     const message = (allPaths.length > 1) ?
       errorMessages.multipleConfigsWarning(allPaths, this.prefixConfigFolder(allPaths[allPaths.length - 1])) :
       null
 
-    return [message, config]
+    return [message, projectConfig]
   } else {
     throw new VoilaError(errorMessages.NO_VOILA_YML)
   }

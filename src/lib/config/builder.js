@@ -4,14 +4,13 @@ const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 
 const Validator = require('jsonschema').Validator
-const {parseArgsStringToArgv} = require('string-argv')
 
-module.exports = class Manager {
+module.exports = class Builder {
   constructor(configFile) {
-    Manager.validate(configFile)
+    Builder.validate(configFile)
 
     this.id = configFile.id
-    this.allStacks = Manager.parseStacks(configFile.stacks)
+    this.allStacks = Builder.parseStacks(configFile.stacks)
   }
 
   static parseStacks(stacks) {
