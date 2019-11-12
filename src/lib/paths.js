@@ -1,7 +1,23 @@
-const {fullPathToConfig} = require('../lib/config/loader')
+const {prefixConfigDir} = require('./config/loader')
 
-exports.projectHostDirPath = () => {
-  return fullPathToConfig().split('/')
+const fs = require('fs')
+const path = require('path')
+
+exports.projectHostPath = () => {
+  let finalPath = null
+  let currentPath = process.cwd().split('/')
+
+  while (currentPath.length > 0) {
+    const currentPathString = currentPath.join('/')
+
+    if (fs.existsSync(prefixConfigDir(currentPathString))) {
+      finalPath = currentPathString
+    }
+
+    currentPath.pop()
+  }
+
+  return finalPath.split('/')
 }
 
 exports.stackHostPath = stack => {
@@ -24,20 +40,32 @@ exports.relativeStackPath = stack => {
   return this.stackContainerPath(stack).concat(relativeHostDir)
 }
 
-exports.doesPath1ContainPath2 = (path1, path2) => {
-  if (path1.length < path2.length) {
+exports.doesPath1ContainPath2 = (p1, p2) => {
+  if (p1.length < p2.length) {
     return false
   } else {
-    return path2.every((segment, index) => {
-      return segment === path1[index]
+    return p2.every((segment, index) => {
+      return segment === p1[index]
     })
   }
 }
 
-exports.doesPathContainCurrentPath = path => {
-  return this.doesPath1ContainPath2(path, process.cwd().split('/'))
+exports.doesPathContainCurrentPath = p => {
+  return this.doesPath1ContainPath2(p, process.cwd().split('/'))
 }
 
-exports.doesCurrentPathContainPath = path => {
-  return this.doesPath1ContainPath2(process.cwd().split('/'), path)
+exports.doesCurrentPathContainPath = p => {
+  return this.doesPath1ContainPath2(process.cwd().split('/'), p)
+}
+
+exports.toAbsolutePath = p => {
+  if (this.isAbsolute(p)) {
+    return p.split('/')
+  } else {
+    return path.join(this.projectHostPath().join('/'), p).split('/')
+  }
+}
+
+exports.isAbsolute = p => {
+  return path.isAbsolute(p)
 }

@@ -37,7 +37,7 @@ class StartCommand extends Command {
       },
       {
         action: ctx => {
-          logger.infoWithTime('Initializing stacks')
+          logger.infoWithTime('Starting stacks')
 
           ctx.stacks.forEach((stack) => StartCommand.initStack(ctx, stack, flags))
         }

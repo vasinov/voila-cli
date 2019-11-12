@@ -1,7 +1,7 @@
 const generator = require('dockerfile-generator/lib/dockerGenerator')
-const {fullPathToConfig} = require('../../lib/config/loader')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
+const paths = require('../paths')
 
 const Validator = require('jsonschema').Validator
 
@@ -36,14 +36,14 @@ module.exports = class Builder {
             dockerfileData.push({ working_dir: stack.workdir })
 
             return [
-              fullPathToConfig(),
+              paths.projectHostPath().join('/'),
               stack.workdir
             ]
           case 'object':
             dockerfileData.push({ working_dir: Object.values(stack.workdir)[0] })
 
             return [
-              Object.keys(stack.workdir)[0],
+              paths.toAbsolutePath(Object.keys(stack.workdir)[0]).join('/'),
               Object.values(stack.workdir)[0]
             ]
           default:
@@ -85,10 +85,15 @@ module.exports = class Builder {
         stack.volumes.forEach(volume => {
             switch (typeof volume) {
               case 'string':
-                volumes.push(`${volume}:${volume}`)
+                const dir = paths.toAbsolutePath(volume).join('/')
+
+                volumes.push(`${dir}:${dir}`)
                 break
               case 'object':
-                volumes.push(`${Object.keys(volume)[0]}:${Object.values(volume)[0]}`)
+                const dir1 = paths.toAbsolutePath(Object.keys(volume)[0]).join('/')
+                const dir2 = Object.values(volume)[0]
+
+                volumes.push(`${dir1}:${dir2}`)
                 break
               default:
             }

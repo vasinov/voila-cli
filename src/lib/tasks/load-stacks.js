@@ -27,7 +27,7 @@ exports.task = async (ctx, flags, args, showAll = false) => {
 
     const response = await inquirer.prompt([{
       name: 'stack',
-      message: 'Multiple stacks detected. What stack should be loaded?',
+      message: 'Multiple stacks detected. What stack should be used?',
       type: 'list',
       choices: choices,
     }])

@@ -17,7 +17,7 @@ exports.loadUserConfig = () => {
   const allPaths = []
 
   while (currentPath.length > 0) {
-    const fp = this.prefixConfigFolder(currentPath.join('/'))
+    const fp = this.prefixConfigDir(currentPath.join('/'))
 
     if (fs.existsSync(fp)) {
       allPaths.push(currentPath.join('/'))
@@ -41,7 +41,7 @@ exports.loadUserConfig = () => {
 
   if (userConfig) {
     const message = (allPaths.length > 1) ?
-      errorMessages.multipleConfigsWarning(allPaths, this.prefixConfigFolder(allPaths[allPaths.length - 1])) :
+      errorMessages.multipleConfigsWarning(allPaths, this.prefixConfigDir(allPaths[allPaths.length - 1])) :
       null
 
     return [message, userConfig]
@@ -50,23 +50,6 @@ exports.loadUserConfig = () => {
   }
 }
 
-exports.prefixConfigFolder = path => {
+exports.prefixConfigDir = path => {
   return `${path}/${this.configDirName}`
-}
-
-exports.fullPathToConfig = () => {
-  let finalPath = null
-  let currentPath = process.cwd().split('/')
-
-  while (currentPath.length > 0) {
-    const currentPathString = currentPath.join('/')
-
-    if (fs.existsSync(this.prefixConfigFolder(currentPathString))) {
-      finalPath = currentPathString
-    }
-
-    currentPath.pop()
-  }
-
-  return finalPath
 }

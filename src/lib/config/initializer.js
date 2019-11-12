@@ -3,7 +3,7 @@ const path = require('path')
 const yaml = require('js-yaml')
 const crypto = require('crypto')
 
-const {prefixConfigFolder, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
+const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
 const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
@@ -15,9 +15,9 @@ exports.init = force => {
   currentPath.pop()
 
   while (currentPath.length > 0) {
-    const fp = prefixConfigFolder(currentPath.join('/'))
+    const configDir = prefixConfigDir(currentPath.join('/'))
 
-    if (fs.existsSync(fp)) {
+    if (fs.existsSync(configDir)) {
       folderExistsInParents = true
       break;
     } else {
