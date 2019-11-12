@@ -9,11 +9,11 @@ module.exports = {
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
 
   stackNotRunningError: (stackName) => {
-    return `Stack ${stackName} is not running. Start it with "voila start ${stackName}" first.`
+    return `Stack "${stackName}" is not running. Start it with "voila start ${stackName}" first.`
   },
 
   containerError: (containerName, code, reason) => {
-    return `Error: Container ${containerName} returned error code ${code} during "${reason}".`
+    return `Error: Container "${containerName}" returned error code ${code} during "${reason}".`
   },
 
   configExistsInParentError: (path) => `You can't initialize new Voila projects inside of an existing project. ".voila.yml" was found in "${path}".`,

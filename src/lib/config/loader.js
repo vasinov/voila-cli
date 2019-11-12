@@ -8,13 +8,13 @@ const errorMessages = require('../error/messages')
 const {projectTemplate} = require('./templates/project')
 const {stackTemplate} = require('./templates/stack')
 
-exports.configFolderName = '.voila'
-exports.stacksFolderName = 'stacks'
+exports.configDirName = '.voila'
+exports.stacksDirName = 'stacks'
 exports.projectConfigFileName = 'config.yml'
 exports.stackFileExtension = '.yml'
 
-exports.loadConfig = () => {
-  let projectConfig = null
+exports.loadUserConfig = () => {
+  let userConfig = null
   const currentPath = process.cwd().split('/')
   const allPaths = []
 
@@ -24,29 +24,29 @@ exports.loadConfig = () => {
     if (fs.existsSync(fp)) {
       allPaths.push(currentPath.join('/'))
       const projectConfigPath = path.join(fp, this.projectConfigFileName)
-      const stacksPath = path.join(fp, this.stacksFolderName)
+      const stacksPath = path.join(fp, this.stacksDirName)
 
-      const projectConfigPart = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
+      const projectConfig = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
 
-      const stackConfigParts = fs.readdirSync(stacksPath)
+      const stackConfigs = fs.readdirSync(stacksPath)
         .filter(file => file.endsWith(this.stackFileExtension))
         .map(file => yaml.safeLoad(fs.readFileSync(path.join(stacksPath, file), 'utf8')))
 
-      projectConfig = {
-        id: projectConfigPart.id,
-        stacks: stackConfigParts
-      }
+      userConfig = Object.assign(
+        projectConfig,
+        { stacks: stackConfigs }
+      )
     }
 
     currentPath.pop()
   }
 
-  if (projectConfig) {
+  if (userConfig) {
     const message = (allPaths.length > 1) ?
       errorMessages.multipleConfigsWarning(allPaths, this.prefixConfigFolder(allPaths[allPaths.length - 1])) :
       null
 
-    return [message, projectConfig]
+    return [message, userConfig]
   } else {
     throw new VoilaError(errorMessages.NO_VOILA_YML)
   }
@@ -61,7 +61,7 @@ exports.generateStackConfig = (name, images) => {
 }
 
 exports.prefixConfigFolder = path => {
-  return `${path}/${this.configFolderName}`
+  return `${path}/${this.configDirName}`
 }
 
 exports.fullPathToConfig = () => {

@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadConfig, loadStacks} = require('../lib/tasks')
+const {buildConfig, loadStacks} = require('../lib/tasks')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
@@ -14,7 +14,7 @@ class $Command extends Command {
 
     const tasks = [
       {
-        action: ctx => loadConfig(ctx, false)
+        action: ctx => buildConfig(ctx, false)
       },
       {
         action: ctx => loadStacks(ctx, flags, argv)

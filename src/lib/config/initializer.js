@@ -3,7 +3,7 @@ const path = require('path')
 const yaml = require('js-yaml')
 
 const {
-  prefixConfigFolder, configFolderName, stacksFolderName, projectConfigFileName,
+  prefixConfigFolder, configDirName, stacksDirName, projectConfigFileName,
   generateProjectConfig, generateStackConfig} = require('../config/loader')
 const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
@@ -29,13 +29,13 @@ exports.init = (force) => {
   if (folderExistsInParents) {
     throw new VoilaError(errorMessages.configExistsInParentError(currentPath.join('/')))
   } else {
-    if (fs.existsSync(configFolderName) && !force) {
+    if (fs.existsSync(configDirName) && !force) {
       throw new VoilaError(errorMessages.VOILA_YML_ALREADY_EXISTS)
     } else {
-      const stacksFolderPath = path.join(configFolderName, stacksFolderName)
-      removeDirectory(configFolderName)
+      const stacksFolderPath = path.join(configDirName, stacksDirName)
+      removeDirectory(configDirName)
 
-      fs.mkdirSync(configFolderName)
+      fs.mkdirSync(configDirName)
       fs.mkdirSync(stacksFolderPath)
 
       createConfigFiles()
@@ -44,7 +44,7 @@ exports.init = (force) => {
 }
 
 exports.createModuleConfigFromTemplate = (template, fileName) => {
-  const yamlPath = path.join(configFolderName, stacksFolderName, `${fileName}.yml`)
+  const yamlPath = path.join(configDirName, stacksDirName, `${fileName}.yml`)
 
   fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(template.name, template.images)), err => {
     throw new Error(err.message)
@@ -58,7 +58,7 @@ const createConfigFiles = () => {
 }
 
 const createProjectConfig = () => {
-  const projectConfigPath = path.join(configFolderName, projectConfigFileName)
+  const projectConfigPath = path.join(configDirName, projectConfigFileName)
 
   fs.writeFileSync(projectConfigPath, yaml.safeDump(generateProjectConfig()), (err) => {
     throw new Error(err.message)
