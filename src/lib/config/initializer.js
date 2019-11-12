@@ -3,6 +3,8 @@ const path = require('path')
 const yaml = require('js-yaml')
 const crypto = require('crypto')
 
+const {projectTemplate} = require('./templates/project')
+const {stackTemplate} = require('./templates/stack')
 const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
 const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
@@ -65,11 +67,11 @@ const createProjectConfig = () => {
 }
 
 const generateProjectConfig = () => {
-  return this.projectTemplate(crypto.randomBytes(5).toString('hex'))
+  return projectTemplate(crypto.randomBytes(5).toString('hex'))
 }
 
 const generateStackConfig = (name, images) => {
-  return this.stackTemplate(name, images)
+  return stackTemplate(name, images)
 }
 
 const removeDirectory = dirPath => {
