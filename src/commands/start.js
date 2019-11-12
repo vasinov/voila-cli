@@ -29,9 +29,11 @@ class StartCommand extends Command {
             const imageName = dockerUtils.imageName(ctx.config.id, stack.name)
             const dockerfile = ctx.config.toDockerfile(stack.name)
 
-            dockerUtils.buildImage(imageName, dockerfile, flags['no-cache'], flags['pull'])
+            logger.infoWithTime(`Building image for the "${stack.name}" stack`, true)
 
-            logger.infoWithTime(`Image for ${stack.name} built`, true)
+            dockerUtils.buildImage(imageName, dockerfile, flags['no-cache'], flags['pull'], flags['verbose'])
+
+            logger.infoWithTime(`Image for the "${stack.name}" stack finished building`, true)
           })
         }
       },
@@ -85,20 +87,19 @@ StartCommand.args = [
 
 StartCommand.flags = {
   'all': flags.boolean({
-    description: `Start all stacks in the project.`,
-    default: false
+    description: `Start all stacks in the project.`
   }),
   'no-cache': flags.boolean({
-    description: `Don't use cache when building stack images.`,
-    default: false
+    description: `Don't use cache when building stack images.`
   }),
   'pull': flags.boolean({
-    description: `Always attempt to pull newer versions of Docker images.`,
-    default: false
+    description: `Always attempt to pull newer versions of Docker images.`
   }),
   'persist': flags.boolean({
-    description: `Don't remove the container when it exits.`,
-    default: false
+    description: `Don't remove the container when it stops.`
+  }),
+  'verbose': flags.boolean({
+    description: `Show all output.`
   })
 }
 

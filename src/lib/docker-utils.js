@@ -51,7 +51,7 @@ exports.startContainer = (volumes, ports, containerName, imageName, isAttached, 
   args.push(imageName)
 
   return spawnSync('docker', args, {
-    stdio: isAttached ? ['pipe', 'inherit', 'pipe'] : 'pipe'
+    stdio: isAttached ? 'inherit' : 'pipe'
   })
 }
 
@@ -73,11 +73,13 @@ exports.runCommandAsync = (containerName, workdir, command) => {
   return spawn('docker', args)
 }
 
-exports.buildImage = (imageName, dockerfile, isNoCache, isPull) => {
+exports.buildImage = (imageName, dockerfile, isNoCache, isPull, isVerbose) => {
   const noCache = (isNoCache) ? '--no-cache' : ''
   const pull = (isPull) ? '--pull' : ''
 
-  return execSync(`docker build ${noCache} ${pull} -t ${imageName} -f- . <<EOF\n${dockerfile}\nEOF`)
+  return execSync(`docker build ${noCache} ${pull} -t ${imageName} -f- . <<EOF\n${dockerfile}\nEOF`, {
+    stdio: isVerbose ? 'inherit' : 'pipe'
+  })
 }
 
 exports.sshContainer = (containerName, workdir) => {
