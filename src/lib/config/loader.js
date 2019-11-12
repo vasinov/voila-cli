@@ -1,12 +1,10 @@
 const yaml = require('js-yaml')
 const fs = require('fs')
-const crypto = require('crypto')
+
 const path = require('path')
 
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
-const {projectTemplate} = require('./templates/project')
-const {stackTemplate} = require('./templates/stack')
 
 exports.configDirName = '.voila'
 exports.stacksDirName = 'stacks'
@@ -50,14 +48,6 @@ exports.loadUserConfig = () => {
   } else {
     throw new VoilaError(errorMessages.NO_VOILA_YML)
   }
-}
-
-exports.generateProjectConfig = () => {
-  return projectTemplate(crypto.randomBytes(5).toString('hex'))
-}
-
-exports.generateStackConfig = (name, images) => {
-  return stackTemplate(name, images)
 }
 
 exports.prefixConfigFolder = path => {

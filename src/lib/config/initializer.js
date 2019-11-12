@@ -1,15 +1,14 @@
 const fs = require('fs')
 const path = require('path')
 const yaml = require('js-yaml')
+const crypto = require('crypto')
 
-const {
-  prefixConfigFolder, configDirName, stacksDirName, projectConfigFileName,
-  generateProjectConfig, generateStackConfig} = require('../config/loader')
+const {prefixConfigFolder, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
 const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 
-exports.init = (force) => {
+exports.init = force => {
   let folderExistsInParents = false
   const currentPath = process.cwd().split('/')
 
@@ -60,9 +59,17 @@ const createConfigFiles = () => {
 const createProjectConfig = () => {
   const projectConfigPath = path.join(configDirName, projectConfigFileName)
 
-  fs.writeFileSync(projectConfigPath, yaml.safeDump(generateProjectConfig()), (err) => {
+  fs.writeFileSync(projectConfigPath, yaml.safeDump(generateProjectConfig()), err => {
     throw new Error(err.message)
   })
+}
+
+const generateProjectConfig = () => {
+  return this.projectTemplate(crypto.randomBytes(5).toString('hex'))
+}
+
+const generateStackConfig = (name, images) => {
+  return this.stackTemplate(name, images)
 }
 
 const removeDirectory = dirPath => {

@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {loadUserConfig, loadStacks} = require('../lib/tasks')
+const {buildConfig, loadStacks} = require('../lib/tasks')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
@@ -11,7 +11,7 @@ class StopCommand extends Command {
 
     const tasks = [
       {
-        action: ctx => loadUserConfig(ctx)
+        action: ctx => buildConfig(ctx)
       },
       {
         action: ctx => {
