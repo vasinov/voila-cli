@@ -5,7 +5,7 @@ const yaml = require('js-yaml')
 const {
   prefixConfigFolder, configFolderName, stacksFolderName, projectConfigFileName,
   generateProjectConfig, generateStackConfig} = require('../config/loader')
-const {stacksData} = require('./templates/stacks')
+const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 
@@ -43,19 +43,25 @@ exports.init = (force) => {
   }
 }
 
+exports.createModuleConfigFromTemplate = (template, fileName) => {
+  const yamlPath = path.join(configFolderName, stacksFolderName, `${fileName}.yml`)
+
+  fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(template.name, template.images)), err => {
+    throw new Error(err.message)
+  })
+}
+
 const createConfigFiles = () => {
+  createProjectConfig()
+
+  stackTemplateData.forEach(template => this.createModuleConfigFromTemplate(template, template.name))
+}
+
+const createProjectConfig = () => {
   const projectConfigPath = path.join(configFolderName, projectConfigFileName)
 
   fs.writeFileSync(projectConfigPath, yaml.safeDump(generateProjectConfig()), (err) => {
     throw new Error(err.message)
-  })
-
-  stacksData.forEach(stack => {
-    const yamlPath = path.join(configFolderName, stacksFolderName, `${stack.name}.yml`)
-
-    fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stack.name, stack.images)), (err) => {
-      throw new Error(err.message)
-    })
   })
 }
 
