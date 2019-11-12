@@ -49,6 +49,8 @@ class StatusCommand extends Command {
   }
 }
 
+StatusCommand.aliases = ['stacks:list']
+
 StatusCommand.description = `List all project stacks and their status details.`
 
 module.exports = StatusCommand
