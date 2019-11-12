@@ -13,7 +13,7 @@ class PathCommand extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, args, false, false)
+        action: ctx => loadStacks(ctx, flags, args, true)
       },
       {
         action: ctx => {

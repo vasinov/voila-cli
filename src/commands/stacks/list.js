@@ -14,7 +14,11 @@ class ListCommand extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, args, true, false)
+        action: ctx => {
+          flags['all'] = true
+
+          loadStacks(ctx, flags, args)
+        }
       },
       {
         action: ctx => {

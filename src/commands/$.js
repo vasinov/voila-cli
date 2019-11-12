@@ -17,7 +17,7 @@ class $Command extends Command {
         action: ctx => loadConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, argv, false, false)
+        action: ctx => loadStacks(ctx, flags, argv)
       },
       {
         action: ctx => {

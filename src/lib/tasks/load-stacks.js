@@ -1,19 +1,16 @@
-const logger = require('../logger')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
 const {doesCurrentPathContainPath, stackHostPath} = require('../paths')
 const inquirer = require('inquirer')
 
-exports.task = async (ctx, flags, args, loadAll = false, verbose = true) => {
-  if (verbose) logger.infoWithTime('Loading stacks')
-
+exports.task = async (ctx, flags, args, showAll = false) => {
   const selectedStacks = []
 
   const stacksInCurrentPath = ctx.config.allStacks.filter(stack => {
     return doesCurrentPathContainPath(stackHostPath(stack))
   })
 
-  if (loadAll || flags['all']) {
+  if (flags['all']) {
     ctx.config.allStacks.map((stack) => selectedStacks.push(stack))
   } else if (args['stack-name']) {
     selectedStacks.push(ctx.config.getStack(args['stack-name']))
@@ -24,7 +21,9 @@ exports.task = async (ctx, flags, args, loadAll = false, verbose = true) => {
   } else if (stacksInCurrentPath.length === 1) {
     selectedStacks.push(stackHostPath(stacksInCurrentPath[0]))
   } else if (stacksInCurrentPath.length > 1) {
-    const choices = stacksInCurrentPath.map(m => { return { name: m.name } })
+    const choices = showAll ?
+      ctx.config.allStacks.map(m => { return { name: m.name } }) :
+      stacksInCurrentPath.map(m => { return { name: m.name } })
 
     const response = await inquirer.prompt([{
       name: 'stack',
