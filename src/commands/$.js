@@ -32,7 +32,7 @@ class $Command extends Command {
   }
 
   processCommand(ctx, argv, stack, shouldDetach, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
+    const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
       const commandFromConfig = ctx.config.findInDockerfileData(stack.name, 'cmd')

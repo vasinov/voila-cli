@@ -30,7 +30,7 @@ class RemoveCommand extends Command {
   }
 
   static removeStack(ctx, stack) {
-    if (isContainerRunning(containerName(ctx.config.id, stack.name))) {
+    if (isContainerRunning(containerName(ctx.config.projectId, stack.name))) {
       throw new VoilaError(errorMessages.stopStackBeforeProceeding(stack.name))
     } else {
       fs.unlinkSync(stack.configFile)

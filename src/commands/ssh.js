@@ -33,7 +33,7 @@ class SshCommand extends Command {
   }
 
   processSsh(ctx, stack, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
+    const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
 

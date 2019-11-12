@@ -26,7 +26,7 @@ class StartCommand extends Command {
           logger.infoWithTime('Downloading dependencies and building images')
 
           ctx.stacks.forEach(stack => {
-            const imageName = dockerUtils.imageName(ctx.config.id, stack.name)
+            const imageName = dockerUtils.imageName(ctx.config.projectId, stack.name)
             const dockerfile = ctx.config.toDockerfile(stack.name)
 
             logger.infoWithTime(`Building image for the "${stack.name}" stack`, true)
@@ -50,8 +50,8 @@ class StartCommand extends Command {
   }
 
   static initStack(ctx, stack, flags) {
-    const imageName = dockerUtils.imageName(ctx.config.id, stack.name)
-    const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
+    const imageName = dockerUtils.imageName(ctx.config.projectId, stack.name)
+    const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
       logger.infoWithTime(`Stack "${stack.name}" is already running`, true)

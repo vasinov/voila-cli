@@ -25,7 +25,7 @@ class StatusCommand extends Command {
           const data = []
 
           ctx.config.projectStacks.map(stack => {
-            const containerName = dockerUtils.containerName(ctx.config.id, stack.name)
+            const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
             data.push({
               stackName: stack.name,

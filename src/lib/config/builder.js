@@ -9,7 +9,7 @@ module.exports = class Builder {
   constructor(configFile) {
     Builder.validate(configFile)
 
-    this.id = configFile.id
+    this.projectId = configFile.id
     this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
