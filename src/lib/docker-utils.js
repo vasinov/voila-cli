@@ -14,7 +14,7 @@ exports.imageName = (projectName, dockerfileName) => {
   return this.imageNameWithTag(projectName, dockerfileName, defaultTag)
 }
 
-exports.isContainerRunning = (containerName) => {
+exports.isContainerRunning = containerName => {
   const containerNames =
     execSync(`docker container ls --format "{{json .Names }}"`)
       .toString()

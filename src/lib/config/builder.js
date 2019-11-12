@@ -10,7 +10,7 @@ module.exports = class Builder {
     Builder.validate(configFile)
 
     this.id = configFile.id
-    this.allStacks = Builder.parseStacks(configFile.stacks)
+    this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
   static parseStacks(stacks) {
@@ -106,6 +106,7 @@ module.exports = class Builder {
 
       return {
         name: stack.name,
+        configFile: stack.configFile,
         hostDir: hostWorkdir,
         volumes: volumes,
         ports: ports,
@@ -127,7 +128,7 @@ module.exports = class Builder {
   }
 
   getStack(stackName) {
-    const stack = this.allStacks.find((c) => c.name === stackName)
+    const stack = this.projectStacks.find((c) => c.name === stackName)
 
     if (stack) {
       return stack
@@ -137,7 +138,7 @@ module.exports = class Builder {
   }
 
   findInDockerfileData(stackName, key) {
-    const obj = this.allStacks
+    const obj = this.projectStacks
       .find((c) => c.name === stackName)
       .dockerfileData
       .find((e) => Object.keys(e)[0] === key)
@@ -147,7 +148,7 @@ module.exports = class Builder {
 
   toDockerfile(stackName) {
     return generator.generateDockerFileFromArray(
-      this.allStacks.find((c) => c.name === stackName).dockerfileData
+      this.projectStacks.find((c) => c.name === stackName).dockerfileData
     )
   }
 }

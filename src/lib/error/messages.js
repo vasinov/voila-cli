@@ -28,5 +28,9 @@ module.exports = {
 
   wrongStackHostDirError: directory => {
     return `Stack access only allowed in the mounted stack directory: ${directory}`
+  },
+
+  stopStackBeforeProceeding: stack => {
+    return `Stack "${stack}" is currently running. Stop it with "voila stop ${stack}" first`
   }
 }

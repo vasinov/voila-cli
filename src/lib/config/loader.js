@@ -28,7 +28,10 @@ exports.loadUserConfig = () => {
 
       const stackConfigs = fs.readdirSync(stacksPath)
         .filter(file => file.endsWith(this.stackFileExtension))
-        .map(file => yaml.safeLoad(fs.readFileSync(path.join(stacksPath, file), 'utf8')))
+        .map(file => Object.assign(
+          { configFile: path.join(stacksPath, file) },
+          yaml.safeLoad(fs.readFileSync(path.join(stacksPath, file), 'utf8'))
+        ))
 
       userConfig = Object.assign(
         projectConfig,
