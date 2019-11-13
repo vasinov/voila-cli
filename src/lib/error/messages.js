@@ -7,6 +7,8 @@ module.exports = {
   SPECIFY_COMMAND: `Specify command to run.`,
   SSH_SESSION_INTERRUPTED: `SSH session was interrupted unexpectedly.`,
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
+  CONTAINER_DIR_NOT_ABSOLUTE: `"containerDir" in the stack config file has to be an absolute path.`,
+  HOST_DIR_OUTSIDE_PROJECT: `"hostDir" has to be inside the current project.`,
 
   stackNotRunningError: (stackName) => {
     return `Stack "${stackName}" is not running. Start it with "voila start ${stackName}" first.`

@@ -2,7 +2,8 @@ exports.stackTemplate = (name, images) => {
   return {
     "name": name,
     "env": [],
-    "workdir": "/project",
+    "hostDir": ".",
+    "containerDir": "/project",
     "volumes": [],
     "ports": [],
     "stages": {

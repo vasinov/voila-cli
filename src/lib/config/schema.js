@@ -19,15 +19,11 @@ exports.schema = {
           items: { type: 'object' },
           uniqueItems: true
         },
-        workdir: {
-          oneOf: [
-            {
-              type: "string"
-            },
-            {
-              type: 'object'
-            }
-          ]
+        hostDir: {
+          type: "string"
+        },
+        containerDir: {
+          type: "string"
         },
         volumes: {
           type: 'array',
@@ -99,7 +95,7 @@ exports.schema = {
           }
         }
       },
-      required: ['name', 'workdir']
+      required: ['name', 'hostDir', 'containerDir']
     }
   },
   required: ['id']

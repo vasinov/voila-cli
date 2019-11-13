@@ -13,6 +13,24 @@ module.exports = class Builder {
     this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
+  static loadHostDir = stack => {
+    const absoluteHostPath = paths.toAbsolutePath(stack.hostDir)
+
+    if (paths.doesPath1ContainPath2(absoluteHostPath, paths.projectHostPath())) {
+      return absoluteHostPath.join('/')
+    } else {
+      throw new VoilaError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
+    }
+  }
+
+  static loadContainerDir = stack => {
+    if (paths.isAbsolute(stack.containerDir)) {
+      return stack.containerDir
+    } else {
+      throw new VoilaError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
+    }
+  }
+
   static parseStacks(stacks) {
     return stacks.map(stack => {
       const globalEnv = stack.env
@@ -30,25 +48,10 @@ module.exports = class Builder {
       if (buildEnv && buildEnv.length > 0) dockerfileData.push({ args: [] })
       if (globalEnv && globalEnv.length > 0) dockerfileData.push({ env: {} })
 
-      const [hostWorkdir, stackWorkdir] = (() => {
-        switch (typeof stack.workdir) {
-          case 'string':
-            dockerfileData.push({ working_dir: stack.workdir })
+      const hostDir = Builder.loadHostDir(stack)
+      const containerDir = Builder.loadContainerDir(stack)
 
-            return [
-              paths.projectHostPath().join('/'),
-              stack.workdir
-            ]
-          case 'object':
-            dockerfileData.push({ working_dir: Object.values(stack.workdir)[0] })
-
-            return [
-              paths.toAbsolutePath(Object.keys(stack.workdir)[0]).join('/'),
-              Object.values(stack.workdir)[0]
-            ]
-          default:
-        }
-      })()
+      dockerfileData.push({ working_dir: containerDir })
 
       if (globalEnv) {
         globalEnv.forEach((c) => {
@@ -100,14 +103,15 @@ module.exports = class Builder {
         })
       }
 
-      volumes.push(`${hostWorkdir}:${stackWorkdir}`)
+      volumes.push(`${hostDir}:${containerDir}`)
 
       if (stack.ports) stack.ports.forEach(p => ports.push(p))
 
       return {
         name: stack.name,
         configFile: stack.configFile,
-        hostDir: hostWorkdir,
+        hostDir: hostDir,
+        containerDir: containerDir,
         volumes: volumes,
         ports: ports,
         dockerfileData: dockerfileData,
