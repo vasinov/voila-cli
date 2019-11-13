@@ -1,7 +1,7 @@
 const {Command} = require('@oclif/command')
 const fs = require('fs')
 
-const {buildConfig, loadStacks} = require('../../lib/tasks')
+const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 const {containerName, isContainerRunning} = require('../../lib/docker-utils')

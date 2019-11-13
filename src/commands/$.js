@@ -1,6 +1,6 @@
 const {Command, flags} = require('@oclif/command')
 
-const {buildConfig, loadStacks} = require('../lib/tasks')
+const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
@@ -22,7 +22,7 @@ class $Command extends Command {
       {
         action: ctx => {
           ctx.stacks.forEach(stack => {
-            this.processCommand(ctx, argv, stack, flags['run-as-job'], flags['stack-path'])
+            $Command.processCommand(ctx, argv, stack, flags['run-as-job'], flags['stack-path'])
           })
         }
       }
@@ -31,7 +31,7 @@ class $Command extends Command {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, stack, shouldDetach, executeIn) {
+  static processCommand(ctx, argv, stack, shouldDetach, executeIn) {
     const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
