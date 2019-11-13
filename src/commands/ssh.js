@@ -23,37 +23,28 @@ class SshCommand extends Command {
         title: 'Connecting over SSH',
         action: async ctx => {
           ctx.stacks.forEach(stack => {
-            this.processSsh(ctx, stack, flags['stack-path'])
+            const executeIn = flags['stack-path']
+
+            const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+
+            if (dockerUtils.isContainerRunning(containerName)) {
+
+              if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
+                const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
+
+                dockerUtils.sshContainer(containerName, workdir)
+              } else {
+                throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
+              }
+            } else {
+              throw new VoilaError(errorMessages.stackNotRunningError(stack.name))
+            }
           })
         }
       }
     ]
 
     await runTask(tasks)
-  }
-
-  processSsh(ctx, stack, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
-
-    if (dockerUtils.isContainerRunning(containerName)) {
-
-      if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
-        const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
-        const subProcess = dockerUtils.sshContainer(containerName, workdir)
-
-        subProcess.on('exit', code => {
-          if (code !== 0) logger.error(errorMessages.SSH_SESSION_INTERRUPTED)
-        })
-
-        subProcess.on('error', code => {
-          logger.error(errorMessages.containerError(containerName, code, 'SSH session'))
-        })
-      } else {
-        throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
-      }
-    } else {
-      throw new VoilaError(errorMessages.stackNotRunningError(stack.name))
-    }
   }
 }
 

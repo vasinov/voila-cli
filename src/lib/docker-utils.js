@@ -1,5 +1,9 @@
 const {spawn, spawnSync, exec, execSync} = require('child_process')
 
+const VoilaError = require('../lib/error/voila-error')
+const errorMessages = require('../lib/error/messages')
+const logger = require('../lib/logger')
+
 const defaultTag = "latest"
 
 exports.containerName = (projectName, dockerfileName) => {
@@ -15,12 +19,13 @@ exports.imageName = (projectName, dockerfileName) => {
 }
 
 exports.isContainerRunning = containerName => {
-  const containerNames =
-    execSync(`docker container ls --format "{{json .Names }}"`)
-      .toString()
-      .split('\n').map(n => n.slice(1, -1))
+  const args = ['container', 'ls', '--format', '{{json .Names }}']
 
-  return containerNames.includes(containerName)
+  return runCommand('docker', args, {}, result => {
+    const containerNames = result.split('\n').map(n => n.slice(1, -1))
+
+    return containerNames.includes(containerName)
+  })
 }
 
 exports.containerStatus = (containerName) => {
@@ -50,24 +55,22 @@ exports.startContainer = (volumes, ports, containerName, imageName, isAttached, 
   args.push(`--name=${containerName}`)
   args.push(imageName)
 
-  return spawnSync('docker', args, {
-    stdio: isAttached ? 'inherit' : 'pipe'
-  })
+  return runCommand('docker', args, { stdio: isAttached ? 'inherit' : 'pipe' }, result => result)
 }
 
 exports.stopContainer = (localdir, workdir, containerName) => {
   const args = ['container', 'stop', containerName]
 
-  spawnSync('docker', args)
+  return runCommand('docker', args, {}, result => result)
 }
 
-exports.runCommand = (containerName, workdir, command) => {
+exports.execCommandSync = (containerName, workdir, command) => {
   const args = ['exec', '-it', '-w', workdir, containerName, 'bash', '-c', command]
 
-  return spawn('docker', args, { stdio: 'inherit' })
+  return runCommand('docker', args, { stdio: 'inherit' }, result => result)
 }
 
-exports.runCommandAsync = (containerName, workdir, command) => {
+exports.execCommandAsync = (containerName, workdir, command) => {
   const args = ['exec', '-d', '-w', workdir, containerName, 'bash', '-c', command]
 
   return spawn('docker', args)
@@ -85,5 +88,24 @@ exports.buildImage = (imageName, dockerfile, isNoCache, isPull, isVerbose) => {
 exports.sshContainer = (containerName, workdir) => {
   const args = ['exec', '-it', '-w', workdir, containerName, 'bash']
 
-  return spawn('docker', args, { stdio: 'inherit' })
+  const subProcess = spawn('docker', args, { stdio: 'inherit' })
+
+  subProcess.on('exit', code => {
+    if (code !== 0) logger.error(errorMessages.SSH_SESSION_INTERRUPTED)
+  })
+
+  return subProcess
+}
+
+runCommand = (command, args, options, action) => {
+  const result = spawnSync(command, args, options)
+
+  if (result.stderr && result.stderr.length > 0) {
+    throw new VoilaError(result.stderr)
+  } else if (result.stdout) {
+    return action(result.stdout.toString())
+  } else {
+    // this will only happen when stdio is set to "inherit"
+    return null
+  }
 }

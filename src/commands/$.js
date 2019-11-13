@@ -49,19 +49,11 @@ class $Command extends Command {
         } else if (shouldDetach) {
           $Command.log(stack.name, workdir, command, true)
 
-          dockerUtils.runCommandAsync(containerName, workdir, command)
+          dockerUtils.execCommandAsync(containerName, workdir, command)
         } else {
           $Command.log(stack.name, workdir, command, false)
 
-          const subProcess = dockerUtils.runCommand(containerName, workdir, command)
-
-          subProcess.on('exit', code => {
-            if (code === 1) logger.error(errorMessages.EXEC_INTERRUPTED)
-          })
-
-          subProcess.on('error', code => {
-            logger.error(errorMessages.containerError(containerName, code, command))
-          })
+          dockerUtils.execCommandSync(containerName, workdir, command)
         }
       } else {
         throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
