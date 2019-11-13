@@ -64,7 +64,8 @@ All stack config files have the following structure:
 ```yaml
 name: STRING
 env: ARRAY_OF_OBJECTS
-workdir: STRING_OR_OBJECT
+hostDir: STRING
+containerDir: STRING
 volumes: ARRAY_OF_STRINGS_AND_OBJECTS
 ports: ARRAY_OF_STRINGS
 stages:
@@ -84,11 +85,13 @@ Name of the container image that Voila will generate.
 
 Array of environmental variables set in the following format: `name:value`. Variables setup here can be used during `build` *and* `run` stages
 
-### `container.workdir` (required)
+### `container.hostDir` (required)
 
-Represents a directory in the Docker container where your project host root directory will be mounted to. Voila automatically sets this directory to `workdir`. Think of it as a default attached volume.
+Represents the host directory that is mounted to `container.containerDir`. It can be relative or absolute but it has to be inside the current project.
 
-You can also use an object notation and mount any directory on your hard drive to the container `workdir`. This is useful for when you want to mount a specific project sub-directory inside of a stack.
+### `container.containerDir` (required)
+
+Represents the directory in the Docker container where the host directory will be mounted to. Voila automatically sets `workdir` to this directory. It has to be an absolute path.
 
 ### `container.volumes` (optional)
 
@@ -119,6 +122,7 @@ actions:
   - execute: apt-get -y install gfortran
 ```
 
+An `execute` action can be either a string or an array. If it's an array then the CLI converts all elements into one `RUN` statement in the dockerfile by joining them with `&&`.
 
 ## CLI Commands
 

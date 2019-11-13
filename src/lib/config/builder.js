@@ -73,7 +73,16 @@ module.exports = class Builder {
         buildStage.actions.forEach(action => {
           switch (Object.keys(action)[0]) {
             case "execute":
-              dockerfileData.push({ run: ["bash", "-c", action.execute] })
+              switch (typeof action.execute) {
+                case "string":
+                  dockerfileData.push({ run: ["bash", "-c", action.execute] })
+                  break
+                case "object":
+                  const run = action.execute.join(' && ')
+
+                  dockerfileData.push({ run: ["bash", "-c", run] })
+                  break
+              }
               break
             default:
           }
@@ -106,6 +115,8 @@ module.exports = class Builder {
       volumes.push(`${hostDir}:${containerDir}`)
 
       if (stack.ports) stack.ports.forEach(p => ports.push(p))
+
+      console.log(dockerfileData)
 
       return {
         name: stack.name,
