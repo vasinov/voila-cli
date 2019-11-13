@@ -1,8 +1,8 @@
 const {Command, flags} = require('@oclif/command')
 
-const initializer = require('../../lib/config/initializer')
-const runTask = require('../../lib/run-task')
-const logger = require('../../lib/logger')
+const initializer = require('../lib/config/initializer')
+const runTask = require('../lib/run-task')
+const logger = require('../lib/logger')
 
 class InitCommand extends Command {
   async run() {
@@ -24,8 +24,6 @@ class InitCommand extends Command {
     await runTask(tasks)
   }
 }
-
-InitCommand.aliases = ['init']
 
 InitCommand.description = `Initialize Voila in the current directory. This command creates a ".voila" folder with YAML config files.`
 
