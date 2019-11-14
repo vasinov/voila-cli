@@ -20,9 +20,7 @@ exports.projectHostPath = () => {
   return finalPath.split('/')
 }
 
-exports.stackHostPath = stack => {
-  return stack.hostDir.split('/')
-}
+exports.stackHostPath = stack => stack.hostDir.split('/')
 
 exports.relativeStackPath = stack => {
   const absoluteHostDir = process.cwd().split('/')
@@ -60,6 +58,4 @@ exports.toAbsolutePath = p => {
   }
 }
 
-exports.isAbsolute = p => {
-  return path.isAbsolute(p)
-}
+exports.isAbsolute = p => path.isAbsolute(p)

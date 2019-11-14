@@ -15,7 +15,7 @@ module.exports = class Builder {
   }
 
   static readHostDir = stack => {
-    const absoluteHostPath = paths.toAbsolutePath(stack.hostDir)
+    const absoluteHostPath = paths.toAbsolutePath(stack.stages.run.hostDir)
 
     if (paths.doesPath1ContainPath2(absoluteHostPath, paths.projectHostPath())) {
       return absoluteHostPath.join('/')
@@ -25,16 +25,16 @@ module.exports = class Builder {
   }
 
   static readContainerDir = stack => {
-    if (paths.isAbsolute(stack.containerDir)) {
-      return stack.containerDir
+    if (paths.isAbsolute(stack.stages.run.containerDir)) {
+      return stack.stages.run.containerDir
     } else {
       throw new VoilaError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
     }
   }
 
-  static readDockerfilePath = buildStage => {
-    if (buildStage && buildStage.dockerfile) {
-      const absoluteDockerfilePath = paths.toAbsolutePath(buildStage.dockerfile)
+  static readDockerfilePath = dockerfile => {
+    if (dockerfile) {
+      const absoluteDockerfilePath = paths.toAbsolutePath(dockerfile)
 
       if (paths.doesPath1ContainPath2(absoluteDockerfilePath, paths.projectHostPath())) {
         return absoluteDockerfilePath
@@ -48,11 +48,9 @@ module.exports = class Builder {
 
   static parseStacks(stacks) {
     return stacks.map(stack => {
-      const globalEnv = stack.env
+      const globalEnv = stack.stages.run.env
       const buildEnv = stack.stages.build.env
-      const buildStage = stack.stages.build
-      const dockerfilePath = Builder.readDockerfilePath(buildStage)
-      const runStage = stack.stages.run
+      const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
       const ports = []
       const hostDir = Builder.readHostDir(stack)
@@ -60,8 +58,8 @@ module.exports = class Builder {
 
       let dockerfile = ''
 
-      if (stack.volumes) {
-        stack.volumes.forEach(volume => {
+      if (stack.stages.run.volumes) {
+        stack.stages.run.volumes.forEach(volume => {
           switch (typeof volume) {
             case 'string':
               const dir = paths.toAbsolutePath(volume).join('/')
@@ -81,7 +79,7 @@ module.exports = class Builder {
 
       volumes.push(`${hostDir}:${containerDir}`)
 
-      if (stack.ports) stack.ports.forEach(p => ports.push(p))
+      if (stack.stages.run.ports) stack.stages.run.ports.forEach(p => ports.push(p))
 
       if (dockerfilePath) {
         const dockerfileDir = dockerfilePath.join('/')
@@ -89,8 +87,8 @@ module.exports = class Builder {
         if (fs.existsSync(dockerfileDir)) {
           dockerfile = fs.readFileSync(dockerfileDir, 'utf8')
 
-          if (runStage && runStage.command) {
-            dockerfile += `\nENTRYPOINT [ "bash", "-c", "${runStage.command}" ]`
+          if (stack.stages.run.command) {
+            dockerfile += `\nENTRYPOINT [ "bash", "-c", "${stack.stages.run.command}" ]`
           }
         } else {
           throw new VoilaError(errorMessages.DOCKERFILE_DOESNT_EXIST)
@@ -98,7 +96,7 @@ module.exports = class Builder {
       } else {
         const dockerfileArray = []
 
-        buildStage.images.forEach(i => dockerfileArray.push({
+        stack.stages.build.images.forEach(i => dockerfileArray.push({
           from: i
         }))
 
@@ -123,8 +121,8 @@ module.exports = class Builder {
           })
         }
 
-        if (buildStage.actions) {
-          buildStage.actions.forEach(action => {
+        if (stack.stages.build.actions) {
+          stack.stages.build.actions.forEach(action => {
             switch (Object.keys(action)[0]) {
               case "execute":
                 switch (typeof action.execute) {
@@ -143,8 +141,8 @@ module.exports = class Builder {
           })
         }
 
-        if (runStage && runStage.command) {
-          dockerfileArray.push({ entrypoint: ["bash", "-c", runStage.command] })
+        if (stack.stages.run.command) {
+          dockerfileArray.push({ entrypoint: ["bash", "-c", stack.stages.run.command] })
         }
 
         dockerfile = generator.generateDockerFileFromArray(dockerfileArray)
@@ -159,7 +157,7 @@ module.exports = class Builder {
         ports: ports,
         dockerfile: dockerfile,
         shouldStartAttached: () => {
-          return !!(runStage && runStage.command)
+          return !!(stack.stages.run.command)
         }
       }
     })

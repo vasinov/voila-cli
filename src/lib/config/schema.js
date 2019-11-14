@@ -14,38 +14,6 @@ exports.schema = {
       type: 'object',
       properties: {
         name: { type: 'string' },
-        env: {
-          type: 'array',
-          items: { type: 'object' },
-          uniqueItems: true
-        },
-        hostDir: {
-          type: "string"
-        },
-        containerDir: {
-          type: "string"
-        },
-        volumes: {
-          type: 'array',
-          items: {
-            type: {
-              oneOf: [
-                {
-                  type: "string"
-                },
-                {
-                  type: 'object'
-                }
-              ]
-            }
-          },
-          uniqueItems: true
-        },
-        ports: {
-          type: 'array',
-          items: { type: 'string' },
-          uniqueItems: true
-        },
         stages: {
           type: 'object',
           properties: {
@@ -92,13 +60,49 @@ exports.schema = {
             run: {
               type: 'object',
               properties: {
-                command: { type: 'string' }
-              }
+                env: {
+                  type: 'array',
+                  items: { type: 'object' },
+                  uniqueItems: true
+                },
+                hostDir: {
+                  type: "string"
+                },
+                containerDir: {
+                  type: "string"
+                },
+                volumes: {
+                  type: 'array',
+                  items: {
+                    type: {
+                      oneOf: [
+                        {
+                          type: "string"
+                        },
+                        {
+                          type: 'object'
+                        }
+                      ]
+                    }
+                  },
+                  uniqueItems: true
+                },
+                ports: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  uniqueItems: true
+                },
+                command: {
+                  type: 'string'
+                }
+              },
+              required: ['hostDir', 'containerDir']
             }
-          }
+          },
+          required: ['build', 'run']
         }
       },
-      required: ['name', 'hostDir', 'containerDir']
+      required: ['name', 'stages']
     }
   },
   required: ['id']

@@ -81,29 +81,9 @@ Each stack represents an independent unit that has its own settings and executio
 
 Name of the stack. The name has to be unique across the project. It's used to name images and containers.
 
-### `env` (optional)
-
-Array of environmental variables set in the following format: `name:value`. Variables setup here can be used during `build` *and* `run` stages
-
-### `hostDir` (required)
-
-Represents the host directory that is mounted to `containerDir`. It can be relative or absolute but it has to be inside the current project.
-
-### `containerDir` (required)
-
-Represents the directory in the Docker container (Voila stack) where `hostDir` is mounted to. Voila automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
-
-### `volumes` (optional)
-
-Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created. You can also use a string shortcut for one-to-one mappings. For example `/my/path` will map host `/my/path` to the container `/my/path`.
-
-### `ports` (optional)
-
-Open container ports and map them to host ports. For example, `8080:80` opens port `80` in the container and maps it to the host port `8080`. You can also specify IP addresses and TCP, UDP, or SCTP protocols (TCP is the default). For example, `127.0.0.2:80:5000/udp` maps host IP address `127.0.0.2` and port `80` to container port `5000` over UDP.
-
 ### `stages` (required)
 
-Voila currently supports two stages: `build` and `run`.
+Voila currently supports two stages: `build` and `run`. The `build` stage corresponds to actions that you'd normally defined in the dockerfile. The `run` stage represents container initialization and start.
 
 ### `stages.build.dockerfile` (optional)
 
@@ -127,6 +107,34 @@ actions:
 ```
 
 `Execute` actions can be strings or arrays. If the action is an array then the CLI converts all of its elements into one `RUN` statement in the dockerfile by joining them with `&&`.
+
+### `stages.run.env` (optional)
+
+Array of environmental variables passed to the container at startup. Environmental variables have to match one of the following two formats:
+
+```yaml
+env:
+  - MY_VAR1
+  - MY_VAR=foo
+```
+
+The former format picks up your host environmental variable and passes it to the container. The latter format sets the variable explicitly. Variables defined in the `run` stage always overwrite variables set in the `build` stage.
+
+### `stages.run.hostDir` (required)
+
+Represents the host directory that is mounted to `containerDir`. It can be relative or absolute but it has to be inside the current project.
+
+### `stages.run.containerDir` (required)
+
+Represents the directory in the Docker container (Voila stack) where `hostDir` is mounted to. Voila automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
+
+### `stages.run.volumes` (optional)
+
+Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created. You can also use a string shortcut for one-to-one mappings. For example `/my/path` will map host `/my/path` to the container `/my/path`.
+
+### `stages.run.ports` (optional)
+
+Open container ports and map them to host ports. For example, `8080:80` opens port `80` in the container and maps it to the host port `8080`. You can also specify IP addresses and TCP, UDP, or SCTP protocols (TCP is the default). For example, `127.0.0.2:80:5000/udp` maps host IP address `127.0.0.2` and port `80` to container port `5000` over UDP.
 
 ### `stages.run.command` (optional)
 
