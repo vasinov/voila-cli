@@ -48,8 +48,6 @@ module.exports = class Builder {
 
   static parseStacks(stacks) {
     return stacks.map(stack => {
-      const globalEnv = stack.stages.run.env
-      const buildEnv = stack.stages.build.env
       const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
       const ports = []
@@ -100,26 +98,7 @@ module.exports = class Builder {
           from: i
         }))
 
-        if (buildEnv && buildEnv.length > 0) dockerfileArray.push({ args: [] })
-        if (globalEnv && globalEnv.length > 0) dockerfileArray.push({ env: {} })
-
         dockerfileArray.push({ working_dir: containerDir })
-
-        if (globalEnv) {
-          globalEnv.forEach((c) => {
-            const index = dockerfileArray.findIndex((e) => Object.keys(e)[0] === 'env')
-
-            dockerfileArray[index]['env'][Object.keys(c)[0]] = Object.values(c)[0]
-          })
-        }
-
-        if (buildEnv) {
-          buildEnv.forEach(env => {
-            const index = dockerfileArray.findIndex((e) => Object.keys(e)[0] === 'args')
-
-            dockerfileArray[index]['args'].push(`${[Object.keys(env)[0]]}=${Object.values(env)[0]}`)
-          })
-        }
 
         if (stack.stages.build.actions) {
           stack.stages.build.actions.forEach(action => {
@@ -155,6 +134,7 @@ module.exports = class Builder {
         containerDir: containerDir,
         volumes: volumes,
         ports: ports,
+        env: stack.stages.run.env,
         dockerfile: dockerfile,
         shouldStartAttached: () => {
           return !!(stack.stages.run.command)

@@ -63,16 +63,17 @@ All stack config files have the following structure:
 
 ```yaml
 name: STRING
-env: ARRAY_OF_OBJECTS
-hostDir: STRING
-containerDir: STRING
-volumes: ARRAY_OF_STRINGS_AND_OBJECTS
-ports: ARRAY_OF_STRINGS
 stages:
   build:
     images: ARRAY_OF_OBJECTS
-    env: ARRAY_OF_OBJECTS
     actions: ARRAY_OF_OBJECTS
+  run:
+    env: ARRAY_OF_STRINGS
+    hostDir: STRING
+    containerDir: STRING
+    volumes: ARRAY_OF_STRINGS_AND_OBJECTS
+    ports: ARRAY_OF_STRINGS
+    command: STRING
 ```
 
 Each stack represents an independent unit that has its own settings and execution context. Stacks have names, environment variables, volumes, ports, and stages. Internally, stacks are Docker containers that are based on images defined in the config file or optional linked dockerfile.
@@ -91,11 +92,7 @@ You can reference any valid dockerfile inside of your project directory by setti
 
 ### `stages.build.images` (required)
 
-Includes the list of images that the final image should include.
-
-### `stages.build.env` (optional)
-
-Environmental variables only available during the `build` stage.
+Includes the list of images that the final image should include via the multi-stage build mechanism provided by Docker. Most stacks should only include one image here.
 
 ### `stages.build.actions` (optional)
 
@@ -119,7 +116,9 @@ env:
   - MY_VAR=foo
 ```
 
-The former format picks up your host environmental variable and passes it to the container. The latter format sets the variable explicitly. Variables defined in the `run` stage always overwrite variables set in the `build` stage.
+The former format picks up your host environmental variable and passes it to the container. You can set such variables on your host system with `export MY_VAR1=bar`.
+
+The latter format sets the variable explicitly. Variables defined in the `run` stage always overwrite variables set in the `build` stage.
 
 ### `stages.run.hostDir` (required)
 

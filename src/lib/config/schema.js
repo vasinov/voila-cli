@@ -28,11 +28,6 @@ exports.schema = {
                   items: { type: 'string' },
                   uniqueItems: true
                 },
-                env: {
-                  type: 'array',
-                  items: { type: 'object' },
-                  uniqueItems: true
-                },
                 actions: {
                   type: 'array',
                   items: {
@@ -62,7 +57,7 @@ exports.schema = {
               properties: {
                 env: {
                   type: 'array',
-                  items: { type: 'object' },
+                  items: { type: 'string' },
                   uniqueItems: true
                 },
                 hostDir: {

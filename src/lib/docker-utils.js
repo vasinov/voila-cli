@@ -36,7 +36,7 @@ exports.containerStatus = (containerName) => {
   }
 }
 
-exports.startContainer = (volumes, ports, containerName, imageName, isAttached, persistAfterStop) => {
+exports.startContainer = (stack, containerName, imageName, isAttached, persistAfterStop) => {
   const args = ['run']
 
   if (!persistAfterStop) args.push('--rm')
@@ -44,13 +44,11 @@ exports.startContainer = (volumes, ports, containerName, imageName, isAttached, 
   if (isAttached) args.push('-it')
   else args.push('-dt')
 
-  volumes.forEach(v => {
-    args.push(`--volume=${v}`)
-  })
+  stack.volumes.forEach(v => args.push(`--volume=${v}`))
 
-  ports.forEach(p => {
-    args.push(`--publish=${p}`)
-  })
+  stack.ports.forEach(p => args.push(`--publish=${p}`))
+
+  stack.env.forEach(e => args.push(`--env=${e}`))
 
   args.push(`--name=${containerName}`)
   args.push(imageName)

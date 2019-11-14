@@ -56,11 +56,11 @@ class StartCommand extends Command {
     } else if (stack.shouldStartAttached()) {
       logger.infoWithTime(`Stack "${stack.name}" running`, true)
 
-      dockerUtils.startContainer(stack.volumes, stack.ports, containerName, imageName, true, flags['persist'])
+      dockerUtils.startContainer(stack, containerName, imageName, true, flags['persist'])
 
       logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
     } else {
-      dockerUtils.startContainer(stack.volumes, stack.ports, containerName, imageName, false, flags['persist'])
+      dockerUtils.startContainer(stack, containerName, imageName, false, flags['persist'])
 
       logger.infoWithTime(`Stack "${stack.name}" started`, true)
     }
