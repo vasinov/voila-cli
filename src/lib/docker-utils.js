@@ -36,12 +36,12 @@ exports.containerStatus = (containerName) => {
   }
 }
 
-exports.startContainer = (stack, containerName, imageName, isAttached, persistAfterStop) => {
+exports.startContainer = (stack, containerName, imageName, persistAfterStop, entrypointCommand = null) => {
   const args = ['run']
 
   if (!persistAfterStop) args.push('--rm')
 
-  if (isAttached) args.push('-it')
+  if (entrypointCommand) args.push('-it')
   else args.push('-dt')
 
   stack.volumes.forEach(v => args.push(`--volume=${v}`))
@@ -51,9 +51,14 @@ exports.startContainer = (stack, containerName, imageName, isAttached, persistAf
   stack.env.forEach(e => args.push(`--env=${e}`))
 
   args.push(`--name=${containerName}`)
+
+  if (entrypointCommand) args.push('--entrypoint=bash')
+
   args.push(imageName)
 
-  return runCommand('docker', args, { stdio: isAttached ? 'inherit' : 'pipe' }, result => result)
+  if (entrypointCommand) args.push('-c', entrypointCommand)
+
+  return runCommand('docker', args, { stdio: entrypointCommand ? 'inherit' : 'pipe' }, result => result)
 }
 
 exports.stopContainer = (localdir, containerName) => {

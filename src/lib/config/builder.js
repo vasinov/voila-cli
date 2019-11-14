@@ -120,10 +120,6 @@ module.exports = class Builder {
           })
         }
 
-        if (stack.stages.run.command) {
-          dockerfileArray.push({ entrypoint: ["bash", "-c", stack.stages.run.command] })
-        }
-
         dockerfile = generator.generateDockerFileFromArray(dockerfileArray)
       }
 
@@ -136,9 +132,7 @@ module.exports = class Builder {
         ports: ports,
         env: stack.stages.run.env,
         dockerfile: dockerfile,
-        shouldStartAttached: () => {
-          return !!(stack.stages.run.command)
-        }
+        entrypointCommand: stack.stages.run.command
       }
     })
   }

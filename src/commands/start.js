@@ -50,17 +50,18 @@ class StartCommand extends Command {
   static initStack(ctx, stack, flags) {
     const imageName = dockerUtils.imageName(ctx.config.projectId, stack.name)
     const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+    const command = stack.entrypointCommand
 
     if (dockerUtils.isContainerRunning(containerName)) {
       logger.infoWithTime(`Stack "${stack.name}" is already running`, true)
-    } else if (stack.shouldStartAttached()) {
-      logger.infoWithTime(`Stack "${stack.name}" running`, true)
+    } else if (command) {
+      logger.infoWithTime(`Executing "${command}" in stack "${stack.name}"`, true)
 
-      dockerUtils.startContainer(stack, containerName, imageName, true, flags['persist'])
+      dockerUtils.startContainer(stack, containerName, imageName, flags['persist'], command)
 
       logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
     } else {
-      dockerUtils.startContainer(stack, containerName, imageName, false, flags['persist'])
+      dockerUtils.startContainer(stack, containerName, imageName, flags['persist'])
 
       logger.infoWithTime(`Stack "${stack.name}" started`, true)
     }
