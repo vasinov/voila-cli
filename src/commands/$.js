@@ -35,11 +35,7 @@ class $Command extends Command {
     const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
 
     if (dockerUtils.isContainerRunning(containerName)) {
-      const commandFromConfig = ctx.config.findInDockerfileData(stack.name, 'cmd')
-
-      const command = (argv.length === 0 && !commandFromConfig) ?
-        '' :
-        (argv.length === 0) ? commandFromConfig : argv.join(' ')
+      const command = (argv.length === 0) ? '' : argv.join(' ')
 
       if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
         const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')

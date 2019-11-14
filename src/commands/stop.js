@@ -27,10 +27,9 @@ class StopCommand extends Command {
           ctx.stacks.forEach(stack => {
             const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
             const localdir = process.cwd()
-            const workdir = ctx.config.findInDockerfileData(stack.name, 'working_dir')
 
             if (dockerUtils.isContainerRunning(containerName)) {
-              dockerUtils.stopContainer(localdir, workdir, containerName)
+              dockerUtils.stopContainer(localdir, containerName)
 
               logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
             } else {

@@ -41,7 +41,7 @@ exports.startContainer = (volumes, ports, containerName, imageName, isAttached, 
 
   if (!persistAfterStop) args.push('--rm')
 
-  if (isAttached) args.push('-t')
+  if (isAttached) args.push('-it')
   else args.push('-dt')
 
   volumes.forEach(v => {
@@ -58,7 +58,7 @@ exports.startContainer = (volumes, ports, containerName, imageName, isAttached, 
   return runCommand('docker', args, { stdio: isAttached ? 'inherit' : 'pipe' }, result => result)
 }
 
-exports.stopContainer = (localdir, workdir, containerName) => {
+exports.stopContainer = (localdir, containerName) => {
   const args = ['container', 'stop', containerName]
 
   return runCommand('docker', args, {}, result => result)

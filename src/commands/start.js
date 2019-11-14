@@ -26,11 +26,10 @@ class StartCommand extends Command {
 
           ctx.stacks.forEach(stack => {
             const imageName = dockerUtils.imageName(ctx.config.projectId, stack.name)
-            const dockerfile = ctx.config.toDockerfile(stack.name)
 
             logger.infoWithTime(`Building image for the "${stack.name}" stack`, true)
 
-            dockerUtils.buildImage(imageName, dockerfile, flags['no-cache'], flags['pull'], flags['verbose'])
+            dockerUtils.buildImage(imageName, stack.dockerfile, flags['no-cache'], flags['pull'], flags['verbose'])
 
             logger.infoWithTime(`Image for the "${stack.name}" stack finished building`, true)
           })

@@ -24,12 +24,6 @@ exports.stackHostPath = stack => {
   return stack.hostDir.split('/')
 }
 
-exports.stackContainerPath = stack => {
-  return stack.dockerfileData
-    .find((e) => Object.keys(e)[0] === 'working_dir')['working_dir']
-    .split('/')
-}
-
 exports.relativeStackPath = stack => {
   const absoluteHostDir = process.cwd().split('/')
   const relativeHostDir = absoluteHostDir.slice(
@@ -37,7 +31,7 @@ exports.relativeStackPath = stack => {
     absoluteHostDir.length
   )
 
-  return this.stackContainerPath(stack).concat(relativeHostDir)
+  return stack.containerDir.split('/').concat(relativeHostDir)
 }
 
 exports.doesPath1ContainPath2 = (p1, p2) => {

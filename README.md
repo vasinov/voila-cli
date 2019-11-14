@@ -75,45 +75,49 @@ stages:
     actions: ARRAY_OF_OBJECTS
 ```
 
-Each container represents an independent unit that has its own settings and execution context. Containers have names, environment variables, volumes, ports, and stages.
+Each stack represents an independent unit that has its own settings and execution context. Stacks have names, environment variables, volumes, ports, and stages. Internally, stacks are Docker containers that are based on images defined in the config file or optional linked dockerfile.
 
-### `container.name` (required)
+### `name` (required)
 
-Name of the container image that Voila will generate.
+Name of the stack. The name has to be unique across the project. It's used to name images and containers.
 
-### `container.env` (optional)
+### `env` (optional)
 
 Array of environmental variables set in the following format: `name:value`. Variables setup here can be used during `build` *and* `run` stages
 
-### `container.hostDir` (required)
+### `hostDir` (required)
 
-Represents the host directory that is mounted to `container.containerDir`. It can be relative or absolute but it has to be inside the current project.
+Represents the host directory that is mounted to `containerDir`. It can be relative or absolute but it has to be inside the current project.
 
-### `container.containerDir` (required)
+### `containerDir` (required)
 
-Represents the directory in the Docker container where the host directory will be mounted to. Voila automatically sets `workdir` to this directory. It has to be an absolute path.
+Represents the directory in the Docker container (Voila stack) where `hostDir` is mounted to. Voila automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
 
-### `container.volumes` (optional)
+### `volumes` (optional)
 
 Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created. You can also use a string shortcut for one-to-one mappings. For example `/my/path` will map host `/my/path` to the container `/my/path`.
 
-### `container.ports` (optional)
+### `ports` (optional)
 
-Open container ports and map them to host ports. For example, `8080:80` opens port `80` in the container and maps it to the host port `8080`. You can also specify IP addresses and TCP, UDP, or SCTP protocols (TCP is the default). For example, `127.0.0.2:80:5000/udp` maps host IP address `127.0.0.2` and port `80` to container port `5000` over UDP. 
+Open container ports and map them to host ports. For example, `8080:80` opens port `80` in the container and maps it to the host port `8080`. You can also specify IP addresses and TCP, UDP, or SCTP protocols (TCP is the default). For example, `127.0.0.2:80:5000/udp` maps host IP address `127.0.0.2` and port `80` to container port `5000` over UDP.
 
-### `container.stages` (required)
+### `stages` (required)
 
-There are two stages: `build` and `run`.
+Voila currently supports two stages: `build` and `run`.
 
-### `container.stages.build.images` (required)
+### `stages.build.dockerfile` (optional)
+
+You can reference any valid dockerfile inside of your project directory by setting this property to the absolute or relative dockerfile path. Voila will pick it up and ignore everything else in the `container.stages.build` section of the config. This feature is intended for users that prefer to use Docker directly. Note that if you set `ENTRYPOINT` in your dockerfile it will get overwritten by `stages.run.command`.
+
+### `stages.build.images` (required)
 
 Includes the list of images that the final image should include.
 
-### `container.stages.build.env` (optional)
+### `stages.build.env` (optional)
 
 Environmental variables only available during the `build` stage.
 
-### `container.stages.build.actions` (optional)
+### `stages.build.actions` (optional)
 
 There is currently one type of `action` called `execute`. Here's an example of how to use it:
 
@@ -122,7 +126,11 @@ actions:
   - execute: apt-get -y install gfortran
 ```
 
-An `execute` action can be either a string or an array. If it's an array then the CLI converts all elements into one `RUN` statement in the dockerfile by joining them with `&&`.
+`Execute` actions can be strings or arrays. If the action is an array then the CLI converts all of its elements into one `RUN` statement in the dockerfile by joining them with `&&`.
+
+### `stages.run.command` (optional)
+
+This is a the default bash command that will get executed when the stack starts. Once the command finishes the stack will automatically stop. It overrides any `ENTRYPOINT` defined in the custom dockerfile. 
 
 ## CLI Commands
 

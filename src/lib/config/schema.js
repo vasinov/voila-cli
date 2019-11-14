@@ -52,6 +52,9 @@ exports.schema = {
             build: {
               type: 'object',
               properties: {
+                dockerfile: {
+                  type: 'string'
+                },
                 images: {
                   type: 'array',
                   items: { type: 'string' },

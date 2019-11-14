@@ -17,12 +17,12 @@ exports.loadUserConfig = () => {
   const allPaths = []
 
   while (currentPath.length > 0) {
-    const fp = this.prefixConfigDir(currentPath.join('/'))
+    const absoluteConfigDir = this.prefixConfigDir(currentPath.join('/'))
 
-    if (fs.existsSync(fp)) {
+    if (fs.existsSync(absoluteConfigDir)) {
       allPaths.push(currentPath.join('/'))
-      const projectConfigPath = path.join(fp, this.projectConfigFileName)
-      const stacksPath = path.join(fp, this.stacksDirName)
+      const projectConfigPath = path.join(absoluteConfigDir, this.projectConfigFileName)
+      const stacksPath = path.join(absoluteConfigDir, this.stacksDirName)
 
       const projectConfig = yaml.safeLoad(fs.readFileSync(projectConfigPath, 'utf8'))
 
