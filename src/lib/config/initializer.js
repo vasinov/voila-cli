@@ -45,11 +45,20 @@ exports.init = force => {
 }
 
 exports.createModuleConfigFromTemplate = (template, fileName) => {
-  const yamlPath = path.join(configDirName, stacksDirName, `${fileName}.yml`)
+  let fileCreated = false
 
-  fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(template.name, template.images)), err => {
-    throw new Error(err.message)
-  })
+  while (!fileCreated) {
+    const randomness = crypto.randomBytes(2).toString('hex')
+    const yamlPath = path.join(configDirName, stacksDirName, `${fileName}-${randomness}.yml`)
+
+    if (!fs.existsSync(yamlPath)) {
+      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(template.name, template.images)), err => {
+        throw new Error(err.message)
+      })
+
+      fileCreated = true
+    }
+  }
 }
 
 const createConfigFiles = () => {
