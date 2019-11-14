@@ -124,13 +124,13 @@ module.exports = class Builder {
         if (stack.stages.build.actions) {
           stack.stages.build.actions.forEach(action => {
             switch (Object.keys(action)[0]) {
-              case "execute":
-                switch (typeof action.execute) {
+              case "run":
+                switch (typeof action.run) {
                   case "string":
-                    dockerfileArray.push({ run: ["bash", "-c", action.execute] })
+                    dockerfileArray.push({ run: ["bash", "-c", action.run] })
                     break
                   case "object":
-                    const run = action.execute.join(' && ')
+                    const run = action.run.join(' && ')
 
                     dockerfileArray.push({ run: ["bash", "-c", run] })
                     break

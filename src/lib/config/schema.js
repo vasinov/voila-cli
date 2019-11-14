@@ -38,7 +38,7 @@ exports.schema = {
                   items: {
                     type: 'object',
                     properties: {
-                      execute: {
+                      run: {
                         oneOf: [
                           {
                             type: "string"

@@ -99,11 +99,12 @@ Environmental variables only available during the `build` stage.
 
 ### `stages.build.actions` (optional)
 
-There is currently one type of `action` called `execute`. Here's an example of how to use it:
+There is currently one type of `action` called `run`. Here's an example of how to use it:
 
 ```yaml
 actions:
-  - execute: apt-get -y install gfortran
+  - run: [apt-get update, apt-get -y install gfortran]
+  - run: apt-get -y install vim
 ```
 
 `Execute` actions can be strings or arrays. If the action is an array then the CLI converts all of its elements into one `RUN` statement in the dockerfile by joining them with `&&`.
