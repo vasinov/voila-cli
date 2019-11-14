@@ -18,24 +18,28 @@ exports.task = async (ctx, flags, args, showAll = false) => {
     selectedStacks.push(ctx.config.getStack(flags['stack-name']))
   } else if (ctx.config.projectStacks.length === 1) {
     selectedStacks.push(ctx.config.projectStacks[0])
+  } else if (showAll) {
+    await addStacksFromResponse(ctx.config.projectStacks, selectedStacks, ctx.config.projectStacks)
   } else if (stacksInCurrentPath.length === 1) {
-    selectedStacks.push(stackHostPath(stacksInCurrentPath[0]))
+    selectedStacks.push(stacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length > 1) {
-    const choices = showAll ?
-      ctx.config.projectStacks.map(s => { return { name: s.name } }) :
-      stacksInCurrentPath.map(s => { return { name: s.name } })
-
-    const response = await inquirer.prompt([{
-      name: 'stack',
-      message: 'Multiple stacks detected. What stack should be used?',
-      type: 'list',
-      choices: choices,
-    }])
-
-    selectedStacks.push(ctx.config.projectStacks.find(s => s.name === response.stack))
+    await addStacksFromResponse(stacksInCurrentPath, selectedStacks, ctx.config.projectStacks)
   } else {
     throw new VoilaError(errorMessages.SPECIFY_STACK_NAME)
   }
 
   ctx.stacks = selectedStacks
+}
+
+addStacksFromResponse = async (choiceStacks, selectedStacks, allStacks) => {
+  const choices = choiceStacks.map(s => { return { name: s.name } })
+
+  const response = await inquirer.prompt([{
+    name: 'stack',
+    message: 'Multiple stacks detected. What stack should be used?',
+    type: 'list',
+    choices: choices,
+  }])
+
+  selectedStacks.push(allStacks.find(s => s.name === response.stack))
 }
