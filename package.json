@@ -55,9 +55,6 @@
       "@oclif/plugin-not-found",
       "@oclif/plugin-autocomplete"
     ],
-    "hooks": {
-      "prerun": "./src/hooks/prerun/load-state"
-    },
     "update": {
       "s3": {
         "bucket": "penguin-cli-tarballs"

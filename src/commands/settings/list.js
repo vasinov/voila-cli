@@ -1,17 +1,16 @@
-const {Command} = require('@oclif/command')
+const BaseCommand = require('../base')
 
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 
-class ListCommand extends Command {
+class ListCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(ListCommand)
-    const storage = this.config.storage
 
     const tasks = [
       {
         action: ctx => {
-          const data = Object.entries(storage.list('settings')).map(e => {
+          const data = Object.entries(this.storage.list('settings')).map(e => {
             return {
               key: e[0],
               value: e[1]

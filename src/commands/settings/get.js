@@ -1,17 +1,16 @@
-const {Command} = require('@oclif/command')
+const BaseCommand = require('../base')
 
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 
-class GetCommand extends Command {
+class GetCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(GetCommand)
-    const storage = this.config.storage
 
     const tasks = [
       {
         action: ctx => {
-          logger.info(storage.get('settings', args['key']))
+          logger.info(this.storage.get('settings', args['key']))
         }
       }
     ]

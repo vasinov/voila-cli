@@ -1,19 +1,18 @@
-const {Command} = require('@oclif/command')
+const BaseCommand = require('../base')
 
 const runTask = require('../../lib/run-task')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
 
-class SetCommand extends Command {
+class SetCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(SetCommand)
-    const storage = this.config.storage
 
     const tasks = [
       {
         action: ctx => {
-          if (storage.get('settings', args['key'])) {
-            storage.set('settings', args['key'], args['value'])
+          if (this.storage.get('settings', args['key'])) {
+            this.storage.set('settings', args['key'], args['value'])
           } else {
             throw new PenguinError(errorMessages.STORAGE_SETTINGS_KEY_DOESNT_EXIST)
           }
