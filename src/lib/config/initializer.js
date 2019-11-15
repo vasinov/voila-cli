@@ -46,20 +46,20 @@ exports.init = force => {
 }
 
 exports.createStackConfigFromTemplate = (stackName, hostDir, template) => {
+  let suffix = ''
   let fileCreated = false
 
   while (!fileCreated) {
-    const randomness = crypto.randomBytes(2).toString('hex')
     const yamlPath = path.join(
-      paths.projectHostPath().join('/'), configDirName, stacksDirName, `${stackName}-${randomness}.yml`
+      paths.projectHostPath().join('/'), configDirName, stacksDirName, `${stackName}${suffix}.yml`
     )
 
     if (!fs.existsSync(yamlPath)) {
-      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stackName, hostDir, template.images)), err => {
-        throw new Error(err.message)
-      })
+      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stackName, hostDir, template.images)))
 
       fileCreated = true
+    } else {
+      suffix = `-${crypto.randomBytes(2).toString('hex')}`
     }
   }
 }
