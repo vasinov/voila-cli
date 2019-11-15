@@ -43,11 +43,11 @@ class $Command extends Command {
         if (command === '') {
           throw new PenguinError(errorMessages.SPECIFY_COMMAND)
         } else if (shouldDetach) {
-          $Command.log(stack.name, workdir, command, true)
+          logger.dimInfo(`Asynchronously executing "${command}" in ${containerName}:${workdir}`)
 
           dockerUtils.execCommandAsync(containerName, workdir, command)
         } else {
-          $Command.log(stack.name, workdir, command, false)
+          logger.dimInfo(`Executing "${command}" in ${containerName}:${workdir}`)
 
           dockerUtils.execCommandSync(containerName, workdir, command)
         }
@@ -56,14 +56,6 @@ class $Command extends Command {
       }
     } else {
       throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
-    }
-  }
-
-  static log(stackName, workdir, command, isAsync) {
-    if (isAsync) {
-      logger.dimInfo(`Asynchronously executing "${command}" in ${stackName}:${workdir}`)
-    } else {
-      logger.dimInfo(`Executing "${command}" in ${stackName}:${workdir}`)
     }
   }
 }
