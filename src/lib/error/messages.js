@@ -13,6 +13,9 @@ module.exports = {
   DOCKERFILE_DOESNT_EXIST: `Dockerfile doesn't exist.`,
   DOCKERFILE_OUTSIDE_PROJECT: `Dockerfile path has to be inside the current project.`,
 
+  STACK_NAME_INVALID: `Stack name has to be a non-empty alphanumeric string ("-" and "_" characters are allowed).`,
+  STACK_NAME_EXISTS: `Stack name already exists.`,
+
   stackNotRunningError: (stackName) => {
     return `Stack "${stackName}" is not running. Start it with "voila start ${stackName}" first.`
   },

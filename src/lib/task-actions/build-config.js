@@ -5,9 +5,9 @@ const Builder = require('../config/builder')
 exports.task = (ctx, verbose = true) => {
   if (verbose) logger.infoWithTime('Loading config')
 
-  const [message, userConfig] = loadUserConfig()
+  const userConfig = loadUserConfig()
 
-  ctx.config = new Builder(userConfig)
+  ctx.config = new Builder(userConfig.config)
 
-  if (message) logger.warn(message)
+  if (userConfig.message) logger.warn(userConfig.message)
 }

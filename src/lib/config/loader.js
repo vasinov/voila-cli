@@ -47,7 +47,10 @@ exports.loadUserConfig = () => {
       errorMessages.multipleConfigsWarning(allPaths, this.prefixConfigDir(allPaths[allPaths.length - 1])) :
       null
 
-    return [message, userConfig]
+    return {
+      message: message,
+      config: userConfig
+    }
   } else {
     throw new VoilaError(errorMessages.NO_CONFIG)
   }

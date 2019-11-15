@@ -9,6 +9,7 @@ const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = r
 const {stackTemplateData} = require('./templates/stacks')
 const VoilaError = require('../error/voila-error')
 const errorMessages = require('../error/messages')
+const paths = require('../../lib/paths')
 
 exports.init = force => {
   let folderExistsInParents = false
@@ -44,15 +45,17 @@ exports.init = force => {
   }
 }
 
-exports.createModuleConfigFromTemplate = (template, fileName) => {
+exports.createStackConfigFromTemplate = (stackName, hostDir, template) => {
   let fileCreated = false
 
   while (!fileCreated) {
     const randomness = crypto.randomBytes(2).toString('hex')
-    const yamlPath = path.join(configDirName, stacksDirName, `${fileName}-${randomness}.yml`)
+    const yamlPath = path.join(
+      paths.projectHostPath().join('/'), configDirName, stacksDirName, `${stackName}-${randomness}.yml`
+    )
 
     if (!fs.existsSync(yamlPath)) {
-      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(template.name, template.images)), err => {
+      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stackName, hostDir, template.images)), err => {
         throw new Error(err.message)
       })
 
@@ -64,7 +67,9 @@ exports.createModuleConfigFromTemplate = (template, fileName) => {
 const createConfigFiles = () => {
   createProjectConfig()
 
-  stackTemplateData.forEach(template => this.createModuleConfigFromTemplate(template, template.name))
+  stackTemplateData.forEach(template => {
+    this.createStackConfigFromTemplate(template.name, '.', template)
+  })
 }
 
 const createProjectConfig = () => {
@@ -79,8 +84,8 @@ const generateProjectConfig = () => {
   return projectTemplate(crypto.randomBytes(5).toString('hex'))
 }
 
-const generateStackConfig = (name, images) => {
-  return stackTemplate(name, images)
+const generateStackConfig = (name, hostDir, images) => {
+  return stackTemplate(name, hostDir, images)
 }
 
 const removeDirectory = dirPath => {

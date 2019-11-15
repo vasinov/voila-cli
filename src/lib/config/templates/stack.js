@@ -1,4 +1,4 @@
-exports.stackTemplate = (name, images) => {
+exports.stackTemplate = (name, hostDir, images) => {
   return {
     "name": name,
     "stages": {
@@ -6,7 +6,7 @@ exports.stackTemplate = (name, images) => {
         "images": images
       },
       "run": {
-        "hostDir": ".",
+        "hostDir": hostDir,
         "containerDir": "/project"
       }
     }

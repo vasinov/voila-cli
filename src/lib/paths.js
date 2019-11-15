@@ -58,4 +58,10 @@ exports.toAbsolutePath = p => {
   }
 }
 
+exports.relativePath = p => {
+  const relativePath = path.relative(this.projectHostPath().join('/'), p)
+
+  return (relativePath) ? relativePath.split('/') : '.'.split('/')
+}
+
 exports.isAbsolute = p => path.isAbsolute(p)
