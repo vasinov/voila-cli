@@ -16,7 +16,8 @@ module.exports = {
   STACK_NAME_INVALID: `Stack name has to be a non-empty alphanumeric string ("-" and "_" characters are allowed).`,
   STACK_NAME_EXISTS: `Stack name already exists.`,
 
-  STORAGE_TABLE_DOESNT_EXIST: `Specified table doesn't exist in the local storage.`,
+  STORAGE_TABLE_DOESNT_EXIST: `Table doesn't exist in the local storage.`,
+  STORAGE_SETTINGS_KEY_DOESNT_EXIST: `Key doesn't exist in the settings.`,
 
   stackNotRunningError: (stackName) => {
     return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`

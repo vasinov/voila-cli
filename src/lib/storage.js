@@ -9,7 +9,7 @@ module.exports = class Storage {
   }
 
   static defaultTables = {
-    penguinSettings: {
+    settings: {
       dockerPath: 'docker'
     },
     jobs: {
@@ -42,6 +42,28 @@ module.exports = class Storage {
       const table = JSON.parse(fs.readFileSync(fullPath))
 
       return table[key]
+    } else {
+      throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
+    }
+  }
+
+  remove = (tableName, key) => {
+    const fullPath = this.fullPathTable(tableName)
+
+    if (fs.existsSync(fullPath)) {
+      const table = JSON.parse(fs.readFileSync(fullPath))
+
+      delete table[key]
+    } else {
+      throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
+    }
+  }
+
+  list = tableName => {
+    const fullPath = this.fullPathTable(tableName)
+
+    if (fs.existsSync(fullPath)) {
+      return JSON.parse(fs.readFileSync(fullPath))
     } else {
       throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
     }
