@@ -16,7 +16,7 @@ class InitCommand extends Command {
           initializer.init(flags.force)
 
           logger.infoWithTime(
-            `New ".voila" folder with config files was successfully generated in the current directory.`, true)
+            `New ".penguin" folder with config files was successfully generated in the current directory.`, true)
         }
       }
     ]
@@ -25,7 +25,7 @@ class InitCommand extends Command {
   }
 }
 
-InitCommand.description = `Initialize Voila in the current directory. This command creates a ".voila" folder with YAML config files.`
+InitCommand.description = `Initialize Penguin in the current directory. This command creates a ".penguin" folder with YAML config files.`
 
 InitCommand.flags = {
   force: flags.boolean({

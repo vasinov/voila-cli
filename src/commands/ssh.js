@@ -3,7 +3,7 @@ const {Command, flags} = require('@oclif/command')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
-const VoilaError = require('../lib/error/voila-error')
+const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const logger = require('../lib/logger')
@@ -34,10 +34,10 @@ class SshCommand extends Command {
 
                 dockerUtils.sshContainer(containerName, workdir)
               } else {
-                throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
+                throw new PenguinError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
               }
             } else {
-              throw new VoilaError(errorMessages.stackNotRunningError(stack.name))
+              throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
             }
           })
         }

@@ -1,12 +1,12 @@
 {
-  "name": "voila",
-  "description": "Voila CLI",
+  "name": "penguin",
+  "description": "Penguin CLI",
   "version": "0.4.0",
   "author": "Vasily Vasinov @vasinov",
   "bin": {
-    "voila": "./bin/run"
+    "penguin": "./bin/run"
   },
-  "bugs": "https://github.com/getvoila/cli/issues",
+  "bugs": "https://github.com/getvoila/penguin/issues",
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
@@ -40,7 +40,7 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://github.com/getvoila/cli",
+  "homepage": "https://github.com/getvoila/penguin",
   "keywords": [
     "oclif"
   ],
@@ -48,7 +48,7 @@
   "main": "src/index.js",
   "oclif": {
     "commands": "./src/commands",
-    "bin": "voila",
+    "bin": "penguin",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-update",
@@ -60,14 +60,16 @@
     },
     "update": {
       "s3": {
-        "bucket": "voila-cli-tarballs"
+        "bucket": "penguin-cli-tarballs"
       }
     },
     "topics": {
-      "stacks": { "description": "Show additional information and modify stacks." }
+      "stacks": {
+        "description": "Show additional information and modify stacks."
+      }
     }
   },
-  "repository": "getvoila/cli",
+  "repository": "getvoila/penguin",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",

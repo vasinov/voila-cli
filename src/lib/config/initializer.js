@@ -7,7 +7,7 @@ const {projectTemplate} = require('./templates/project')
 const {stackTemplate} = require('./templates/stack')
 const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
 const {stackTemplateData} = require('./templates/stacks')
-const VoilaError = require('../error/voila-error')
+const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 const paths = require('../../lib/paths')
 
@@ -29,10 +29,10 @@ exports.init = force => {
   }
 
   if (folderExistsInParents) {
-    throw new VoilaError(errorMessages.configExistsInParentError(currentPath.join('/')))
+    throw new PenguinError(errorMessages.configExistsInParentError(currentPath.join('/')))
   } else {
     if (fs.existsSync(configDirName) && !force) {
-      throw new VoilaError(errorMessages.CONFIG_ALREADY_EXISTS)
+      throw new PenguinError(errorMessages.CONFIG_ALREADY_EXISTS)
     } else {
       const stacksFolderPath = path.join(configDirName, stacksDirName)
       removeDirectory(configDirName)

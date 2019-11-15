@@ -1,17 +1,17 @@
 const {spawn, spawnSync, exec, execSync} = require('child_process')
 
-const VoilaError = require('../lib/error/voila-error')
+const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 
 const defaultTag = "latest"
 
 exports.containerName = (projectName, dockerfileName) => {
-  return `voila-${projectName}-${dockerfileName}`
+  return `penguin-${projectName}-${dockerfileName}`
 }
 
 exports.imageNameWithTag = (projectName, dockerfileName, tag) => {
-  return `voila-${projectName}-${dockerfileName}:${tag}`
+  return `penguin-${projectName}-${dockerfileName}:${tag}`
 }
 
 exports.imageName = (projectName, dockerfileName) => {
@@ -104,7 +104,7 @@ runCommand = (command, args, options, action) => {
   const result = spawnSync(command, args, options)
 
   if (result.stderr && result.stderr.length > 0) {
-    throw new VoilaError(result.stderr)
+    throw new PenguinError(result.stderr)
   } else if (result.stdout) {
     return action(result.stdout.toString())
   } else {

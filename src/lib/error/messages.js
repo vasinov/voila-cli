@@ -1,7 +1,7 @@
 module.exports = {
-  CONFIG_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
-  NO_CONFIG: `Can't find ".voila". Initialize Voila with "voila init" first.`,
-  DEFINE_STACKS: `Define stacks in ".voila/stacks" first.`,
+  CONFIG_ALREADY_EXISTS: `".penguin" already exists. Run "penguin init --force" to overwrite.`,
+  NO_CONFIG: `Can't find ".penguin". Initialize Penguin with "penguin init" first.`,
+  DEFINE_STACKS: `Define stacks in ".penguin/stacks" first.`,
   SPECIFY_STACK_NAME: `Specify stack name.`,
   STACK_NOT_FOUND: `Stack not found.`,
   SPECIFY_COMMAND: `Specify command to run.`,
@@ -17,19 +17,19 @@ module.exports = {
   STACK_NAME_EXISTS: `Stack name already exists.`,
 
   stackNotRunningError: (stackName) => {
-    return `Stack "${stackName}" is not running. Start it with "voila start ${stackName}" first.`
+    return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`
   },
 
   containerError: (containerName, code, reason) => {
     return `Error: Container "${containerName}" returned error code ${code} during "${reason}".`
   },
 
-  configExistsInParentError: (path) => `You can't initialize new Voila projects inside of an existing project. ".voila.yml" was found in "${path}".`,
+  configExistsInParentError: (path) => `You can't initialize new Penguin projects inside of an existing project. ".penguin.yml" was found in "${path}".`,
 
   multipleConfigsWarning: (paths, loadedFile) => {
     const pathList = paths.map(p => `${p}\n`).join('')
 
-    return `Multiple ".voila.yml" files were detected in the following directories:\n\n` +
+    return `Multiple ".penguin.yml" files were detected in the following directories:\n\n` +
       `${pathList}\n\n` +
       `Loading the top level file: ${loadedFile}`
   },
@@ -39,6 +39,6 @@ module.exports = {
   },
 
   stopStackBeforeProceeding: stack => {
-    return `Stack "${stack}" is currently running. Stop it with "voila stop ${stack}" first`
+    return `Stack "${stack}" is currently running. Stop it with "penguin stop ${stack}" first`
   }
 }

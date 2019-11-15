@@ -4,7 +4,7 @@ const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
-const VoilaError = require('../lib/error/voila-error')
+const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 
@@ -41,7 +41,7 @@ class $Command extends Command {
         const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
 
         if (command === '') {
-          throw new VoilaError(errorMessages.SPECIFY_COMMAND)
+          throw new PenguinError(errorMessages.SPECIFY_COMMAND)
         } else if (shouldDetach) {
           $Command.log(stack.name, workdir, command, true)
 
@@ -52,10 +52,10 @@ class $Command extends Command {
           dockerUtils.execCommandSync(containerName, workdir, command)
         }
       } else {
-        throw new VoilaError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
+        throw new PenguinError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
       }
     } else {
-      throw new VoilaError(errorMessages.stackNotRunningError(stack.name))
+      throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
     }
   }
 

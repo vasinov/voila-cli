@@ -2,7 +2,7 @@ const Validator = require('jsonschema').Validator
 const fs = require('fs')
 const generator = require('dockerfile-generator/lib/dockerGenerator')
 
-const VoilaError = require('../error/voila-error')
+const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 const paths = require('../paths')
 
@@ -20,7 +20,7 @@ module.exports = class Builder {
     if (paths.doesPath1ContainPath2(absoluteHostPath, paths.projectHostPath())) {
       return absoluteHostPath.join('/')
     } else {
-      throw new VoilaError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
+      throw new PenguinError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
     }
   }
 
@@ -28,7 +28,7 @@ module.exports = class Builder {
     if (paths.isAbsolute(stack.stages.run.containerDir)) {
       return stack.stages.run.containerDir
     } else {
-      throw new VoilaError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
+      throw new PenguinError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
     }
   }
 
@@ -39,7 +39,7 @@ module.exports = class Builder {
       if (paths.doesPath1ContainPath2(absoluteDockerfilePath, paths.projectHostPath())) {
         return absoluteDockerfilePath
       } else {
-        throw new VoilaError(errorMessages.DOCKERFILE_OUTSIDE_PROJECT)
+        throw new PenguinError(errorMessages.DOCKERFILE_OUTSIDE_PROJECT)
       }
     } else {
       return null
@@ -89,7 +89,7 @@ module.exports = class Builder {
             dockerfile += `\nENTRYPOINT [ "bash", "-c", "${stack.stages.run.command}" ]`
           }
         } else {
-          throw new VoilaError(errorMessages.DOCKERFILE_DOESNT_EXIST)
+          throw new PenguinError(errorMessages.DOCKERFILE_DOESNT_EXIST)
         }
       } else {
         const dockerfileArray = []
@@ -152,7 +152,7 @@ module.exports = class Builder {
     if (stack) {
       return stack
     } else {
-      throw new VoilaError(errorMessages.STACK_NOT_FOUND)
+      throw new PenguinError(errorMessages.STACK_NOT_FOUND)
     }
   }
 }

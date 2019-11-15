@@ -1,4 +1,4 @@
-const VoilaError = require('../error/voila-error')
+const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 const {doesCurrentPathContainPath, stackHostPath} = require('../paths')
 const inquirer = require('inquirer')
@@ -25,7 +25,7 @@ exports.task = async (ctx, flags, args, showAll = false) => {
   } else if (stacksInCurrentPath.length > 1) {
     await addStacksFromResponse(stacksInCurrentPath, selectedStacks, ctx.config.projectStacks)
   } else {
-    throw new VoilaError(errorMessages.SPECIFY_STACK_NAME)
+    throw new PenguinError(errorMessages.SPECIFY_STACK_NAME)
   }
 
   ctx.stacks = selectedStacks

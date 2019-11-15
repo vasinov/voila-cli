@@ -3,10 +3,10 @@ const fs = require('fs')
 
 const path = require('path')
 
-const VoilaError = require('../error/voila-error')
+const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 
-exports.configDirName = '.voila'
+exports.configDirName = '.penguin'
 exports.stacksDirName = 'stacks'
 exports.projectConfigFileName = 'config.yml'
 exports.stackFileExtension = '.yml'
@@ -52,7 +52,7 @@ exports.loadUserConfig = () => {
       config: userConfig
     }
   } else {
-    throw new VoilaError(errorMessages.NO_CONFIG)
+    throw new PenguinError(errorMessages.NO_CONFIG)
   }
 }
 

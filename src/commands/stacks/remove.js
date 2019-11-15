@@ -5,7 +5,7 @@ const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 const {containerName, isContainerRunning} = require('../../lib/docker-utils')
-const VoilaError = require('../../lib/error/voila-error')
+const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
 
 class RemoveCommand extends Command {
@@ -31,7 +31,7 @@ class RemoveCommand extends Command {
 
   static removeStack(ctx, stack) {
     if (isContainerRunning(containerName(ctx.config.projectId, stack.name))) {
-      throw new VoilaError(errorMessages.stopStackBeforeProceeding(stack.name))
+      throw new PenguinError(errorMessages.stopStackBeforeProceeding(stack.name))
     } else {
       fs.unlinkSync(stack.configFile)
       logger.info(`Stack "${stack.name}" removed`)

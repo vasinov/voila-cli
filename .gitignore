@@ -60,9 +60,9 @@ typings/
 # next.js build output
 .next
 
-# CLI-generated Voila files
-.voila.yml
-.voila
+# CLI-generated Penguin files
+.penguin.yml
+.penguin
 
 .idea
 .DS_Store

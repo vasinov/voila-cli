@@ -1,5 +1,5 @@
 const ValidationError = require('jsonschema').ValidationError
-const VoilaError = require('./error/voila-error')
+const PenguinError = require('./error/penguin-error')
 const logger = require('../lib/logger')
 
 const runTask = async (tasks, ctx = {}) => {
@@ -16,7 +16,7 @@ const runTask = async (tasks, ctx = {}) => {
   } catch (error) {
     if (error instanceof ValidationError) {
       logger.error(`YAML config validation failed: ${error.stack.replace(/instance/g, 'root')}`)
-    } else if (error instanceof VoilaError) {
+    } else if (error instanceof PenguinError) {
       logger.error(error.message)
     } else {
       logger.error(error.stack)
