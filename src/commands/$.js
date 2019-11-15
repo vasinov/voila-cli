@@ -1,5 +1,6 @@
-const {Command, flags} = require('@oclif/command')
+const {flags} = require('@oclif/command')
 
+const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
@@ -8,7 +9,7 @@ const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 
-class $Command extends Command {
+class $Command extends BaseCommand {
   async run() {
     const {argv, flags} = this.parse($Command)
 

@@ -1,5 +1,4 @@
 const BaseCommand = require('../base')
-
 const runTask = require('../../lib/run-task')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')

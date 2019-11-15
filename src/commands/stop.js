@@ -1,11 +1,12 @@
-const {Command, flags} = require('@oclif/command')
+const {flags} = require('@oclif/command')
 
+const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
 
-class StopCommand extends Command {
+class StopCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(StopCommand)
 

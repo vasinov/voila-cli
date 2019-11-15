@@ -1,5 +1,6 @@
-const {Command, flags} = require('@oclif/command')
+const {flags} = require('@oclif/command')
 
+const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
 const dockerUtils = require('../lib/docker-utils')
@@ -8,7 +9,7 @@ const errorMessages = require('../lib/error/messages')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const logger = require('../lib/logger')
 
-class SshCommand extends Command {
+class SshCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(SshCommand)
 

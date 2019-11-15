@@ -1,10 +1,11 @@
-const {Command, flags} = require('@oclif/command')
+const {flags} = require('@oclif/command')
 
+const BaseCommand = require('./base')
 const initializer = require('../lib/config/initializer')
 const runTask = require('../lib/run-task')
 const logger = require('../lib/logger')
 
-class InitCommand extends Command {
+class InitCommand extends BaseCommand {
   async run() {
     const {flags} = this.parse(InitCommand)
 

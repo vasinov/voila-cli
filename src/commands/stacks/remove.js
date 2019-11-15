@@ -1,6 +1,6 @@
-const {Command} = require('@oclif/command')
 const fs = require('fs')
 
+const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
@@ -8,7 +8,7 @@ const {containerName, isContainerRunning} = require('../../lib/docker-utils')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
 
-class RemoveCommand extends Command {
+class RemoveCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(RemoveCommand)
 

@@ -1,10 +1,9 @@
-const {Command} = require('@oclif/command')
-
+const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 
-class PathCommand extends Command {
+class PathCommand extends BaseCommand {
   async run() {
     const {flags, args} = this.parse(PathCommand)
 
