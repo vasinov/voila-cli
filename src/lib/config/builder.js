@@ -130,7 +130,7 @@ module.exports = class Builder {
         containerDir: containerDir,
         volumes: volumes,
         ports: ports,
-        env: stack.stages.run.env,
+        env: stack.stages.run.env || [],
         dockerfile: dockerfile,
         entrypointCommand: stack.stages.run.command
       }
