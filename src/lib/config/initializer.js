@@ -31,7 +31,7 @@ exports.init = force => {
     throw new VoilaError(errorMessages.configExistsInParentError(currentPath.join('/')))
   } else {
     if (fs.existsSync(configDirName) && !force) {
-      throw new VoilaError(errorMessages.VOILA_YML_ALREADY_EXISTS)
+      throw new VoilaError(errorMessages.CONFIG_ALREADY_EXISTS)
     } else {
       const stacksFolderPath = path.join(configDirName, stacksDirName)
       removeDirectory(configDirName)

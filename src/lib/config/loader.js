@@ -49,7 +49,7 @@ exports.loadUserConfig = () => {
 
     return [message, userConfig]
   } else {
-    throw new VoilaError(errorMessages.NO_VOILA_YML)
+    throw new VoilaError(errorMessages.NO_CONFIG)
   }
 }
 

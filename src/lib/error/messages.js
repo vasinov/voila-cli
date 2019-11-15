@@ -1,6 +1,6 @@
 module.exports = {
-  VOILA_YML_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
-  NO_VOILA_YML: `Can't find ".voila". Initialize Voila with "voila init" first.`,
+  CONFIG_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
+  NO_CONFIG: `Can't find ".voila". Initialize Voila with "voila init" first.`,
   DEFINE_STACKS: `Define stacks in ".voila/stacks" first.`,
   SPECIFY_STACK_NAME: `Specify stack name.`,
   STACK_NOT_FOUND: `Stack not found.`,
@@ -9,7 +9,6 @@ module.exports = {
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
   CONTAINER_DIR_NOT_ABSOLUTE: `"containerDir" in the stack config file has to be an absolute path.`,
   HOST_DIR_OUTSIDE_PROJECT: `"hostDir" has to be inside the current project.`,
-
 
   DOCKERFILE_DOESNT_EXIST: `Dockerfile doesn't exist.`,
   DOCKERFILE_OUTSIDE_PROJECT: `Dockerfile path has to be inside the current project.`,
