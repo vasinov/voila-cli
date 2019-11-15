@@ -4,7 +4,6 @@ const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
 const runTask = require('../lib/run-task')
-const dockerUtils = require('../lib/docker-utils')
 const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
@@ -23,7 +22,7 @@ class $Command extends BaseCommand {
       {
         action: ctx => {
           ctx.stacks.forEach(stack => {
-            $Command.processCommand(ctx, argv, stack, flags['run-as-job'], flags['stack-path'])
+            this.processCommand(ctx, argv, stack, flags['run-as-job'], flags['stack-path'])
           })
         }
       }
@@ -32,10 +31,10 @@ class $Command extends BaseCommand {
     await runTask(tasks)
   }
 
-  static processCommand(ctx, argv, stack, shouldDetach, executeIn) {
-    const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+  processCommand(ctx, argv, stack, shouldDetach, executeIn) {
+    const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
-    if (dockerUtils.isContainerRunning(containerName)) {
+    if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')
 
       if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
@@ -46,11 +45,11 @@ class $Command extends BaseCommand {
         } else if (shouldDetach) {
           logger.dimInfo(`Asynchronously executing "${command}" in ${containerName}:${workdir}`)
 
-          dockerUtils.execCommandAsync(containerName, workdir, command)
+          this.docker.execCommandAsync(containerName, workdir, command)
         } else {
           logger.dimInfo(`Executing "${command}" in ${containerName}:${workdir}`)
 
-          dockerUtils.execCommandSync(containerName, workdir, command)
+          this.docker.execCommandSync(containerName, workdir, command)
         }
       } else {
         throw new PenguinError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))

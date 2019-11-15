@@ -1,7 +1,6 @@
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
-const dockerUtils = require('../../lib/docker-utils')
 const logger = require('../../lib/logger')
 
 class StatusCommand extends BaseCommand {
@@ -24,13 +23,13 @@ class StatusCommand extends BaseCommand {
           const data = []
 
           ctx.config.projectStacks.map(stack => {
-            const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+            const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
             data.push({
               stackName: stack.name,
               mountedHostDir: stack.hostDir,
               containerName: containerName,
-              containerStatus: dockerUtils.containerStatus(containerName)
+              containerStatus: this.docker.containerStatus(containerName)
             })
           })
 

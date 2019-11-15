@@ -33,9 +33,9 @@ class CreateCommand extends BaseCommand {
           if (!validation.isValid) throw new PenguinError(validation.message)
 
           if (flags['empty']) {
-            CreateCommand.addStack(stackName)
+            this.addStack(stackName)
           } else if (flags['template-name']) {
-            CreateCommand.addStack(stackName, flags['template-name'])
+            this.addStack(stackName, flags['template-name'])
           } else {
               const noTemplateChoice = 'no template'
 
@@ -48,7 +48,7 @@ class CreateCommand extends BaseCommand {
 
             const stackTemplate = response.template === noTemplateChoice ? null : response.template
 
-            CreateCommand.addStack(stackName, stackTemplate)
+            this.addStack(stackName, stackTemplate)
           }
         }
       }
@@ -57,7 +57,7 @@ class CreateCommand extends BaseCommand {
     await runTask(tasks)
   }
 
-  static addStack(stackName, templateName = null) {
+  addStack(stackName, templateName = null) {
     const hostDir = paths.relativePath(process.cwd()).join('/')
 
     if (templateName) {

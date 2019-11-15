@@ -3,7 +3,6 @@ const {flags} = require('@oclif/command')
 const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
-const dockerUtils = require('../lib/docker-utils')
 const logger = require('../lib/logger')
 
 class StopCommand extends BaseCommand {
@@ -26,11 +25,11 @@ class StopCommand extends BaseCommand {
           logger.infoWithTime('Stopping stacks')
 
           ctx.stacks.forEach(stack => {
-            const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+            const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
             const localdir = process.cwd()
 
-            if (dockerUtils.isContainerRunning(containerName)) {
-              dockerUtils.stopContainer(localdir, containerName)
+            if (this.docker.isContainerRunning(containerName)) {
+              this.docker.stopContainer(localdir, containerName)
 
               logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
             } else {

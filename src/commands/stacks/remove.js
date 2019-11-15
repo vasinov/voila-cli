@@ -4,7 +4,6 @@ const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
-const {containerName, isContainerRunning} = require('../../lib/docker-utils')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
 
@@ -21,7 +20,7 @@ class RemoveCommand extends BaseCommand {
       },
       {
         action: async ctx => {
-          ctx.stacks.forEach(stack => RemoveCommand.removeStack(ctx, stack))
+          ctx.stacks.forEach(stack => this.removeStack(ctx, stack))
         }
       }
     ]
@@ -29,8 +28,8 @@ class RemoveCommand extends BaseCommand {
     await runTask(tasks)
   }
 
-  static removeStack(ctx, stack) {
-    if (isContainerRunning(containerName(ctx.config.projectId, stack.name))) {
+  removeStack(ctx, stack) {
+    if (this.docker.isContainerRunning(this.docker.containerName(ctx.config.projectId, stack.name))) {
       throw new PenguinError(errorMessages.stopStackBeforeProceeding(stack.name))
     } else {
       fs.unlinkSync(stack.configFile)

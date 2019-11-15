@@ -3,7 +3,6 @@ const {flags} = require('@oclif/command')
 const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
-const dockerUtils = require('../lib/docker-utils')
 const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
@@ -26,14 +25,14 @@ class SshCommand extends BaseCommand {
           ctx.stacks.forEach(stack => {
             const executeIn = flags['stack-path']
 
-            const containerName = dockerUtils.containerName(ctx.config.projectId, stack.name)
+            const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
-            if (dockerUtils.isContainerRunning(containerName)) {
+            if (this.docker.isContainerRunning(containerName)) {
 
               if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
                 const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
 
-                dockerUtils.sshContainer(containerName, workdir)
+                this.docker.sshContainer(containerName, workdir)
               } else {
                 throw new PenguinError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
               }

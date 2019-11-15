@@ -3,18 +3,9 @@ const fs = require('fs')
 const PenguinError = require('./error/penguin-error')
 const errorMessages = require('./error/messages')
 
-module.exports = class Storage {
+class Storage {
   constructor(storagePath) {
     this.storagePath = storagePath
-  }
-
-  static defaultTables = {
-    settings: {
-      dockerPath: 'docker'
-    },
-    jobs: {
-      list: []
-    }
   }
 
   fullPathTable = tableName => {
@@ -83,3 +74,14 @@ module.exports = class Storage {
     fs.writeFileSync(fullPath, JSON.stringify(table))
   }
 }
+
+Storage.defaultTables = {
+  settings: {
+    dockerPath: 'docker'
+  },
+  jobs: {
+    list: []
+  }
+}
+
+module.exports = Storage
