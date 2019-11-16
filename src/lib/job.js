@@ -31,4 +31,8 @@ class Job {
 
 Job.containerOutputPath = '/penguin/jobs/output'
 
+Job.list = storage => {
+  return storage.list('jobs')
+}
+
 module.exports = Job

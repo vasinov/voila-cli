@@ -66,6 +66,9 @@
       },
       "settings": {
         "description": "Show and change Penguin settings."
+      },
+      "jobs": {
+        "description": "Work with asyncronous jobs."
       }
     }
   },
