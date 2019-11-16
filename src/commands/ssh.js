@@ -5,7 +5,7 @@ const {buildConfig, loadStacks} = require('../lib/task-actions')
 const runTask = require('../lib/run-task')
 const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
-const {relativeStackPath, stackHostPath, doesCurrentPathContainPath} = require('../lib/paths')
+const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../lib/paths')
 const logger = require('../lib/logger')
 
 class SshCommand extends BaseCommand {
@@ -29,12 +29,12 @@ class SshCommand extends BaseCommand {
 
             if (this.docker.isContainerRunning(containerName)) {
 
-              if (executeIn || doesCurrentPathContainPath(stackHostPath(stack))) {
-                const workdir = (executeIn) ? executeIn : relativeStackPath(stack).join('/')
+              if (executeIn || doesCurrentPathContain(relativeStackHostPath(stack))) {
+                const workdir = (executeIn) ? executeIn : hostToStackAbsolutePath(stack).join('/')
 
                 this.docker.sshContainer(containerName, workdir)
               } else {
-                throw new PenguinError(errorMessages.wrongStackHostDirError(stackHostPath(stack).join('/')))
+                throw new PenguinError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
               }
             } else {
               throw new PenguinError(errorMessages.stackNotRunningError(stack.name))

@@ -51,7 +51,7 @@ exports.createStackConfigFromTemplate = (stackName, hostDir, template) => {
 
   while (!fileCreated) {
     const yamlPath = path.join(
-      paths.projectHostPath().join('/'), configDirName, stacksDirName, `${stackName}${suffix}.yml`
+      paths.absoluteProjectHostPath().join('/'), configDirName, stacksDirName, `${stackName}${suffix}.yml`
     )
 
     if (!fs.existsSync(yamlPath)) {

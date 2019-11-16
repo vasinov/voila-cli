@@ -17,7 +17,7 @@ module.exports = class Builder {
   static readHostDir = stack => {
     const absoluteHostPath = paths.toAbsolutePath(stack.stages.run.hostDir)
 
-    if (paths.doesPath1ContainPath2(absoluteHostPath, paths.projectHostPath())) {
+    if (paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
       return absoluteHostPath.join('/')
     } else {
       throw new PenguinError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
@@ -36,7 +36,7 @@ module.exports = class Builder {
     if (dockerfile) {
       const absoluteDockerfilePath = paths.toAbsolutePath(dockerfile)
 
-      if (paths.doesPath1ContainPath2(absoluteDockerfilePath, paths.projectHostPath())) {
+      if (paths.doesPathContain(absoluteDockerfilePath, paths.absoluteProjectHostPath())) {
         return absoluteDockerfilePath
       } else {
         throw new PenguinError(errorMessages.DOCKERFILE_OUTSIDE_PROJECT)

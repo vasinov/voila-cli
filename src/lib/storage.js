@@ -80,7 +80,7 @@ Storage.defaultTables = {
     dockerPath: 'docker'
   },
   jobs: {
-    list: []
+
   }
 }
 

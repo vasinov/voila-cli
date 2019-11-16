@@ -3,7 +3,7 @@ const {prefixConfigDir} = require('./config/loader')
 const fs = require('fs')
 const path = require('path')
 
-exports.projectHostPath = () => {
+exports.absoluteProjectHostPath = () => {
   let finalPath = null
   let currentPath = process.cwd().split('/')
 
@@ -20,19 +20,19 @@ exports.projectHostPath = () => {
   return finalPath.split('/')
 }
 
-exports.stackHostPath = stack => stack.hostDir.split('/')
+exports.relativeStackHostPath = stack => stack.hostDir.split('/')
 
-exports.relativeStackPath = stack => {
+exports.hostToStackAbsolutePath = stack => {
   const absoluteHostDir = process.cwd().split('/')
   const relativeHostDir = absoluteHostDir.slice(
-    this.stackHostPath(stack).length,
+    this.relativeStackHostPath(stack).length,
     absoluteHostDir.length
   )
 
   return stack.containerDir.split('/').concat(relativeHostDir)
 }
 
-exports.doesPath1ContainPath2 = (p1, p2) => {
+exports.doesPathContain = (p1, p2) => {
   if (p1.length < p2.length) {
     return false
   } else {
@@ -43,23 +43,23 @@ exports.doesPath1ContainPath2 = (p1, p2) => {
 }
 
 exports.doesPathContainCurrentPath = p => {
-  return this.doesPath1ContainPath2(p, process.cwd().split('/'))
+  return this.doesPathContain(p, process.cwd().split('/'))
 }
 
-exports.doesCurrentPathContainPath = p => {
-  return this.doesPath1ContainPath2(process.cwd().split('/'), p)
+exports.doesCurrentPathContain = p => {
+  return this.doesPathContain(process.cwd().split('/'), p)
 }
 
 exports.toAbsolutePath = p => {
   if (this.isAbsolute(p)) {
     return p.split('/')
   } else {
-    return path.join(this.projectHostPath().join('/'), p).split('/')
+    return path.join(this.absoluteProjectHostPath().join('/'), p).split('/')
   }
 }
 
 exports.relativePath = p => {
-  const relativePath = path.relative(this.projectHostPath().join('/'), p)
+  const relativePath = path.relative(this.absoluteProjectHostPath().join('/'), p)
 
   return (relativePath) ? relativePath.split('/') : '.'.split('/')
 }

@@ -3,6 +3,7 @@ const {spawn, spawnSync, exec, execSync} = require('child_process')
 const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
+const Job = require('../lib/job')
 
 class Docker {
   constructor(dockerPath) {
@@ -31,13 +32,7 @@ class Docker {
     })
   }
 
-  containerStatus = containerName => {
-    if (this.isContainerRunning(containerName)) {
-      return 'running'
-    } else {
-      return 'stopped'
-    }
-  }
+  containerStatus = containerName => this.isContainerRunning(containerName) ? 'running' : 'stopped'
 
   startContainer = (stack, containerName, imageName, persistAfterStop, entrypointCommand = null) => {
     const args = ['run']
@@ -77,9 +72,10 @@ class Docker {
     return this.runCommand(this.dockerPath, args, { stdio: 'inherit' }, result => result)
   }
 
-  execCommandAsync = (containerName, workdir, command) => {
-    const pathToJobs = `/penguin/jobs/output`
-    const commandWithPipe = `mkdir -p ${pathToJobs} && ${command} > ${pathToJobs}/job-output`
+  startJob = (containerName, workdir, job) => {
+    const pathToJobs = Job.containerOutputPath
+
+    const commandWithPipe = `mkdir -p ${pathToJobs} && ${job.command} > ${pathToJobs}/${job.id}`
 
     const args = ['exec', '-d', '-w', workdir, containerName, 'bash', '-c', commandWithPipe]
 

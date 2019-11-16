@@ -1,13 +1,13 @@
 const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
-const {doesCurrentPathContainPath, stackHostPath} = require('../paths')
+const {doesCurrentPathContain, relativeStackHostPath} = require('../paths')
 const inquirer = require('inquirer')
 
 exports.task = async (ctx, flags, args, showAll = false) => {
   const selectedStacks = []
 
   const stacksInCurrentPath = ctx.config.projectStacks.filter(stack => {
-    return doesCurrentPathContainPath(stackHostPath(stack))
+    return doesCurrentPathContain(relativeStackHostPath(stack))
   })
 
   if (flags['all']) {

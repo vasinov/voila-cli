@@ -1,16 +1,17 @@
 const {flags} = require('@oclif/command')
 
-const BaseCommand = require('./base')
-const {buildConfig, loadStacks} = require('../lib/task-actions')
-const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../lib/paths')
-const runTask = require('../lib/run-task')
-const PenguinError = require('../lib/error/penguin-error')
-const errorMessages = require('../lib/error/messages')
-const logger = require('../lib/logger')
+const BaseCommand = require('../base')
+const {buildConfig, loadStacks} = require('../../lib/task-actions')
+const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../../lib/paths')
+const runTask = require('../../lib/run-task')
+const PenguinError = require('../../lib/error/penguin-error')
+const errorMessages = require('../../lib/error/messages')
+const logger = require('../../lib/logger')
+const Job = require('../../lib/job')
 
-class $Command extends BaseCommand {
+class StartCommand extends BaseCommand {
   async run() {
-    const {argv, flags} = this.parse($Command)
+    const {argv, flags} = this.parse(StartCommand)
 
     const tasks = [
       {
@@ -43,9 +44,11 @@ class $Command extends BaseCommand {
         if (command === '') {
           throw new PenguinError(errorMessages.SPECIFY_COMMAND)
         } else {
-          logger.dimInfo(`Executing "${command}" in ${containerName}:${workdir}`)
+          const job = new Job(command, true, this.storage)
 
-          this.docker.execCommandSync(containerName, workdir, command)
+          logger.dimInfo(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}`)
+
+          this.docker.startJob(containerName, workdir, job.start())
         }
       } else {
         throw new PenguinError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
@@ -56,21 +59,21 @@ class $Command extends BaseCommand {
   }
 }
 
-$Command.description = `Run a shell command inside of a running stack.`
+StartCommand.description = `Start an asynchronous job inside of a stack.`
 
-$Command.usage = `$ [ARGS...]`
+StartCommand.usage = `$ [ARGS...]`
 
-$Command.strict = false
+StartCommand.strict = false
 
-$Command.flags = {
+StartCommand.flags = {
   'stack-name': flags.string({
     description: `Specify stack name.`
   }),
   'stack-path': flags.string({
-    description: `Specify an absolute path inside the container that you'd like your command to be executed in.`
+    description: `Specify an absolute path inside the container that you'd like your job to be executed in.`
   })
 }
 
-$Command.hidden = false
+StartCommand.hidden = false
 
-module.exports = $Command
+module.exports = StartCommand
