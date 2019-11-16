@@ -3,9 +3,9 @@ const runTask = require('../../lib/run-task')
 const logger = require('../../lib/logger')
 const Job = require('../../lib/job')
 
-class ListCommand extends BaseCommand {
+class StatusCommand extends BaseCommand {
   async run() {
-    const {flags, args} = this.parse(ListCommand)
+    const {flags, args} = this.parse(StatusCommand)
 
     const tasks = [
       {
@@ -15,6 +15,7 @@ class ListCommand extends BaseCommand {
 
             data.queuedAt = new Date(data.queuedAt).toLocaleString()
             data.startedAt = new Date(data.startedAt).toLocaleString()
+            data.status = "unknown"
 
             return data
           }).reverse()
@@ -24,6 +25,7 @@ class ListCommand extends BaseCommand {
             command: { header: 'Command' },
             savingOutput: { header: 'Saving Output' },
             startedAt: { header: 'Started at' },
+            status: { header: 'Status' }
           }, data)
         }
       }
@@ -33,8 +35,8 @@ class ListCommand extends BaseCommand {
   }
 }
 
-ListCommand.description = `List all jobs.`
+StatusCommand.description = `Show status of all jobs.`
 
-ListCommand.hidden = false
+StatusCommand.hidden = false
 
-module.exports = ListCommand
+module.exports = StatusCommand
