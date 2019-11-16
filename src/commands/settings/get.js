@@ -28,4 +28,6 @@ GetCommand.args = [
   }
 ]
 
+GetCommand.hidden = false
+
 module.exports = GetCommand

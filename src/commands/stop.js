@@ -61,4 +61,6 @@ StopCommand.flags = {
   })
 }
 
+StopCommand.hidden = false
+
 module.exports = StopCommand

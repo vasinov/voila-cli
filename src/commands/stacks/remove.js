@@ -48,4 +48,6 @@ RemoveCommand.args = [
   }
 ]
 
+RemoveCommand.hidden = false
+
 module.exports = RemoveCommand

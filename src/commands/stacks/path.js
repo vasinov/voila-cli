@@ -37,4 +37,6 @@ PathCommand.args = [
   }
 ]
 
+PathCommand.hidden = false
+
 module.exports = PathCommand

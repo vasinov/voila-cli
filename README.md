@@ -32,7 +32,7 @@ You need [npm](https://nodejs.org/en/) to install the CLI from source.
 git@github.com:getvoila/penguin.git
 
 # Install package dependencies
-cd cli && npm up
+cd penguin && npm up
 
 # To run the CLI directly 
 ./cli/bin/run
@@ -41,7 +41,7 @@ cd cli && npm up
 npm link
 
 # Initialize a project
-cd my_project
+cd /my_project
 penguin init
 ```
 

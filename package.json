@@ -63,6 +63,9 @@
     "topics": {
       "stacks": {
         "description": "Show additional information and modify stacks."
+      },
+      "settings": {
+        "description": "Show and change Penguin settings."
       }
     }
   },

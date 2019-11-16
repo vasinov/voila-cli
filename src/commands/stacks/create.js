@@ -93,4 +93,6 @@ CreateCommand.flags = {
   }),
 }
 
+CreateCommand.hidden = false
+
 module.exports = CreateCommand

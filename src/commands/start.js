@@ -96,4 +96,6 @@ StartCommand.flags = {
   })
 }
 
+StartCommand.hidden = false
+
 module.exports = StartCommand

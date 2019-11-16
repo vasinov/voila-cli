@@ -79,4 +79,6 @@ $Command.flags = {
   })
 }
 
+$Command.hidden = false
+
 module.exports = $Command

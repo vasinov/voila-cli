@@ -36,4 +36,6 @@ InitCommand.flags = {
   })
 }
 
+InitCommand.hidden = false
+
 module.exports = InitCommand

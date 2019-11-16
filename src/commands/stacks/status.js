@@ -51,4 +51,6 @@ StatusCommand.aliases = ['stacks:list']
 
 StatusCommand.description = `List all project stacks and their status details.`
 
+StatusCommand.hidden = false
+
 module.exports = StatusCommand

@@ -38,4 +38,6 @@ SetCommand.args = [
   }
 ]
 
+SetCommand.hidden = false
+
 module.exports = SetCommand

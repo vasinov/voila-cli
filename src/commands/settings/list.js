@@ -30,4 +30,6 @@ class ListCommand extends BaseCommand {
 
 ListCommand.description = `List all Penguin settings.`
 
+ListCommand.hidden = false
+
 module.exports = ListCommand

@@ -64,4 +64,6 @@ SshCommand.flags = {
   })
 }
 
+SshCommand.hidden = false
+
 module.exports = SshCommand
