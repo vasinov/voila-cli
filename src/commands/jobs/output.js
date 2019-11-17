@@ -34,7 +34,7 @@ class OutputCommand extends BaseCommand {
   }
 }
 
-OutputCommand.description = `Return the current state of the job output.`
+OutputCommand.description = `Return full job output. If the job is still running this command will return the output generated up until now.`
 
 OutputCommand.args = [
   {

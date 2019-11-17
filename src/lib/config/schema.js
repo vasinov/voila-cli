@@ -14,6 +14,7 @@ exports.schema = {
       type: 'object',
       properties: {
         name: { type: 'string' },
+        apiVersion: { type: 'string' },
         stages: {
           type: 'object',
           properties: {
@@ -97,7 +98,7 @@ exports.schema = {
           required: ['build', 'run']
         }
       },
-      required: ['name', 'stages']
+      required: ['name', 'apiVersion', 'stages']
     }
   },
   required: ['id']
