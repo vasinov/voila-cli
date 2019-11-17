@@ -11,13 +11,20 @@ class StatusCommand extends BaseCommand {
       {
         action: ctx => {
           const data = Object.entries(Job.list(this.storage)).map(e => {
-            const data = e[1]
+            const jobJson = e[1]
+            const containerName = this.docker.containerName(jobJson.projectId, jobJson.stackName)
 
-            data.queuedAt = new Date(data.queuedAt).toLocaleString()
-            data.startedAt = new Date(data.startedAt).toLocaleString()
-            data.status = "unknown"
+            const status = jobJson.wasKilled ?
+              'killed':
+              this.docker.isJobRunning(containerName, jobJson.id) ?
+                'running':
+                'finished'
 
-            return data
+            jobJson.queuedAt = new Date(jobJson.queuedAt).toLocaleString()
+            jobJson.startedAt = new Date(jobJson.startedAt).toLocaleString()
+            jobJson.status = status
+
+            return jobJson
           })
 
           logger.table({

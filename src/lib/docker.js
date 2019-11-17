@@ -51,7 +51,7 @@ class Docker {
 
     args.push(`--name=${containerName}`)
 
-    if (entrypoint) args.push('--entrypoint=bash')
+    if (entrypoint) args.push('--entrypoint=sh')
 
     args.push(imageName)
 
@@ -68,7 +68,7 @@ class Docker {
   }
 
   execCommandSync = (containerName, workdir, command) => {
-    const args = ['exec', '-it', '-w', workdir, containerName, 'bash', '-c', command]
+    const args = ['exec', '-it', '-w', workdir, containerName, 'sh', '-c', command]
 
     return this.runCommandSync(this.dockerPath, args, { stdio: 'inherit' }, result => result)
   }
@@ -78,13 +78,13 @@ class Docker {
 
     const commandWithPipe = `mkdir -p ${pathToJobs} && ${job.command} > ${pathToJobs}/${job.id}`
 
-    const args = ['exec', '-d', '-w', workdir, containerName, 'bash', '-c', commandWithPipe]
+    const args = ['exec', '-d', '-w', workdir, containerName, 'sh', '-c', commandWithPipe]
 
     return spawn(this.dockerPath, args)
   }
 
-  killJob = (containerName, jobId, signal) => {
-    const pid = this.ps(containerName).find(row => row['CMD'].includes(jobId))['PID']
+  killJob = (containerName, job, signal) => {
+    const pid = this.ps(containerName).find(row => row['CMD'].includes(job.id))['PID']
 
     const args = ['exec', '-it', containerName, 'kill', `-${signal}`, `-${pid}`]
     const opts = { stdio: 'inherit' }

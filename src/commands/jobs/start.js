@@ -17,7 +17,7 @@ class StartCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, argv)
+        action: ctx => loadStacks(ctx, flags, argv, true)
       },
       {
         action: ctx => {

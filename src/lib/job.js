@@ -10,10 +10,19 @@ class Job {
     this.storage = storage
     this.savingOutput = savingOutput
     this.startedAt = undefined
+    this.wasKilled = false
   }
 
   start = () => {
     this.startedAt = Date.now()
+
+    this.storage.set('jobs', this.id, this.toJson())
+
+    return this
+  }
+
+  kill = () => {
+    this.wasKilled = true
 
     this.storage.set('jobs', this.id, this.toJson())
 
@@ -28,7 +37,8 @@ class Job {
       command: this.command,
       savingOutput: this.savingOutput,
       queuedAt: this.queuedAt,
-      startedAt: this.startedAt
+      startedAt: this.startedAt,
+      wasKilled: this.wasKilled
     }
   }
 }
@@ -48,6 +58,12 @@ Job.last = storage => {
 
 Job.find = (storage, jobId) => {
   return storage.get('jobs', jobId)
+}
+
+Job.fromJson = (storage, json) => {
+  json.storage = storage
+
+  return Object.assign(new Job(), json)
 }
 
 module.exports = Job
