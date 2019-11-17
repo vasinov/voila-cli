@@ -43,7 +43,7 @@ class Job {
   }
 }
 
-Job.containerOutputPath = '/penguin/jobs/output'
+Job.containerOutputPath = '/var/log/penguin/jobs/output'
 
 Job.list = storage => {
   return storage.list('jobs')
