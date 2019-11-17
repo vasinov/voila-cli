@@ -103,6 +103,13 @@ class Docker {
     )
   }
 
+  cat = (containerName, path) => {
+    const args = ['exec', '-it', containerName, 'cat', path]
+    const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
+
+    return this.runCommandSync(this.dockerPath, args, opts, result => result)
+  }
+
   buildImage = (imageName, dockerfile, isNoCache, isPull, isVerbose) => {
     const noCache = (isNoCache) ? '--no-cache' : ''
     const pull = (isPull) ? '--pull' : ''

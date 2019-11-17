@@ -7,9 +7,9 @@ const Job = require('../../lib/job')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
 
-class KillCommand extends BaseCommand {
+class OutputCommand extends BaseCommand {
   async run() {
-    const {flags, args} = this.parse(KillCommand)
+    const {flags, args} = this.parse(OutputCommand)
 
     const tasks = [
       {
@@ -22,13 +22,7 @@ class KillCommand extends BaseCommand {
             const job = Job.fromJson(this.storage, jobJson)
             const containerName = this.docker.containerName(job.projectId, job.stackName)
 
-            if (this.docker.isJobRunning(containerName, jobJson.id)) {
-              logger.info(`Killing job ${jobJson.id}`)
-
-              this.docker.killJob(containerName, Job.fromJson(this.storage, jobJson).kill(), flags['signal'])
-            } else {
-              throw new PenguinError(errorMessages.JOB_ISNT_RUNNING)
-            }
+            logger.info(this.docker.cat(containerName, job.outputFileName()))
           } else {
             throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)
           }
@@ -40,22 +34,15 @@ class KillCommand extends BaseCommand {
   }
 }
 
-KillCommand.description = `Kill a running job. If no ID is provided the last started job will be killed.`
+OutputCommand.description = `Return the current state of the job output.`
 
-KillCommand.args = [
+OutputCommand.args = [
   {
     name: 'job-id',
     required: false
   }
 ]
 
-KillCommand.flags = {
-  'signal': flags.string({
-    default: 'KILL',
-    description: `Signal for the kill command. Can be either a name or a number.`
-  })
-}
+OutputCommand.hidden = false
 
-KillCommand.hidden = false
-
-module.exports = KillCommand
+module.exports = OutputCommand

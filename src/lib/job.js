@@ -29,6 +29,10 @@ class Job {
     return this
   }
 
+  outputFileName = () => {
+    return `${Job.containerOutputPath}/${this.id}`
+  }
+
   toJson = () => {
     return {
       id: this.id,
