@@ -14,7 +14,7 @@ class LogCommand extends BaseCommand {
 
     const tasks = [
       {
-        action: ctx => buildConfig(ctx)
+        action: ctx => buildConfig(ctx, false)
       },
       {
         action: ctx => {
@@ -26,7 +26,11 @@ class LogCommand extends BaseCommand {
             const job = Job.fromJson(this.storage, jobJson)
             const containerName = this.docker.containerName(job.projectId, job.stackName)
 
-            logger.info(this.docker.cat(containerName, job.outputFileName()))
+            if (flags['full']) {
+              logger.info(this.docker.cat(containerName, job.outputFileName()))
+            } else {
+              this.docker.tail(containerName, job.outputFileName())
+            }
           } else {
             throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)
           }
@@ -38,7 +42,7 @@ class LogCommand extends BaseCommand {
   }
 }
 
-LogCommand.description = `Continually outputs the log of the current command.`
+LogCommand.description = `Continually outputs the log of the current command. Equivalent to "tail -f".`
 
 LogCommand.args = [
   {
@@ -46,6 +50,12 @@ LogCommand.args = [
     required: false
   }
 ]
+
+LogCommand.flags = {
+  'full': flags.boolean({
+    description: `Show the full log of the command. This flag prevents tailing and returns immediately.`
+  })
+}
 
 LogCommand.hidden = false
 
