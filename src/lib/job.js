@@ -49,13 +49,17 @@ class Job {
 
 Job.containerOutputPath = '/var/log/penguin/jobs/output'
 
-Job.list = storage => {
-  return storage.list('jobs')
+Job.list = (storage, projectId) => {
+  const allJobs = storage.list('jobs')
+
+  return Object.values(allJobs)
+    .filter(job => job.projectId === projectId)
+    .reduce((obj, job) => { obj[job.id] = job; return obj }, {})
 }
 
-Job.last = storage => {
-  const jobs = storage.list('jobs')
-  const ids = Object.keys(storage.list('jobs'))
+Job.last = (storage, projectId) => {
+  const jobs = Job.list(storage, projectId)
+  const ids = Object.keys(jobs)
 
   return jobs[ids[ids.length - 1]]
 }

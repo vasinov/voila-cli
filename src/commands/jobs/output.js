@@ -6,6 +6,7 @@ const logger = require('../../lib/logger')
 const Job = require('../../lib/job')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
+const {buildConfig} = require('../../lib/task-actions')
 
 class OutputCommand extends BaseCommand {
   async run() {
@@ -13,10 +14,13 @@ class OutputCommand extends BaseCommand {
 
     const tasks = [
       {
+        action: ctx => buildConfig(ctx)
+      },
+      {
         action: ctx => {
           const jobJson = args['job-id'] ?
             Job.find(this.storage,  args['job-id']) :
-            Job.last(this.storage)
+            Job.last(this.storage, ctx.config.projectId)
 
           if (jobJson) {
             const job = Job.fromJson(this.storage, jobJson)

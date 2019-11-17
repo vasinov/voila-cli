@@ -64,6 +64,7 @@ All stack config files have the following structure:
 
 ```yaml
 name: STRING
+apiVersion: STRING
 stages:
   build:
     images: ARRAY_OF_OBJECTS
