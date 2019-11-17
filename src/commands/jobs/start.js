@@ -2,7 +2,6 @@ const {flags} = require('@oclif/command')
 
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
-const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../../lib/paths')
 const runTask = require('../../lib/run-task')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
@@ -22,9 +21,7 @@ class StartCommand extends BaseCommand {
       },
       {
         action: ctx => {
-          ctx.stacks.forEach(stack => {
-            this.processCommand(ctx, argv, stack, flags['stack-path'])
-          })
+          ctx.stacks.forEach(stack => this.processCommand(ctx, argv, stack, flags['stack-path']))
         }
       }
     ]
@@ -32,26 +29,21 @@ class StartCommand extends BaseCommand {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, stack, executeIn) {
+  processCommand(ctx, argv, stack, stackDir) {
     const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')
+      const workdir = (stackDir) ? stackDir : stack.containerDir
 
-      if (executeIn || doesCurrentPathContain(relativeStackHostPath(stack))) {
-        const workdir = (executeIn) ? executeIn : hostToStackAbsolutePath(stack).join('/')
-
-        if (command === '') {
-          throw new PenguinError(errorMessages.SPECIFY_COMMAND)
-        } else {
-          const job = new Job(command, true, this.storage)
-
-          logger.dimInfo(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}`)
-
-          this.docker.startJob(containerName, workdir, job.start())
-        }
+      if (command === '') {
+        throw new PenguinError(errorMessages.SPECIFY_COMMAND)
       } else {
-        throw new PenguinError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
+        const job = new Job(ctx.config.projectId, stack.name, command, true, this.storage)
+
+        logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}`)
+
+        this.docker.startJob(containerName, workdir, job.start())
       }
     } else {
       throw new PenguinError(errorMessages.stackNotRunningError(stack.name))

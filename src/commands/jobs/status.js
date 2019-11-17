@@ -18,7 +18,7 @@ class StatusCommand extends BaseCommand {
             data.status = "unknown"
 
             return data
-          }).reverse()
+          })
 
           logger.table({
             id: { header: 'Job ID' },

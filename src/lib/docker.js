@@ -4,6 +4,7 @@ const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 const Job = require('../lib/job')
+const {parseTable} = require('../lib/shell')
 
 class Docker {
   constructor(dockerPath) {
@@ -25,7 +26,7 @@ class Docker {
   isContainerRunning = containerName => {
     const args = ['container', 'ls', '--format', '{{json .Names }}']
 
-    return this.runCommand(this.dockerPath, args, {}, result => {
+    return this.runCommandSync(this.dockerPath, args, {}, result => {
       const containerNames = result.split('\n').map(n => n.slice(1, -1))
 
       return containerNames.includes(containerName)
@@ -34,12 +35,12 @@ class Docker {
 
   containerStatus = containerName => this.isContainerRunning(containerName) ? 'running' : 'stopped'
 
-  startContainer = (stack, containerName, imageName, persistAfterStop, entrypointCommand = null) => {
+  startContainer = (stack, containerName, imageName, persistAfterStop, entrypoint = null) => {
     const args = ['run']
 
     if (!persistAfterStop) args.push('--rm')
 
-    if (entrypointCommand) args.push('-it')
+    if (entrypoint) args.push('-it')
     else args.push('-dt')
 
     stack.volumes.forEach(v => args.push(`--volume=${v}`))
@@ -50,26 +51,26 @@ class Docker {
 
     args.push(`--name=${containerName}`)
 
-    if (entrypointCommand) args.push('--entrypoint=bash')
+    if (entrypoint) args.push('--entrypoint=bash')
 
     args.push(imageName)
 
-    if (entrypointCommand) args.push('-c', entrypointCommand)
+    if (entrypoint) args.push('-c', entrypoint)
 
-    return this.runCommand(
-      this.dockerPath, args, { stdio: entrypointCommand ? 'inherit' : 'pipe' }, result => result)
+    return this.runCommandSync(
+      this.dockerPath, args, { stdio: entrypoint ? 'inherit' : 'pipe' }, result => result)
   }
 
   stopContainer = (localdir, containerName) => {
     const args = ['container', 'stop', containerName]
 
-    return this.runCommand(this.dockerPath, args, {}, result => result)
+    return this.runCommandSync(this.dockerPath, args, {}, result => result)
   }
 
   execCommandSync = (containerName, workdir, command) => {
     const args = ['exec', '-it', '-w', workdir, containerName, 'bash', '-c', command]
 
-    return this.runCommand(this.dockerPath, args, { stdio: 'inherit' }, result => result)
+    return this.runCommandSync(this.dockerPath, args, { stdio: 'inherit' }, result => result)
   }
 
   startJob = (containerName, workdir, job) => {
@@ -80,6 +81,26 @@ class Docker {
     const args = ['exec', '-d', '-w', workdir, containerName, 'bash', '-c', commandWithPipe]
 
     return spawn(this.dockerPath, args)
+  }
+
+  killJob = (containerName, jobId, signal) => {
+    const pid = this.ps(containerName).find(row => row['CMD'].includes(jobId))['PID']
+
+    const args = ['exec', '-it', containerName, 'kill', `-${signal}`, `-${pid}`]
+    const opts = { stdio: 'inherit' }
+
+    return this.runCommandSync(this.dockerPath, args, opts, result => result)
+  }
+
+  isJobRunning = (containerName, jobId) => this.ps(containerName).find(row => row['CMD'].includes(jobId))
+
+  ps = containerName => {
+    const args = ['exec', '-it', containerName, 'ps', '-efww']
+    const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
+
+    return parseTable(
+      this.runCommandSync(this.dockerPath, args, opts, result => result)
+    )
   }
 
   buildImage = (imageName, dockerfile, isNoCache, isPull, isVerbose) => {
@@ -104,7 +125,7 @@ class Docker {
     return subProcess
   }
 
-  runCommand = (command, args, options, action) => {
+  runCommandSync = (command, args, options, action) => {
     const result = spawnSync(command, args, options)
 
     if (result.stderr && result.stderr.length > 0) {

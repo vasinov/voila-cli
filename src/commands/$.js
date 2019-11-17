@@ -31,14 +31,14 @@ class $Command extends BaseCommand {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, stack, executeIn) {
+  processCommand(ctx, argv, stack, stackDir) {
     const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')
 
-      if (executeIn || doesCurrentPathContain(relativeStackHostPath(stack))) {
-        const workdir = (executeIn) ? executeIn : hostToStackAbsolutePath(stack).join('/')
+      if (stackDir || doesCurrentPathContain(relativeStackHostPath(stack))) {
+        const workdir = (stackDir) ? stackDir : hostToStackAbsolutePath(stack).join('/')
 
         if (command === '') {
           throw new PenguinError(errorMessages.SPECIFY_COMMAND)

@@ -19,6 +19,9 @@ module.exports = {
   STORAGE_TABLE_DOESNT_EXIST: `Table doesn't exist in the local storage.`,
   STORAGE_SETTINGS_KEY_DOESNT_EXIST: `Key doesn't exist in the settings.`,
 
+  JOB_DOESNT_EXIST: `Job doesn't exist.`,
+  JOB_ISNT_RUNNING: `Job isn't running.`,
+
   stackNotRunningError: (stackName) => {
     return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`
   },
