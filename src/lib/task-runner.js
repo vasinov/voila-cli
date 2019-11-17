@@ -2,7 +2,7 @@ const ValidationError = require('jsonschema').ValidationError
 const PenguinError = require('./error/penguin-error')
 const logger = require('../lib/logger')
 
-const runTask = async (tasks, ctx = {}) => {
+exports.runTask = async (tasks, ctx = {}) => {
   if (!ctx.hasOwnProperty('stacks')) ctx.stacks = []
 
   try {
@@ -25,5 +25,3 @@ const runTask = async (tasks, ctx = {}) => {
     process.exit(1)
   }
 }
-
-module.exports = runTask

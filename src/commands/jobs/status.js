@@ -1,5 +1,5 @@
 const BaseCommand = require('../base')
-const runTask = require('../../lib/run-task')
+const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 const Job = require('../../lib/job')
 

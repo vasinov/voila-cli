@@ -1,6 +1,6 @@
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
-const runTask = require('../../lib/run-task')
+const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 
 class StatusCommand extends BaseCommand {

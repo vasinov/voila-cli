@@ -4,7 +4,7 @@ const inquirer = require('inquirer')
 
 const BaseCommand = require('../base')
 const {buildConfig} = require('../../lib/task-actions')
-const runTask = require('../../lib/run-task')
+const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 const {stackTemplateData} = require('../../lib/config/templates/stacks')
 const emptyStackData = require('../../lib/config/templates/stacks/empty').data

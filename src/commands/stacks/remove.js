@@ -2,7 +2,7 @@ const fs = require('fs')
 
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
-const runTask = require('../../lib/run-task')
+const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')

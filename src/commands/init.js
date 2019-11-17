@@ -2,7 +2,7 @@ const {flags} = require('@oclif/command')
 
 const BaseCommand = require('./base')
 const initializer = require('../lib/config/initializer')
-const runTask = require('../lib/run-task')
+const {runTask} = require('../lib/task-runner')
 const logger = require('../lib/logger')
 
 class InitCommand extends BaseCommand {
