@@ -96,7 +96,7 @@ class Docker {
   startJob = (containerName, workdir, job) => {
     const pathToJobs = Job.containerOutputPath
 
-    const commandWithPipe = `mkdir -p ${pathToJobs} && ${job.command} > ${pathToJobs}/${job.id}`
+    const commandWithPipe = `mkdir -p ${pathToJobs} && ${job.command} > ${Job.outputFileName(job.id)}`
 
     const args = ['exec', '-d', '-w', workdir, containerName, 'sh', '-c', commandWithPipe]
 

@@ -29,10 +29,6 @@ class Job {
     return this
   }
 
-  outputFileName = () => {
-    return `${Job.containerOutputPath}/${this.id}.log`
-  }
-
   toJson = () => {
     return {
       id: this.id,
@@ -48,6 +44,8 @@ class Job {
 }
 
 Job.containerOutputPath = '/var/log/penguin/jobs/output'
+
+Job.outputFileName = id => `${Job.containerOutputPath}/${id}.log`
 
 Job.list = (storage, projectId) => {
   const allJobs = storage.list('jobs')

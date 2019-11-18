@@ -27,9 +27,9 @@ class LogCommand extends BaseCommand {
             const containerName = this.docker.containerName(job.projectId, job.stackName)
 
             if (flags['full']) {
-              logger.info(this.docker.cat(containerName, job.outputFileName()))
+              logger.info(this.docker.cat(containerName, Job.outputFileName(job.id)))
             } else {
-              this.docker.tail(containerName, job.outputFileName())
+              this.docker.tail(containerName, Job.outputFileName(job.id))
             }
           } else {
             throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)
