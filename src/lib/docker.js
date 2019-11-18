@@ -19,18 +19,23 @@ class Docker {
     return `penguin-${projectName}-${stackName}:${tag}`
   }
 
-  imageName = (projectName, dockerfileName) => {
-    return this.imageNameWithTag(projectName, dockerfileName, Docker.defaultTag)
+  imageName = (projectId, dockerfileName) => {
+    return this.imageNameWithTag(projectId, dockerfileName, Docker.defaultTag)
   }
 
-  isContainerRunning = containerName => {
+  runningContainers = (projectId = null) => {
     const args = ['container', 'ls', '--format', '{{json .Names }}']
 
     return this.runCommandSync(this.dockerPath, args, {}, result => {
-      const containerNames = result.split('\n').map(n => n.slice(1, -1))
-
-      return containerNames.includes(containerName)
+      return result
+        .split('\n')
+        .map(n => n.slice(1, -1))
+        .filter(c => !projectId || c.includes(projectId))
     })
+  }
+
+  isContainerRunning = containerName => {
+    return this.runningContainers().includes(containerName)
   }
 
   containerStatus = containerName => this.isContainerRunning(containerName) ? 'running' : 'stopped'
@@ -147,7 +152,7 @@ class Docker {
     } else if (result.error) {
       throw new PenguinError(result.error)
     } else if (result.stdout) {
-      return action(result.stdout.toString())
+      return action(result.stdout.toString().trim())
     } else {
       // this will only happen when stdio is set to "inherit"
       return null

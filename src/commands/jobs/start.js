@@ -1,7 +1,7 @@
 const {flags} = require('@oclif/command')
 
 const BaseCommand = require('../base')
-const {buildConfig, loadStacks} = require('../../lib/task-actions')
+const {buildConfig, promptAllStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
@@ -17,7 +17,7 @@ class StartCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, argv, true)
+        action: ctx => promptAllStacks(ctx)
       },
       {
         action: ctx => {

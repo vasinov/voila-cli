@@ -16,7 +16,7 @@ class RemoveCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, args, true)
+        action: ctx => loadStacks(ctx)
       },
       {
         action: async ctx => {

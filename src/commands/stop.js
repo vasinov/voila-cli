@@ -17,7 +17,7 @@ class StopCommand extends BaseCommand {
         action: ctx => {
           logger.infoWithTime('Loading stacks')
 
-          return loadStacks(ctx, flags, args)
+          return loadStacks(ctx, this.docker, flags, args)
         }
       },
       {

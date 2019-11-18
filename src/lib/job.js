@@ -30,7 +30,7 @@ class Job {
   }
 
   outputFileName = () => {
-    return `${Job.containerOutputPath}/${this.id}`
+    return `${Job.containerOutputPath}/${this.id}.log`
   }
 
   toJson = () => {

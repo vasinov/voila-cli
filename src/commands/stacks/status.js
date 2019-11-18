@@ -1,5 +1,5 @@
 const BaseCommand = require('../base')
-const {buildConfig, loadStacks} = require('../../lib/task-actions')
+const {buildConfig, loadAllStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 
@@ -12,11 +12,7 @@ class StatusCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, false)
       },
       {
-        action: ctx => {
-          flags['all'] = true
-
-          return loadStacks(ctx, flags, args)
-        }
+        action: ctx => loadAllStacks(ctx)
       },
       {
         action: ctx => {

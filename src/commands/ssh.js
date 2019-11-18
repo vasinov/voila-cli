@@ -17,7 +17,7 @@ class SshCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, false)
       },
       {
-        action: ctx => loadStacks(ctx, flags, args)
+        action: ctx => loadStacks(ctx, this.docker, flags, args, false)
       },
       {
         title: 'Connecting over SSH',
@@ -28,9 +28,10 @@ class SshCommand extends BaseCommand {
             const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
             if (this.docker.isContainerRunning(containerName)) {
-
               if (executeIn || doesCurrentPathContain(relativeStackHostPath(stack))) {
                 const workdir = (executeIn) ? executeIn : hostToStackAbsolutePath(stack).join('/')
+
+                logger.dimInfo(`SSHing into ${containerName}:${workdir}`)
 
                 this.docker.sshContainer(containerName, workdir)
               } else {
