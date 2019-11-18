@@ -6,12 +6,11 @@ const crypto = require('crypto')
 const {projectTemplate} = require('./templates/project')
 const {stackTemplate} = require('./templates/stack')
 const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
-const {stackTemplateData} = require('./templates/stacks')
 const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 const paths = require('../../lib/paths')
 
-exports.init = force => {
+exports.init = (force, templates) => {
   let folderExistsInParents = false
   const currentPath = process.cwd().split('/')
 
@@ -22,7 +21,7 @@ exports.init = force => {
 
     if (fs.existsSync(configDir)) {
       folderExistsInParents = true
-      break;
+      break
     } else {
       currentPath.pop()
     }
@@ -40,7 +39,7 @@ exports.init = force => {
       fs.mkdirSync(configDirName)
       fs.mkdirSync(stacksFolderPath)
 
-      createConfigFiles()
+      createConfigFiles(templates)
     }
   }
 }
@@ -64,10 +63,10 @@ exports.createStackConfigFromTemplate = (stackName, hostDir, template) => {
   }
 }
 
-const createConfigFiles = () => {
+const createConfigFiles = (templates) => {
   createProjectConfig()
 
-  stackTemplateData.forEach(template => {
+  templates.forEach(template => {
     this.createStackConfigFromTemplate(template.name, '.', template)
   })
 }
