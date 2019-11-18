@@ -62,12 +62,16 @@ addStacksFromResponse = async (docker, projectId, choiceStacks, selectedStacks, 
     value: s.name
   }})
 
-  const response = await inquirer.prompt([{
-    name: 'stack',
-    message: 'Multiple stacks detected. What stack should be used?',
-    type: 'list',
-    choices: choices,
-  }])
+  if (choices.length === 1) {
+    selectedStacks.push(allStacks.find(s => s.name === choices[0].value))
+  } else {
+    const response = await inquirer.prompt([{
+      name: 'stack',
+      message: 'Multiple stacks detected. What stack should be used?',
+      type: 'list',
+      choices: choices,
+    }])
 
-  selectedStacks.push(allStacks.find(s => s.name === response.stack))
+    selectedStacks.push(allStacks.find(s => s.name === response.stack))
+  }
 }
