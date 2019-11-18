@@ -1,7 +1,7 @@
 {
   "name": "penguin",
   "description": "Penguin CLI",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": "Vasily Vasinov @vasinov",
   "bin": {
     "penguin": "./bin/run"
