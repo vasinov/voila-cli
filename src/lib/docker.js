@@ -58,6 +58,17 @@ class Docker {
 
     stack.env.forEach(e => args.push(`--env=${e}`))
 
+    if (stack.hardware && stack.hardware.cpu) {
+      if (stack.hardware.cpu.cores) args.push(`--cpus=${stack.hardware.cpu.cores}`)
+      if (stack.hardware.cpu.period) args.push(`--cpu-period=${stack.hardware.cpu.period}`)
+      if (stack.hardware.cpu.quota) args.push(`--cpu-quota=${stack.hardware.cpu.quota}`)
+    }
+
+    if (stack.hardware && stack.hardware.memory) {
+      if (stack.hardware.memory.max) args.push(`--memory=${stack.hardware.memory.max}`)
+      if (stack.hardware.memory.swap) args.push(`--memory-swap=${stack.hardware.memory.swap}`)
+    }
+
     args.push(`--name=${containerName}`)
 
     if (entrypoint) args.push('--entrypoint=sh')

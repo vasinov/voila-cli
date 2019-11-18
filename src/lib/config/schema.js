@@ -90,6 +90,36 @@ exports.schema = {
                   items: { type: 'string' },
                   uniqueItems: true
                 },
+                hardware: {
+                  type: 'object',
+                  properties: {
+                    cpu: {
+                      type: 'object',
+                      properties: {
+                        cores: {
+                          type: 'string'
+                        },
+                        period: {
+                          type: 'string'
+                        },
+                        quota: {
+                          type: 'string'
+                        }
+                      }
+                    },
+                    memory: {
+                      type: 'object',
+                      properties: {
+                        max: {
+                          type: 'string'
+                        },
+                        swap: {
+                          type: 'string'
+                        }
+                      }
+                    }
+                  }
+                },
                 command: {
                   type: 'string'
                 }

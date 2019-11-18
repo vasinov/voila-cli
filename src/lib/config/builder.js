@@ -50,7 +50,6 @@ module.exports = class Builder {
     return stacks.map(stack => {
       const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
-      const ports = []
       const hostDir = Builder.validateHostVolumeDir(stack.stages.run.hostDir)
       const containerDir = Builder.validateContainerVolumeDir(stack.stages.run.containerDir)
 
@@ -66,8 +65,6 @@ module.exports = class Builder {
       }
 
       volumes.push(`${hostDir}:${containerDir}`)
-
-      if (stack.stages.run.ports) stack.stages.run.ports.forEach(p => ports.push(p))
 
       if (dockerfilePath) {
         const dockerfileDir = dockerfilePath.join('/')
@@ -119,7 +116,8 @@ module.exports = class Builder {
         hostDir: hostDir,
         containerDir: containerDir,
         volumes: volumes,
-        ports: ports,
+        ports: stack.stages.run.ports || [],
+        hardware: stack.stages.run.hardware || {},
         env: stack.stages.run.env || [],
         dockerfile: dockerfile,
         entrypointCommand: stack.stages.run.command

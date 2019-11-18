@@ -75,6 +75,14 @@ stages:
     containerDir: STRING
     volumes: ARRAY_OF_OBJECTS
     ports: ARRAY_OF_STRINGS
+    hardware:
+      cpu:
+        cores: STRING
+        period: STRING
+        quota: STRING
+      memory:
+        max: STRING
+        swap: STRING
     command: STRING
 ```
 
@@ -146,7 +154,11 @@ Open container ports and map them to host ports. For example, `8080:80` opens po
 
 ### `stages.run.command` (optional)
 
-This is a the default bash command that will get executed when the stack starts. Once the command finishes the stack will automatically stop. It overrides any `ENTRYPOINT` defined in the custom dockerfile. 
+This is a the default bash command that will get executed when the stack starts. Once the command finishes the stack will automatically stop. It overrides any `ENTRYPOINT` defined in the custom dockerfile.
+
+### `hardware`
+
+For hardware limit explanations please refer to the [Docker documentation](https://docs.docker.com/config/containers/resource_constraints/).
 
 ## CLI Commands
 
