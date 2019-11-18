@@ -73,7 +73,7 @@ stages:
     env: ARRAY_OF_STRINGS
     hostDir: STRING
     containerDir: STRING
-    volumes: ARRAY_OF_STRINGS_AND_OBJECTS
+    volumes: ARRAY_OF_OBJECTS
     ports: ARRAY_OF_STRINGS
     command: STRING
 ```
@@ -132,7 +132,13 @@ Represents the directory in the Docker container (Penguin stack) where `hostDir`
 
 ### `stages.run.volumes` (optional)
 
-Map local directories (full paths only) to container directories. For example, `"/usr/local/bin/app": "/my_app"`. If either folder doesn't exist it will get created. You can also use a string shortcut for one-to-one mappings. For example `/my/path` will map host `/my/path` to the container `/my/path`.
+Map project directories to container directories:
+
+```yaml
+volumes:
+  - hostDir: some-directory
+    containerDir: /volumes/some-directory
+```
 
 ### `stages.run.ports` (optional)
 

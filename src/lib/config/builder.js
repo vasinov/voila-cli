@@ -14,8 +14,8 @@ module.exports = class Builder {
     this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
-  static readHostDir = stack => {
-    const absoluteHostPath = paths.toAbsolutePath(stack.stages.run.hostDir)
+  static validateHostVolumeDir = hostDir => {
+    const absoluteHostPath = paths.toAbsolutePath(hostDir)
 
     if (paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
       return absoluteHostPath.join('/')
@@ -24,9 +24,9 @@ module.exports = class Builder {
     }
   }
 
-  static readContainerDir = stack => {
-    if (paths.isAbsolute(stack.stages.run.containerDir)) {
-      return stack.stages.run.containerDir
+  static validateContainerVolumeDir = containerDir => {
+    if (paths.isAbsolute(containerDir)) {
+      return containerDir
     } else {
       throw new PenguinError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
     }
@@ -51,27 +51,17 @@ module.exports = class Builder {
       const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
       const ports = []
-      const hostDir = Builder.readHostDir(stack)
-      const containerDir = Builder.readContainerDir(stack)
+      const hostDir = Builder.validateHostVolumeDir(stack.stages.run.hostDir)
+      const containerDir = Builder.validateContainerVolumeDir(stack.stages.run.containerDir)
 
       let dockerfile = ''
 
       if (stack.stages.run.volumes) {
         stack.stages.run.volumes.forEach(volume => {
-          switch (typeof volume) {
-            case 'string':
-              const dir = paths.toAbsolutePath(volume).join('/')
+          const volumeHostDir = Builder.validateHostVolumeDir(volume.hostDir)
+          const volumeContainerDir = Builder.validateContainerVolumeDir(volume.containerDir)
 
-              volumes.push(`${dir}:${dir}`)
-              break
-            case 'object':
-              const dir1 = paths.toAbsolutePath(Object.keys(volume)[0]).join('/')
-              const dir2 = Object.values(volume)[0]
-
-              volumes.push(`${dir1}:${dir2}`)
-              break
-            default:
-          }
+          volumes.push(`${volumeHostDir}:${volumeContainerDir}`)
         })
       }
 

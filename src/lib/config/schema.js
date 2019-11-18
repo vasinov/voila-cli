@@ -71,14 +71,16 @@ exports.schema = {
                   type: 'array',
                   items: {
                     type: {
-                      oneOf: [
-                        {
+                      type: 'object',
+                      properties: {
+                        hostDir: {
                           type: "string"
                         },
-                        {
-                          type: 'object'
+                        containerDir: {
+                          type: "string"
                         }
-                      ]
+                      },
+                      required: ['hostDir', 'containerDir']
                     }
                   },
                   uniqueItems: true
