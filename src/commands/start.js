@@ -14,11 +14,7 @@ class StartCommand extends BaseCommand {
         action: ctx => buildConfig(ctx, true)
       },
       {
-        action: ctx => {
-          logger.infoWithTime('Loading stacks')
-
-          return loadStacks(ctx, this.docker, flags, args)
-        }
+        action: ctx => loadStacks(ctx, this.docker, flags, args)
       },
       {
         action: ctx => {
