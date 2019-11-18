@@ -11,7 +11,7 @@ class StartCommand extends BaseCommand {
 
     const tasks = [
       {
-        action: ctx => buildConfig(ctx)
+        action: ctx => buildConfig(ctx, true)
       },
       {
         action: ctx => {

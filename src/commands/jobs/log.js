@@ -14,7 +14,7 @@ class LogCommand extends BaseCommand {
 
     const tasks = [
       {
-        action: ctx => buildConfig(ctx, false)
+        action: ctx => buildConfig(ctx)
       },
       {
         action: ctx => {

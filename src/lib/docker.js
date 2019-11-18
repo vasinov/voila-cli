@@ -38,6 +38,10 @@ class Docker {
     return this.runningContainers().includes(containerName)
   }
 
+  isStackRunning = (projectName, stackName) => {
+    return this.runningContainers().includes(this.containerName(projectName, stackName))
+  }
+
   containerStatus = containerName => this.isContainerRunning(containerName) ? 'running' : 'stopped'
 
   startContainer = (stack, containerName, imageName, persistAfterStop, entrypoint = null) => {

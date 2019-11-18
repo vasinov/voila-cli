@@ -14,7 +14,7 @@ class $Command extends BaseCommand {
 
     const tasks = [
       {
-        action: ctx => buildConfig(ctx, false)
+        action: ctx => buildConfig(ctx)
       },
       {
         action: ctx => loadStacks(ctx, this.docker, flags, argv, false)

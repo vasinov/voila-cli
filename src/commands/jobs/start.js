@@ -14,10 +14,10 @@ class StartCommand extends BaseCommand {
 
     const tasks = [
       {
-        action: ctx => buildConfig(ctx, false)
+        action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => promptAllStacks(ctx)
+        action: ctx => promptAllStacks(ctx, this.docker)
       },
       {
         action: ctx => {

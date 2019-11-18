@@ -14,11 +14,7 @@ class StopCommand extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => {
-          logger.infoWithTime('Loading stacks')
-
-          return loadStacks(ctx, this.docker, flags, args)
-        }
+        action: ctx => loadStacks(ctx, this.docker, flags, args)
       },
       {
         action: ctx => {

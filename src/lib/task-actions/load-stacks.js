@@ -29,7 +29,8 @@ exports.loadStacks = async (ctx, docker, flags, args, noAssumptions = true) => {
   } else if (stacksInCurrentPath.length === 1) {
     selectedStacks.push(stacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length > 1) {
-    await addStacksFromResponse(stacksInCurrentPath, selectedStacks, ctx.config.projectStacks)
+    await addStacksFromResponse(
+      docker, ctx.config.projectId, stacksInCurrentPath, selectedStacks, ctx.config.projectStacks)
   } else {
     throw new PenguinError(errorMessages.SPECIFY_STACK_NAME)
   }
@@ -37,7 +38,7 @@ exports.loadStacks = async (ctx, docker, flags, args, noAssumptions = true) => {
   ctx.stacks = selectedStacks
 }
 
-exports.loadAllStacks = async (ctx) => {
+exports.loadAllStacks = async ctx => {
   const selectedStacks = []
 
   ctx.config.projectStacks.map((stack) => selectedStacks.push(stack))
@@ -45,16 +46,21 @@ exports.loadAllStacks = async (ctx) => {
   ctx.stacks = selectedStacks
 }
 
-exports.promptAllStacks = async (ctx) => {
+exports.promptAllStacks = async (ctx, docker) => {
   const selectedStacks = []
 
-  await addStacksFromResponse(ctx.config.projectStacks, selectedStacks, ctx.config.projectStacks)
+  await addStacksFromResponse(
+    docker, ctx.config.projectId, ctx.config.projectStacks, selectedStacks, ctx.config.projectStacks)
 
   ctx.stacks = selectedStacks
 }
 
-addStacksFromResponse = async (choiceStacks, selectedStacks, allStacks) => {
-  const choices = choiceStacks.map(s => { return { name: s.name } })
+addStacksFromResponse = async (docker, projectId, choiceStacks, selectedStacks, allStacks) => {
+  const decorateName = name => `${name} - ${docker.isStackRunning(projectId, name) ? 'running' : 'stopped'}`
+  const choices = choiceStacks.map(s => { return {
+    name: decorateName(s.name),
+    value: s.name
+  }})
 
   const response = await inquirer.prompt([{
     name: 'stack',
