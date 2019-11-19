@@ -27,14 +27,14 @@ module.exports = {
     return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`
   },
 
-  configExistsInParentError: path => `You can't initialize new Penguin projects inside of an existing project. ".penguin.yml" was found in "${path}".`,
+  configExistsInParentError: path => `You can't initialize new Penguin projects inside of an existing project. ".penguin" was found in "${path}".`,
 
-  multipleConfigsWarning: (paths, loadedFile) => {
+  multipleConfigsWarning: (paths, loadedFolder) => {
     const pathList = paths.map(p => `${p}\n`).join('')
 
-    return `Multiple ".penguin.yml" files were detected in the following directories:\n\n` +
+    return `Multiple ".penguin" config folders were detected in the following directories:\n\n` +
       `${pathList}\n\n` +
-      `Loading the top level file: ${loadedFile}`
+      `Loading the top level folder: ${loadedFolder}`
   },
 
   wrongStackHostDirError: directory => {
