@@ -25,7 +25,8 @@ class StartCommand extends BaseCommand {
 
             logger.infoWithTime(`Building image for the "${stack.name}" stack`, true)
 
-            this.docker.buildImage(imageName, stack.dockerfile, flags['no-cache'], flags['pull'], flags['verbose'])
+            this.docker.buildImage(
+              imageName, stack.dockerfile, flags['no-cache'], flags['pull'], !flags['less-verbose'])
 
             logger.infoWithTime(`Image for the "${stack.name}" stack finished building`, true)
           })
@@ -82,8 +83,8 @@ StartCommand.flags = {
   'persist': flags.boolean({
     description: `Don't remove the container when it stops.`
   }),
-  'verbose': flags.boolean({
-    description: `Show all output.`
+  'less-verbose': flags.boolean({
+    description: `Don't show image building output.`
   })
 }
 
