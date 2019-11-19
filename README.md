@@ -49,16 +49,16 @@ penguin init
 
 Getting started with Penguin is easy:
 
-- Initialize Penguin in your project directory with `penguin init`. That will generate a `.penguin` folder with config files for the whole project and individual stacks in the current directory.
-- In your project directory run `penguin start` to start the default stack defined in `.penguin/config.yml`.
-- In your project directory run `penguin $ COMMAND` to run a command for your default stack locally and generate result artifacts in the same directory. For example, `penguin $ ls -al > files.txt`.
+- Initialize Penguin in your project directory with `penguin init`. That will generate a `.penguin` folder with config files for the project and the first stack.
+- In your project directory run `penguin start` to start stack defined in `.penguin/config.yml`.
+- In your project directory run `penguin $ COMMAND` to run a command in your stack and generate result artifacts in the same directory. For example, `penguin $ ls -al > files.txt`.
 - To check stack status run `penguin status`.
-- To SSH into the default running stack run `penguin ssh`.
-- To stop the default stack run `penguin stop`.
+- To SSH into a running stack run `penguin ssh`.
+- To stop a stack run `penguin stop`.
 
 ## Config Format
 
-After running `penguin init` a `.penguin` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID and default stack name. In the `.penguin/stacks` folder you'll find YAML config files for each stack.
+After running `penguin init` a `.penguin` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID. In the `.penguin/stacks` folder you'll find YAML config files for each stack.
 
 All stack config files have the following structure:
 
