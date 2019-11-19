@@ -28,7 +28,7 @@ class LogCommand extends BaseCommand {
 
             if (this.docker.isContainerRunning(containerName)) {
               if (this.docker.doesJobOutputExist(job)) {
-                if (flags['full']) {
+                if (flags['full'] || !this.docker.isJobRunning(job)) {
                   logger.info(this.docker.cat(containerName, Job.outputFileName(job.id)))
                 } else {
                   this.docker.tail(containerName, Job.outputFileName(job.id))
