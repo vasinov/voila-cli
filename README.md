@@ -67,7 +67,7 @@ name: STRING
 apiVersion: STRING
 stages:
   build:
-    images: ARRAY_OF_OBJECTS
+    image: STRING
     actions: ARRAY_OF_OBJECTS
   run:
     env: ARRAY_OF_STRINGS
@@ -86,11 +86,11 @@ stages:
     command: STRING
 ```
 
-Each stack represents an independent unit that has its own settings and execution context. Stacks have names, environment variables, volumes, ports, and stages. Internally, stacks are Docker containers that are based on images defined in the config file or optional linked dockerfile.
+Each stack represents an independent unit that has its own settings and execution context. Stacks have names, environment variables, volumes, ports, and stages. Internally, stacks are Docker containers that are based on an image defined in the config file or optional linked dockerfile.
 
 ### `name` (required)
 
-Name of the stack. The name has to be unique across the project. It's used to name images and containers.
+Name of the stack. The name has to be unique across the project. It's used to name host images and containers.
 
 ### `stages` (required)
 
@@ -100,9 +100,9 @@ Penguin currently supports two stages: `build` and `run`. The `build` stage corr
 
 You can reference any valid dockerfile inside of your project directory by setting this property to the absolute or relative dockerfile path. Penguin will pick it up and ignore everything else in the `container.stages.build` section of the config. This feature is intended for users that prefer to use Docker directly. Note that if you set `ENTRYPOINT` in your dockerfile it will get overwritten by `stages.run.command`.
 
-### `stages.build.images` (required)
+### `stages.build.image` (required)
 
-Includes the list of images that the final image should include via the multi-stage build mechanism provided by Docker. Most stacks should only include one image here.
+Base Docker image that the stack should be build on.
 
 ### `stages.build.actions` (optional)
 

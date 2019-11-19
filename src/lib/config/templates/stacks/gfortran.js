@@ -1,6 +1,4 @@
 exports.data = {
   name: 'gfortran',
-  images: [
-    "getvoila/gfortran:0.2.1"
-  ]
+  images: 'getvoila/gfortran:0.2.1'
 }

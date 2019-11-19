@@ -74,7 +74,7 @@ StartCommand.flags = {
     description: `Start all stacks in the project.`
   }),
   'no-cache': flags.boolean({
-    description: `Don't use cache when building stack images.`
+    description: `Don't use cache when building stack image.`
   }),
   'pull': flags.boolean({
     description: `Always attempt to pull newer versions of Docker images.`

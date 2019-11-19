@@ -24,10 +24,8 @@ exports.schema = {
                 dockerfile: {
                   type: 'string'
                 },
-                images: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  uniqueItems: true
+                image: {
+                  type: 'string',
                 },
                 actions: {
                   type: 'array',
@@ -51,7 +49,7 @@ exports.schema = {
                   uniqueItems: true
                 },
               },
-              required: ['images']
+              required: ['image']
             },
             run: {
               type: 'object',

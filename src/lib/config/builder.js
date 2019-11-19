@@ -81,9 +81,7 @@ module.exports = class Builder {
       } else {
         const dockerfileArray = []
 
-        stack.stages.build.images.forEach(i => dockerfileArray.push({
-          from: i
-        }))
+        dockerfileArray.push({ from: stack.stages.build.image })
 
         dockerfileArray.push({ working_dir: containerDir })
 

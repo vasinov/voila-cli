@@ -54,7 +54,7 @@ exports.createStackConfigFromTemplate = (stackName, hostDir, template) => {
     )
 
     if (!fs.existsSync(yamlPath)) {
-      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stackName, hostDir, template.images)))
+      fs.writeFileSync(yamlPath, yaml.safeDump(generateStackConfig(stackName, hostDir, template.image)))
 
       fileCreated = true
     } else {
@@ -83,8 +83,8 @@ const generateProjectConfig = () => {
   return projectTemplate(crypto.randomBytes(5).toString('hex'))
 }
 
-const generateStackConfig = (name, hostDir, images) => {
-  return stackTemplate(name, hostDir, images)
+const generateStackConfig = (name, hostDir, image) => {
+  return stackTemplate(name, hostDir, image)
 }
 
 const removeDirectory = dirPath => {
