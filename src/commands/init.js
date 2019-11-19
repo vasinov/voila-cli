@@ -16,8 +16,6 @@ class InitCommand extends BaseCommand {
         action: async () => {
           logger.infoWithTime('Generating new config files')
 
-          const templates = []
-
           if (flags['empty']) {
             initializer.init(flags.force, [])
           } else if (flags['all']) {

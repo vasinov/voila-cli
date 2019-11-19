@@ -26,12 +26,16 @@ class KillCommand extends BaseCommand {
             const job = Job.fromJson(this.storage, jobJson)
             const containerName = this.docker.containerName(job.projectId, job.stackName)
 
-            if (this.docker.isJobRunning(containerName, jobJson.id)) {
-              logger.info(`Killing job ${jobJson.id}`)
+            if (this.docker.isContainerRunning(containerName)) {
+              if (this.docker.isJobRunning(job)) {
+                logger.info(`Killing job ${jobJson.id}`)
 
-              this.docker.killJob(containerName, Job.fromJson(this.storage, jobJson).kill(), flags['signal'])
+                this.docker.killJob(containerName, job.kill(), flags['signal'])
+              } else {
+                throw new PenguinError(errorMessages.JOB_ISNT_RUNNING)
+              }
             } else {
-              throw new PenguinError(errorMessages.JOB_ISNT_RUNNING)
+              throw new PenguinError(errorMessages.stackNotRunningError(job.stackName))
             }
           } else {
             throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)

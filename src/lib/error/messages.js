@@ -19,18 +19,15 @@ module.exports = {
   STORAGE_TABLE_DOESNT_EXIST: `Table doesn't exist in the local storage.`,
   STORAGE_SETTINGS_KEY_DOESNT_EXIST: `Key doesn't exist in the settings.`,
 
-  JOB_DOESNT_EXIST: `Job doesn't exist.`,
   JOB_ISNT_RUNNING: `Job isn't running.`,
+  JOB_DOESNT_EXIST: `Job doesn't exist.`,
+  jobDoesntExistAfterRestart: (job) => `Job "${job.id}" log was cleared after stack "${job.stackName}" restarted.`,
 
-  stackNotRunningError: (stackName) => {
+  stackNotRunningError: stackName => {
     return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`
   },
 
-  containerError: (containerName, code, reason) => {
-    return `Error: Container "${containerName}" returned error code ${code} during "${reason}".`
-  },
-
-  configExistsInParentError: (path) => `You can't initialize new Penguin projects inside of an existing project. ".penguin.yml" was found in "${path}".`,
+  configExistsInParentError: path => `You can't initialize new Penguin projects inside of an existing project. ".penguin.yml" was found in "${path}".`,
 
   multipleConfigsWarning: (paths, loadedFile) => {
     const pathList = paths.map(p => `${p}\n`).join('')

@@ -38,6 +38,25 @@ class Docker {
     return this.runningContainers().includes(containerName)
   }
 
+  doesContainerExist = containerName => {
+    const args = ['ps', '-q', '-f', `name=${containerName}`]
+    const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
+
+    return this.runCommandSync(this.dockerPath, args, opts, result => result) !== ''
+  }
+
+  doesJobOutputExist = job => {
+    if (this.doesContainerExist(this.containerName(job.projectId, job.stackName))) {
+      const containerName = this.containerName(job.projectId, job.stackName)
+      const command = [`sh -c "[ -f ${Job.outputFileName(job.id)} ] && echo 1"`]
+      const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
+
+      return this.execCommandSync(containerName, '/', command, opts) === '1'
+    } else {
+      return false
+    }
+  }
+
   isStackRunning = (projectName, stackName) => {
     return this.runningContainers().includes(this.containerName(projectName, stackName))
   }
@@ -87,10 +106,10 @@ class Docker {
     return this.runCommandSync(this.dockerPath, args, {}, result => result)
   }
 
-  execCommandSync = (containerName, workdir, command) => {
+  execCommandSync = (containerName, workdir, command, opts = { stdio: 'inherit' }) => {
     const args = ['exec', '-it', '-w', workdir, containerName, 'sh', '-c', command]
 
-    return this.runCommandSync(this.dockerPath, args, { stdio: 'inherit' }, result => result)
+    return this.runCommandSync(this.dockerPath, args, opts, result => result)
   }
 
   startJob = (containerName, workdir, job) => {
@@ -112,15 +131,20 @@ class Docker {
     return this.runCommandSync(this.dockerPath, args, opts, result => result)
   }
 
-  isJobRunning = (containerName, jobId) => this.ps(containerName).find(row => row['CMD'].includes(jobId))
+  isJobRunning = job =>
+    this.ps(this.containerName(job.projectId, job.stackName)).find(row => row['CMD'].includes(job.id))
 
   ps = containerName => {
-    const args = ['exec', '-it', containerName, 'ps', '-efww']
-    const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
+    if (this.isContainerRunning(containerName)) {
+      const args = ['exec', '-it', containerName, 'ps', '-efww']
+      const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
 
-    return parseTable(
-      this.runCommandSync(this.dockerPath, args, opts, result => result)
-    )
+      return parseTable(
+        this.runCommandSync(this.dockerPath, args, opts, result => result)
+      )
+    } else {
+      return []
+    }
   }
 
   cat = (containerName, path) => {

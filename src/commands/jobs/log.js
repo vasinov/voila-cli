@@ -26,10 +26,18 @@ class LogCommand extends BaseCommand {
             const job = Job.fromJson(this.storage, jobJson)
             const containerName = this.docker.containerName(job.projectId, job.stackName)
 
-            if (flags['full']) {
-              logger.info(this.docker.cat(containerName, Job.outputFileName(job.id)))
+            if (this.docker.isContainerRunning(containerName)) {
+              if (this.docker.doesJobOutputExist(job)) {
+                if (flags['full']) {
+                  logger.info(this.docker.cat(containerName, Job.outputFileName(job.id)))
+                } else {
+                  this.docker.tail(containerName, Job.outputFileName(job.id))
+                }
+              } else {
+                throw new PenguinError(errorMessages.jobDoesntExistAfterRestart(job))
+              }
             } else {
-              this.docker.tail(containerName, Job.outputFileName(job.id))
+              throw new PenguinError(errorMessages.stackNotRunningError(job.stackName))
             }
           } else {
             throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)

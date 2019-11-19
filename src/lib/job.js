@@ -29,6 +29,21 @@ class Job {
     return this
   }
 
+  status = docker => {
+    const wasJobCleared =
+      docker.isContainerRunning(docker.containerName(this.projectId, this.stackName)) &&
+      !docker.doesJobOutputExist(this)
+
+    const isJobRunning = docker.isJobRunning(this)
+
+    const wasJobKilled = this.wasKilled
+
+    if (wasJobKilled) return 'killed'
+    else if (wasJobCleared) return 'cleared'
+    else if (isJobRunning) return 'running'
+    else return 'finished'
+  }
+
   toJson = () => {
     return {
       id: this.id,
