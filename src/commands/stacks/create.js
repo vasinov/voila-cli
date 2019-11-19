@@ -24,8 +24,8 @@ class CreateCommand extends BaseCommand {
       },
       {
         action: async ctx => {
-          const stackName = args['stack-name'] ?
-            args['stack-name'] :
+          const stackName = flags['stack-name'] ?
+            flags['stack-name'] :
             await cli.prompt('What do you want the name of your stack to be?')
 
           const validation = validateStackName(stackName)
@@ -76,15 +76,10 @@ class CreateCommand extends BaseCommand {
 
 CreateCommand.description = `Creates a new stack.`
 
-CreateCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Name for the new stack.'
-  }
-]
-
 CreateCommand.flags = {
+  'stack-name': flags.string({
+    description: `Name for the new stack.`
+  }),
   'empty': flags.boolean({
     description: `Create an empty stack.`
   }),

@@ -18,8 +18,6 @@ exports.loadStacks = async (ctx, docker, flags, args, noAssumptions = true) => {
 
   if (flags['all']) {
     ctx.config.projectStacks.map((stack) => selectedStacks.push(stack))
-  } else if (args['stack-name']) {
-    selectedStacks.push(ctx.config.getStack(args['stack-name']))
   } else if (flags['stack-name']) {
     selectedStacks.push(ctx.config.getStack(flags['stack-name']))
   } else if (ctx.config.projectStacks.length === 1) {

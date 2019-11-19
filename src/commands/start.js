@@ -66,15 +66,10 @@ class StartCommand extends BaseCommand {
 
 StartCommand.description = `Start stacks.`
 
-StartCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Stack name to start.'
-  }
-]
-
 StartCommand.flags = {
+  'stack-name': flags.string({
+    description: `Specify stack name.`
+  }),
   'all': flags.boolean({
     description: `Start all stacks in the project.`
   }),

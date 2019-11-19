@@ -51,15 +51,10 @@ class SshCommand extends BaseCommand {
 
 SshCommand.description = `Connect to a stack over SSH.`
 
-SshCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Stack name to SSH into.'
-  }
-]
-
 SshCommand.flags = {
+  'stack-name': flags.string({
+    description: `Specify stack name.`
+  }),
   'stack-path': flags.string({
     description: `Specify an absolute path inside the container to SSH into.`
   })

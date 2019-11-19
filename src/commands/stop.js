@@ -42,15 +42,10 @@ class StopCommand extends BaseCommand {
 
 StopCommand.description = `Stop running stacks.`
 
-StopCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Stack name to stop.'
-  }
-]
-
 StopCommand.flags = {
+  'stack-name': flags.string({
+    description: `Specify stack name.`
+  }),
   'all': flags.boolean({
     description: `Stop all stacks in the project.`,
     default: false

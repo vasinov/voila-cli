@@ -1,5 +1,7 @@
+const {flags} = require('@oclif/command')
+
 const BaseCommand = require('../base')
-const {buildConfig, promptAllStacks} = require('../../lib/task-actions')
+const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 
@@ -12,7 +14,7 @@ class PathCommand extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => promptAllStacks(ctx, this.docker)
+        action: ctx => loadStacks(ctx, this.docker, flags, args)
       },
       {
         action: ctx => {
@@ -29,13 +31,11 @@ class PathCommand extends BaseCommand {
 
 PathCommand.description = `Returns stack's mounted path.`
 
-PathCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Return a mounted path for a specific stack.'
-  }
-]
+PathCommand.flags = {
+  'stack-name': flags.string({
+    description: `Specify stack name.`
+  })
+}
 
 PathCommand.hidden = false
 

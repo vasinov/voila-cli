@@ -1,4 +1,5 @@
 const fs = require('fs')
+const {flags} = require('@oclif/command')
 
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
@@ -16,7 +17,7 @@ class RemoveCommand extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => loadStacks(ctx)
+        action: ctx => loadStacks(ctx, this.docker, flags, args)
       },
       {
         action: async ctx => {
@@ -40,13 +41,11 @@ class RemoveCommand extends BaseCommand {
 
 RemoveCommand.description = `Removes a stack.`
 
-RemoveCommand.args = [
-  {
-    name: 'stack-name',
-    required: false,
-    description: 'Remove a specific stack.'
-  }
-]
+RemoveCommand.flags = {
+  'stack-name': flags.string({
+    description: `Specify stack name.`
+  })
+}
 
 RemoveCommand.hidden = false
 
