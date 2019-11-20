@@ -1,7 +1,7 @@
 const {flags} = require('@oclif/command')
 
 const BaseCommand = require('../base')
-const {buildConfig, promptAllStacks} = require('../../lib/task-actions')
+const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const PenguinError = require('../../lib/error/penguin-error')
 const errorMessages = require('../../lib/error/messages')
@@ -17,11 +17,11 @@ class StartCommand extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => promptAllStacks(ctx, this.docker)
+        action: ctx => loadStacks(ctx, this.docker, flags, argv, true)
       },
       {
         action: ctx => {
-          ctx.stacks.forEach(stack => this.processCommand(ctx, argv, stack, flags['stack-path']))
+          ctx.stacks.forEach(stack => this.processCommand(ctx, flags, argv, stack, flags['stack-path']))
         }
       }
     ]
@@ -29,7 +29,7 @@ class StartCommand extends BaseCommand {
     await runTask(tasks)
   }
 
-  processCommand(ctx, argv, stack, stackDir) {
+  processCommand(ctx, flags, argv, stack, stackDir) {
     const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
@@ -41,9 +41,13 @@ class StartCommand extends BaseCommand {
       } else {
         const job = new Job(ctx.config.projectId, stack.name, command, true, this.storage)
 
-        logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}`)
+        if (flags['save-output']) {
+          logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is being saved. Log it with "penguin job:log ${job.id}"`)
+        } else {
+          logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is not being saved.`)
+        }
 
-        this.docker.startJob(containerName, workdir, job.start())
+        this.docker.startJob(containerName, workdir, job.start(), flags['save-output'])
       }
     } else {
       throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
@@ -63,6 +67,9 @@ StartCommand.flags = {
   }),
   'stack-path': flags.string({
     description: `Specify an absolute path inside the container that you'd like your job to be executed in.`
+  }),
+  'save-output': flags.boolean({
+    description: `Save command output in the container. The "job:log" command requires this option to be enabled.`
   })
 }
 

@@ -3,7 +3,9 @@ const errorMessages = require('../error/messages')
 const {doesCurrentPathContain, relativeStackHostPath} = require('../paths')
 const inquirer = require('inquirer')
 
-exports.loadStacks = async (ctx, docker, flags, args, noAssumptions = true) => {
+exports.loadStacks = async (ctx, docker, flags, args,
+                            withAssumptions = false,
+                            promptAllStacks = false) => {
   const selectedStacks = []
   const runningContainers = docker.runningContainers(ctx.config.projectId)
 
@@ -22,13 +24,15 @@ exports.loadStacks = async (ctx, docker, flags, args, noAssumptions = true) => {
     selectedStacks.push(ctx.config.getStack(flags['stack-name']))
   } else if (ctx.config.projectStacks.length === 1) {
     selectedStacks.push(ctx.config.projectStacks[0])
-  } else if (!noAssumptions && runningStacksInCurrentPath.length === 1) {
+  } else if (withAssumptions && runningStacksInCurrentPath.length === 1) {
     selectedStacks.push(runningStacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length === 1) {
     selectedStacks.push(stacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length > 1) {
+    const stacks = promptAllStacks ? ctx.config.projectStacks : stacksInCurrentPath
+
     await addStacksFromResponse(
-      docker, ctx.config.projectId, stacksInCurrentPath, selectedStacks, ctx.config.projectStacks)
+      docker, ctx.config.projectId, stacks, selectedStacks, ctx.config.projectStacks)
   } else {
     throw new PenguinError(errorMessages.SPECIFY_STACK_NAME)
   }
@@ -40,15 +44,6 @@ exports.loadAllStacks = async ctx => {
   const selectedStacks = []
 
   ctx.config.projectStacks.map((stack) => selectedStacks.push(stack))
-
-  ctx.stacks = selectedStacks
-}
-
-exports.promptAllStacks = async (ctx, docker) => {
-  const selectedStacks = []
-
-  await addStacksFromResponse(
-    docker, ctx.config.projectId, ctx.config.projectStacks, selectedStacks, ctx.config.projectStacks)
 
   ctx.stacks = selectedStacks
 }

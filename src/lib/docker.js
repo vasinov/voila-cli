@@ -112,10 +112,12 @@ class Docker {
     return this.runCommandSync(this.dockerPath, args, opts, result => result)
   }
 
-  startJob = (containerName, workdir, job) => {
+  startJob = (containerName, workdir, job, saveOutput) => {
     const pathToJobs = Job.containerOutputPath
 
-    const commandWithPipe = `mkdir -p ${pathToJobs} && ${job.command} > ${Job.outputFileName(job.id)}`
+    const commandWithPipe = saveOutput ?
+      `mkdir -p ${pathToJobs} && ${job.command} > ${Job.outputFileName(job.id)}`
+      : `mkdir -p ${pathToJobs} && ${job.command} && echo ${job.id}`
 
     const args = ['exec', '-d', '-w', workdir, containerName, 'sh', '-c', commandWithPipe]
 

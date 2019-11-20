@@ -21,7 +21,6 @@ class CleanupCommand extends BaseCommand {
 
             switch (job.status(this.docker)) {
               case 'killed':
-              case 'missing':
               case 'finished':
                 logger.infoWithTime(`Removing job ${job.id}`, true)
 
@@ -41,7 +40,7 @@ class CleanupCommand extends BaseCommand {
   }
 }
 
-CleanupCommand.description = `Remove finished, missing, and killed jobs. Running jobs won't get affected.`
+CleanupCommand.description = `Remove finished and killed jobs. Running jobs won't get affected.`
 
 CleanupCommand.hidden = false
 

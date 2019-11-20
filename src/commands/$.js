@@ -17,7 +17,7 @@ class $Command extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => loadStacks(ctx, this.docker, flags, argv, false)
+        action: ctx => loadStacks(ctx, this.docker, flags, argv, true)
       },
       {
         action: ctx => {

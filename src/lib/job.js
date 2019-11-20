@@ -34,16 +34,11 @@ class Job {
   }
 
   status = docker => {
-    const isJobMissing =
-      docker.isContainerRunning(docker.containerName(this.projectId, this.stackName)) &&
-      !docker.doesJobOutputExist(this)
-
     const isJobRunning = docker.isJobRunning(this)
 
     const wasJobKilled = this.wasKilled
 
     if (wasJobKilled) return 'killed'
-    else if (isJobMissing) return 'missing'
     else if (isJobRunning) return 'running'
     else return 'finished'
   }

@@ -17,7 +17,7 @@ class SshCommand extends BaseCommand {
         action: ctx => buildConfig(ctx)
       },
       {
-        action: ctx => loadStacks(ctx, this.docker, flags, args, false)
+        action: ctx => loadStacks(ctx, this.docker, flags, args, true)
       },
       {
         title: 'Connecting over SSH',
