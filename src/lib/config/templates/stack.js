@@ -8,7 +8,7 @@ exports.stackTemplate = (name, hostPath, image) => {
       },
       "run": {
         "hostPath": hostPath,
-        "stackPath": "/stack"
+        "stackPath": "/home/root"
       }
     }
   }

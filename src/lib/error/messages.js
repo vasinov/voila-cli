@@ -8,7 +8,7 @@ module.exports = {
   SSH_SESSION_INTERRUPTED: `SSH session was interrupted unexpectedly.`,
   EXEC_INTERRUPTED: `Command execution interrupted unexpectedly.`,
   STACK_PATH_NOT_ABSOLUTE: `"stackPath" in the stack config file has to be an absolute path.`,
-  VOLUME_STACK_PATH_INSIDE_STACK_PATH: `"volumes.stackPath" can't be mounted inside of "stackPath".`,
+  VOLUME_STACK_PATH_INSIDE_STACK_PATH: `"stackPath" can not be mounted inside of another "stackPath"`,
   HOST_DIR_OUTSIDE_PROJECT: `"hostPath" has to be inside the current project.`,
 
   DOCKERFILE_DOESNT_EXIST: `Dockerfile doesn't exist.`,

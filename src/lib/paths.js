@@ -42,6 +42,10 @@ exports.doesPathContain = (p1, p2) => {
   }
 }
 
+exports.doesPathContainPaths = (p1, ps) => {
+  return ps.some(p => this.doesPathContain(p1, p))
+}
+
 exports.doesPathContainCurrentPath = p => {
   return this.doesPathContain(p, process.cwd().split('/'))
 }

@@ -14,7 +14,7 @@ module.exports = class Project {
     this.stacks = Project.parseStacks(configFile.stacks)
   }
 
-  static validateHostVolumeDir = (hostPath, allowOutsideProject) => {
+  static validateHostVolumePath = (hostPath, allowOutsideProject) => {
     const absoluteHostPath = paths.toAbsolutePath(hostPath)
 
     if (allowOutsideProject || paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
@@ -24,11 +24,19 @@ module.exports = class Project {
     }
   }
 
-  static validateContainerVolumeDir = stackPath => {
-    if (paths.isAbsolute(stackPath)) {
-      return stackPath
-    } else {
+  static validateStackVolumePath = (stackPath, volumes) => {
+    const volumeStackPaths = volumes.map(v => {
+      const segments = v.split(':')
+
+      return segments[segments.length - 1].split('/')
+    })
+
+    if (!paths.isAbsolute(stackPath)) {
       throw new PenguinError(errorMessages.STACK_PATH_NOT_ABSOLUTE)
+    } else if (paths.doesPathContainPaths(stackPath.split('/'), volumeStackPaths)) {
+      throw new PenguinError(errorMessages.VOLUME_STACK_PATH_INSIDE_STACK_PATH)
+    } else {
+      return stackPath
     }
   }
 
@@ -50,21 +58,21 @@ module.exports = class Project {
     return stacks.map(stack => {
       const dockerfilePath = Project.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
-      const hostPath = Project.validateHostVolumeDir(stack.stages.run.hostPath, false)
-      const stackPath = Project.validateContainerVolumeDir(stack.stages.run.stackPath)
+      const hostPath = Project.validateHostVolumePath(stack.stages.run.hostPath, false)
+      const stackPath = Project.validateStackVolumePath(stack.stages.run.stackPath, volumes)
 
       let dockerfile = ''
 
+      volumes.push(`${hostPath}:${stackPath}`)
+
       if (stack.stages.run.volumes) {
         stack.stages.run.volumes.forEach(volume => {
-          const volumeHostPath = Project.validateHostVolumeDir(volume.hostPath, true)
-          const volumeStackPath = Project.validateContainerVolumeDir(volume.stackPath)
+          const volumeHostPath = Project.validateHostVolumePath(volume.hostPath, true)
+          const volumeStackPath = Project.validateStackVolumePath(volume.stackPath, volumes)
 
           volumes.push(`${volumeHostPath}:${volumeStackPath}`)
         })
       }
-
-      volumes.push(`${hostPath}:${stackPath}`)
 
       if (dockerfilePath) {
         const dockerfileDir = dockerfilePath.join('/')
@@ -132,7 +140,7 @@ module.exports = class Project {
     return config
   }
 
-  getStack(stackName) {
+  stack(stackName) {
     const stack = this.stacks.find((c) => c.name === stackName)
 
     if (stack) {
