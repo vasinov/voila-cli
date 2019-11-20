@@ -20,11 +20,11 @@ class LogCommand extends BaseCommand {
         action: ctx => {
           const jobJson = args['job-id'] ?
             Job.find(this.storage,  args['job-id']) :
-            Job.last(this.storage, ctx.config.projectId)
+            Job.last(this.storage, ctx.project.id)
 
           if (jobJson) {
             const job = Job.fromJson(this.storage, jobJson)
-            const containerName = this.docker.containerName(job.projectId, job.stackName)
+            const containerName = this.docker.containerName(job.id, job.stackName)
 
             if (this.docker.isContainerRunning(containerName)) {
               if (this.docker.doesJobOutputExist(job)) {

@@ -32,7 +32,7 @@ class $Command extends BaseCommand {
   }
 
   processCommand(ctx, argv, stack, stackDir) {
-    const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
+    const containerName = this.docker.containerName(ctx.project.id, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')

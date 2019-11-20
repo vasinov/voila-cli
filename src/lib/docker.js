@@ -46,8 +46,8 @@ class Docker {
   }
 
   doesJobOutputExist = job => {
-    if (this.doesContainerExist(this.containerName(job.projectId, job.stackName))) {
-      const containerName = this.containerName(job.projectId, job.stackName)
+    if (this.doesContainerExist(this.containerName(job.id, job.stackName))) {
+      const containerName = this.containerName(job.id, job.stackName)
       const command = [`sh -c "[ -f ${Job.outputFileName(job.id)} ] && echo 1"`]
       const opts = { stdio: ['inherit', 'pipe', 'pipe'] }
 
@@ -134,7 +134,7 @@ class Docker {
   }
 
   isJobRunning = job =>
-    this.ps(this.containerName(job.projectId, job.stackName)).find(row => row['CMD'].includes(job.id))
+    this.ps(this.containerName(job.id, job.stackName)).find(row => row['CMD'].includes(job.id))
 
   ps = containerName => {
     if (this.isContainerRunning(containerName)) {

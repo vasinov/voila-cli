@@ -14,7 +14,7 @@ class StatusCommand extends BaseCommand {
       },
       {
         action: ctx => {
-          const data = Object.entries(Job.list(this.storage, ctx.config.projectId)).map(e => {
+          const data = Object.entries(Job.list(this.storage, ctx.project.id)).map(e => {
             const job = Job.fromJson(this.storage, e[1])
             const jobJson = job.toJson()
 

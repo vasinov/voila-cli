@@ -21,7 +21,7 @@ class StartCommand extends BaseCommand {
           logger.infoWithTime('Downloading dependencies and building images')
 
           ctx.stacks.forEach(stack => {
-            const imageName = this.docker.imageName(ctx.config.projectId, stack.name)
+            const imageName = this.docker.imageName(ctx.project.id, stack.name)
 
             logger.infoWithTime(`Building image for the "${stack.name}" stack`, true)
 
@@ -45,8 +45,8 @@ class StartCommand extends BaseCommand {
   }
 
   initStack(ctx, stack, flags) {
-    const imageName = this.docker.imageName(ctx.config.projectId, stack.name)
-    const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
+    const imageName = this.docker.imageName(ctx.project.id, stack.name)
+    const containerName = this.docker.containerName(ctx.project.id, stack.name)
     const command = stack.entrypointCommand
 
     if (this.docker.isContainerRunning(containerName)) {

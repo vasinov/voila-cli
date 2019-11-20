@@ -30,7 +30,7 @@ class RemoveCommand extends BaseCommand {
   }
 
   removeStack(ctx, stack) {
-    if (this.docker.isContainerRunning(this.docker.containerName(ctx.config.projectId, stack.name))) {
+    if (this.docker.isContainerRunning(this.docker.containerName(ctx.project.id, stack.name))) {
       throw new PenguinError(errorMessages.stopStackBeforeProceeding(stack.name))
     } else {
       fs.unlinkSync(stack.configFile)

@@ -21,7 +21,7 @@ class StopCommand extends BaseCommand {
           logger.infoWithTime('Stopping stacks')
 
           ctx.stacks.forEach(stack => {
-            const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
+            const containerName = this.docker.containerName(ctx.project.id, stack.name)
             const localdir = process.cwd()
 
             if (this.docker.isContainerRunning(containerName)) {

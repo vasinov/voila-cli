@@ -3,7 +3,7 @@ const crypto = require('crypto')
 class Job {
   constructor(projectId, stackName, command, savingOutput, storage) {
     this.id = crypto.randomBytes(6).toString('hex')
-    this.projectId = projectId
+    this.id = projectId
     this.stackName = stackName
     this.command = command
     this.queuedAt = Date.now()
@@ -46,7 +46,7 @@ class Job {
   toJson = () => {
     return {
       id: this.id,
-      projectId: this.projectId,
+      id: this.id,
       stackName: this.stackName,
       command: this.command,
       savingOutput: this.savingOutput,
@@ -65,7 +65,7 @@ Job.list = (storage, projectId) => {
   const allJobs = storage.list('jobs')
 
   return Object.values(allJobs)
-    .filter(job => job.projectId === projectId)
+    .filter(job => job.id === projectId)
     .reduce((obj, job) => { obj[job.id] = job; return obj }, {})
 }
 

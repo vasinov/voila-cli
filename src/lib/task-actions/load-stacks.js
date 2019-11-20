@@ -7,9 +7,9 @@ exports.loadStacks = async (ctx, docker, flags, args,
                             withAssumptions = false,
                             promptAllStacks = false) => {
   const selectedStacks = []
-  const runningContainers = docker.runningContainers(ctx.config.projectId)
+  const runningContainers = docker.runningContainers(ctx.project.id)
 
-  const stacksInCurrentPath = ctx.config.projectStacks.filter(stack => {
+  const stacksInCurrentPath = ctx.project.stacks.filter(stack => {
     return doesCurrentPathContain(relativeStackHostPath(stack))
   })
 
@@ -19,20 +19,20 @@ exports.loadStacks = async (ctx, docker, flags, args,
   })
 
   if (flags['all']) {
-    ctx.config.projectStacks.map((stack) => selectedStacks.push(stack))
+    ctx.project.stacks.map((stack) => selectedStacks.push(stack))
   } else if (flags['stack-name']) {
-    selectedStacks.push(ctx.config.getStack(flags['stack-name']))
-  } else if (ctx.config.projectStacks.length === 1) {
-    selectedStacks.push(ctx.config.projectStacks[0])
+    selectedStacks.push(ctx.project.getStack(flags['stack-name']))
+  } else if (ctx.project.stacks.length === 1) {
+    selectedStacks.push(ctx.project.stacks[0])
   } else if (withAssumptions && runningStacksInCurrentPath.length === 1) {
     selectedStacks.push(runningStacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length === 1) {
     selectedStacks.push(stacksInCurrentPath[0])
   } else if (stacksInCurrentPath.length > 1) {
-    const stacks = promptAllStacks ? ctx.config.projectStacks : stacksInCurrentPath
+    const stacks = promptAllStacks ? ctx.project.stacks : stacksInCurrentPath
 
     await addStacksFromResponse(
-      docker, ctx.config.projectId, stacks, selectedStacks, ctx.config.projectStacks)
+      docker, ctx.project.id, stacks, selectedStacks, ctx.project.stacks)
   } else {
     throw new PenguinError(errorMessages.SPECIFY_STACK_NAME)
   }
@@ -43,7 +43,7 @@ exports.loadStacks = async (ctx, docker, flags, args,
 exports.loadAllStacks = async ctx => {
   const selectedStacks = []
 
-  ctx.config.projectStacks.map((stack) => selectedStacks.push(stack))
+  ctx.project.stacks.map((stack) => selectedStacks.push(stack))
 
   ctx.stacks = selectedStacks
 }

@@ -22,7 +22,7 @@ module.exports = {
 
   JOB_ISNT_RUNNING: `Job isn't running.`,
   JOB_DOESNT_EXIST: `Job doesn't exist.`,
-  jobDoesntExistAfterRestart: (job) => `Job "${job.id}" log was cleared after stack "${job.stackName}" restarted.`,
+  jobDoesntExistAfterRestart: (job) => `Can't find log for job "${job.id}"`,
 
   stackNotRunningError: stackName => {
     return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`

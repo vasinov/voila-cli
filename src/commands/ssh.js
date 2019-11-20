@@ -25,7 +25,7 @@ class SshCommand extends BaseCommand {
           ctx.stacks.forEach(stack => {
             const executeIn = flags['stack-path']
 
-            const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
+            const containerName = this.docker.containerName(ctx.project.id, stack.name)
 
             if (this.docker.isContainerRunning(containerName)) {
               if (executeIn || doesCurrentPathContain(relativeStackHostPath(stack))) {

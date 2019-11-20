@@ -6,12 +6,12 @@ const PenguinError = require('../error/penguin-error')
 const errorMessages = require('../error/messages')
 const paths = require('../paths')
 
-module.exports = class Builder {
+module.exports = class Project {
   constructor(configFile) {
-    Builder.validate(configFile)
+    Project.validate(configFile)
 
-    this.projectId = configFile.id
-    this.projectStacks = Builder.parseStacks(configFile.stacks)
+    this.id = configFile.id
+    this.stacks = Project.parseStacks(configFile.stacks)
   }
 
   static validateHostVolumeDir = (hostPath, allowOutsideProject) => {
@@ -48,17 +48,17 @@ module.exports = class Builder {
 
   static parseStacks(stacks) {
     return stacks.map(stack => {
-      const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
+      const dockerfilePath = Project.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
-      const hostPath = Builder.validateHostVolumeDir(stack.stages.run.hostPath, false)
-      const stackPath = Builder.validateContainerVolumeDir(stack.stages.run.stackPath)
+      const hostPath = Project.validateHostVolumeDir(stack.stages.run.hostPath, false)
+      const stackPath = Project.validateContainerVolumeDir(stack.stages.run.stackPath)
 
       let dockerfile = ''
 
       if (stack.stages.run.volumes) {
         stack.stages.run.volumes.forEach(volume => {
-          const volumeHostPath = Builder.validateHostVolumeDir(volume.hostPath, true)
-          const volumeStackPath = Builder.validateContainerVolumeDir(volume.stackPath)
+          const volumeHostPath = Project.validateHostVolumeDir(volume.hostPath, true)
+          const volumeStackPath = Project.validateContainerVolumeDir(volume.stackPath)
 
           volumes.push(`${volumeHostPath}:${volumeStackPath}`)
         })
@@ -133,7 +133,7 @@ module.exports = class Builder {
   }
 
   getStack(stackName) {
-    const stack = this.projectStacks.find((c) => c.name === stackName)
+    const stack = this.stacks.find((c) => c.name === stackName)
 
     if (stack) {
       return stack

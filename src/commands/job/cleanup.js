@@ -16,7 +16,7 @@ class CleanupCommand extends BaseCommand {
         action: ctx => {
           logger.infoWithTime(`Starting jobs cleanup`)
 
-          Object.entries(Job.list(this.storage, ctx.config.projectId)).map(e => {
+          Object.entries(Job.list(this.storage, ctx.project.id)).map(e => {
             const job = Job.fromJson(this.storage, e[1])
 
             switch (job.status(this.docker)) {

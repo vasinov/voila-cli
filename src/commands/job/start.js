@@ -30,7 +30,7 @@ class StartCommand extends BaseCommand {
   }
 
   processCommand(ctx, flags, argv, stack, stackPath) {
-    const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
+    const containerName = this.docker.containerName(ctx.project.id, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')
@@ -39,7 +39,7 @@ class StartCommand extends BaseCommand {
       if (command === '') {
         throw new PenguinError(errorMessages.SPECIFY_COMMAND)
       } else {
-        const job = new Job(ctx.config.projectId, stack.name, command, true, this.storage)
+        const job = new Job(ctx.project.id, stack.name, command, true, this.storage)
 
         if (flags['save-output']) {
           logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is being saved. Log it with "penguin job:log ${job.id}"`)
