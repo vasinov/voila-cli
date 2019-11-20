@@ -2,6 +2,7 @@ const BaseCommand = require('../base')
 const {buildConfig, loadAllStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
+const paths = require('../../lib/paths')
 
 class StatusCommand extends BaseCommand {
   async run() {
@@ -23,7 +24,7 @@ class StatusCommand extends BaseCommand {
 
             data.push({
               stackName: stack.name,
-              mountedHostDir: stack.hostDir,
+              mountedHostDir: paths.relativePath(stack.hostPath).join('/'),
               containerName: containerName,
               containerStatus: this.docker.containerStatus(containerName)
             })
@@ -31,7 +32,7 @@ class StatusCommand extends BaseCommand {
 
           logger.table({
             stackName: { header: 'Stack' },
-            mountedHostDir: { header: 'Mounted Directory' },
+            mountedHostDir: { header: 'Host Path' },
             containerName: { header: 'Image Name' },
             containerStatus: { header: 'Status' }
           }, data)

@@ -20,7 +20,7 @@ exports.absoluteProjectHostPath = () => {
   return finalPath.split('/')
 }
 
-exports.relativeStackHostPath = stack => stack.hostDir.split('/')
+exports.relativeStackHostPath = stack => stack.hostPath.split('/')
 
 exports.hostToStackAbsolutePath = stack => {
   const absoluteHostDir = process.cwd().split('/')
@@ -29,7 +29,7 @@ exports.hostToStackAbsolutePath = stack => {
     absoluteHostDir.length
   )
 
-  return stack.containerDir.split('/').concat(relativeHostDir)
+  return stack.stackPath.split('/').concat(relativeHostDir)
 }
 
 exports.doesPathContain = (p1, p2) => {

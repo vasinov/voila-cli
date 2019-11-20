@@ -71,8 +71,8 @@ stages:
     actions: ARRAY_OF_OBJECTS
   run:
     env: ARRAY_OF_STRINGS
-    hostDir: STRING
-    containerDir: STRING
+    hostPath: STRING
+    stackPath: STRING
     volumes: ARRAY_OF_OBJECTS
     ports: ARRAY_OF_STRINGS
     hardware:
@@ -130,13 +130,13 @@ The former format picks up your host environmental variable and passes it to the
 
 The latter format sets the variable explicitly. Variables defined in the `run` stage always overwrite variables set in the `build` stage.
 
-### `stages.run.hostDir` (required)
+### `stages.run.hostPath` (required)
 
-Represents the host directory that is mounted to `containerDir`. It can be relative or absolute but it has to be inside the current project.
+Represents the host directory that is mounted to `stackPath`. It can be relative or absolute but it has to be inside the current project.
 
-### `stages.run.containerDir` (required)
+### `stages.run.stackPath` (required)
 
-Represents the directory in the Docker container (Penguin stack) where `hostDir` is mounted to. Penguin automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
+Represents the directory in the Docker container (Penguin stack) where `hostPath` is mounted to. Penguin automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
 
 ### `stages.run.volumes` (optional)
 
@@ -144,8 +144,8 @@ Map project directories to container directories:
 
 ```yaml
 volumes:
-  - hostDir: some-directory
-    containerDir: /volumes/some-directory
+  - hostPath: some-directory
+    stackPath: /volumes/some-directory
 ```
 
 ### `stages.run.ports` (optional)

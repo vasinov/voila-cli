@@ -59,10 +59,10 @@ exports.schema = {
                   items: { type: 'string' },
                   uniqueItems: true
                 },
-                hostDir: {
+                hostPath: {
                   type: "string"
                 },
-                containerDir: {
+                stackPath: {
                   type: "string"
                 },
                 volumes: {
@@ -71,14 +71,14 @@ exports.schema = {
                     type: {
                       type: 'object',
                       properties: {
-                        hostDir: {
+                        hostPath: {
                           type: "string"
                         },
-                        containerDir: {
+                        stackPath: {
                           type: "string"
                         }
                       },
-                      required: ['hostDir', 'containerDir']
+                      required: ['hostPath', 'stackPath']
                     }
                   },
                   uniqueItems: true
@@ -122,7 +122,7 @@ exports.schema = {
                   type: 'string'
                 }
               },
-              required: ['hostDir', 'containerDir']
+              required: ['hostPath', 'stackPath']
             }
           },
           required: ['build', 'run']

@@ -19,7 +19,7 @@ class PathCommand extends BaseCommand {
       {
         action: ctx => {
           ctx.stacks.forEach(stack => {
-            logger.info(stack.hostDir)
+            logger.info(stack.hostPath)
           })
         }
       }

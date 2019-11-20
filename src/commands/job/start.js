@@ -29,12 +29,12 @@ class StartCommand extends BaseCommand {
     await runTask(tasks)
   }
 
-  processCommand(ctx, flags, argv, stack, stackDir) {
+  processCommand(ctx, flags, argv, stack, stackPath) {
     const containerName = this.docker.containerName(ctx.config.projectId, stack.name)
 
     if (this.docker.isContainerRunning(containerName)) {
       const command = (argv.length === 0) ? '' : argv.join(' ')
-      const workdir = (stackDir) ? stackDir : stack.containerDir
+      const workdir = (stackPath) ? stackPath : stack.stackPath
 
       if (command === '') {
         throw new PenguinError(errorMessages.SPECIFY_COMMAND)

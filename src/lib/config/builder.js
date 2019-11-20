@@ -14,8 +14,8 @@ module.exports = class Builder {
     this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
-  static validateHostVolumeDir = (hostDir, allowOutsideProject) => {
-    const absoluteHostPath = paths.toAbsolutePath(hostDir)
+  static validateHostVolumeDir = (hostPath, allowOutsideProject) => {
+    const absoluteHostPath = paths.toAbsolutePath(hostPath)
 
     if (allowOutsideProject || paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
       return absoluteHostPath.join('/')
@@ -24,11 +24,11 @@ module.exports = class Builder {
     }
   }
 
-  static validateContainerVolumeDir = containerDir => {
-    if (paths.isAbsolute(containerDir)) {
-      return containerDir
+  static validateContainerVolumeDir = stackPath => {
+    if (paths.isAbsolute(stackPath)) {
+      return stackPath
     } else {
-      throw new PenguinError(errorMessages.CONTAINER_DIR_NOT_ABSOLUTE)
+      throw new PenguinError(errorMessages.STACK_PATH_NOT_ABSOLUTE)
     }
   }
 
@@ -50,21 +50,21 @@ module.exports = class Builder {
     return stacks.map(stack => {
       const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
-      const hostDir = Builder.validateHostVolumeDir(stack.stages.run.hostDir, false)
-      const containerDir = Builder.validateContainerVolumeDir(stack.stages.run.containerDir)
+      const hostPath = Builder.validateHostVolumeDir(stack.stages.run.hostPath, false)
+      const stackPath = Builder.validateContainerVolumeDir(stack.stages.run.stackPath)
 
       let dockerfile = ''
 
       if (stack.stages.run.volumes) {
         stack.stages.run.volumes.forEach(volume => {
-          const volumeHostDir = Builder.validateHostVolumeDir(volume.hostDir, true)
-          const volumeContainerDir = Builder.validateContainerVolumeDir(volume.containerDir)
+          const volumeHostPath = Builder.validateHostVolumeDir(volume.hostPath, true)
+          const volumeStackPath = Builder.validateContainerVolumeDir(volume.stackPath)
 
-          volumes.push(`${volumeHostDir}:${volumeContainerDir}`)
+          volumes.push(`${volumeHostPath}:${volumeStackPath}`)
         })
       }
 
-      volumes.push(`${hostDir}:${containerDir}`)
+      volumes.push(`${hostPath}:${stackPath}`)
 
       if (dockerfilePath) {
         const dockerfileDir = dockerfilePath.join('/')
@@ -83,7 +83,7 @@ module.exports = class Builder {
 
         dockerfileArray.push({ from: stack.stages.build.image })
 
-        dockerfileArray.push({ working_dir: containerDir })
+        dockerfileArray.push({ working_dir: stackPath })
 
         if (stack.stages.build.actions) {
           stack.stages.build.actions.forEach(action => {
@@ -111,8 +111,8 @@ module.exports = class Builder {
       return {
         name: stack.name,
         configFile: stack.configFile,
-        hostDir: hostDir,
-        containerDir: containerDir,
+        hostPath: hostPath,
+        stackPath: stackPath,
         volumes: volumes,
         ports: stack.stages.run.ports || [],
         hardware: stack.stages.run.hardware || {},

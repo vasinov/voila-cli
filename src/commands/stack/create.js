@@ -58,18 +58,18 @@ class CreateCommand extends BaseCommand {
   }
 
   addStack(stackName, templateName = null) {
-    const hostDir = paths.relativePath(process.cwd()).join('/')
+    const hostPath = paths.relativePath(process.cwd()).join('/')
 
     if (templateName) {
       const template = stackTemplateData.find(t => t.name === templateName)
 
-      createStackConfigFromTemplate(stackName, hostDir, template)
+      createStackConfigFromTemplate(stackName, hostPath, template)
 
-      logger.info(`New stack "${stackName}" was created in "${hostDir}"`)
+      logger.info(`New stack "${stackName}" was created in "${hostPath}"`)
     } else {
-      createStackConfigFromTemplate(stackName, hostDir, emptyStackData)
+      createStackConfigFromTemplate(stackName, hostPath, emptyStackData)
 
-      logger.info(`New empty stack "${stackName}" was created in "${hostDir}"`)
+      logger.info(`New empty stack "${stackName}" was created in "${hostPath}"`)
     }
   }
 }
