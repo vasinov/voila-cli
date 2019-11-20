@@ -29,6 +29,10 @@ class Job {
     return this
   }
 
+  clear = () => {
+    this.storage.set('jobs', this.id)
+  }
+
   status = docker => {
     const isJobMissing =
       docker.isContainerRunning(docker.containerName(this.projectId, this.stackName)) &&
