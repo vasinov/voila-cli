@@ -61,13 +61,13 @@
       }
     },
     "topics": {
-      "stacks": {
-        "description": "Show additional information and modify stacks."
+      "stack": {
+        "description": "Work with project stacks."
       },
       "settings": {
         "description": "Show and change Penguin settings."
       },
-      "jobs": {
+      "job": {
         "description": "Work with asyncronous jobs."
       }
     }
