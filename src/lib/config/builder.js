@@ -14,10 +14,10 @@ module.exports = class Builder {
     this.projectStacks = Builder.parseStacks(configFile.stacks)
   }
 
-  static validateHostVolumeDir = hostDir => {
+  static validateHostVolumeDir = (hostDir, allowOutsideProject) => {
     const absoluteHostPath = paths.toAbsolutePath(hostDir)
 
-    if (paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
+    if (allowOutsideProject || paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
       return absoluteHostPath.join('/')
     } else {
       throw new PenguinError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
@@ -50,14 +50,14 @@ module.exports = class Builder {
     return stacks.map(stack => {
       const dockerfilePath = Builder.readDockerfilePath(stack.stages.build.dockerfile)
       const volumes = []
-      const hostDir = Builder.validateHostVolumeDir(stack.stages.run.hostDir)
+      const hostDir = Builder.validateHostVolumeDir(stack.stages.run.hostDir, false)
       const containerDir = Builder.validateContainerVolumeDir(stack.stages.run.containerDir)
 
       let dockerfile = ''
 
       if (stack.stages.run.volumes) {
         stack.stages.run.volumes.forEach(volume => {
-          const volumeHostDir = Builder.validateHostVolumeDir(volume.hostDir)
+          const volumeHostDir = Builder.validateHostVolumeDir(volume.hostDir, true)
           const volumeContainerDir = Builder.validateContainerVolumeDir(volume.containerDir)
 
           volumes.push(`${volumeHostDir}:${volumeContainerDir}`)
