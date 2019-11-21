@@ -95,7 +95,7 @@ class Docker {
 
     args.push(imageName)
 
-    args.concat(runConfig.args)
+    runConfig.args.forEach(a => args.push(a))
 
     return this.runCommandSync(
       this.dockerPath, args, { stdio: runConfig.attached ? 'inherit' : 'pipe' }, result => result)

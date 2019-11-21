@@ -55,17 +55,17 @@ class StartCommand extends BaseCommand {
     if (this.docker.isContainerRunning(containerName)) {
       logger.infoWithTime(`Stack "${stack.name}" is already running`, true)
     } else if (command) {
+      const parsed = parseArgsStringToArgv(command.run)
+      const entrypoint = parsed[0]
+      const entrypointArgs = parsed.length > 1 ? parsed.slice(1, parsed.length) : []
+
       if (command.headless) {
         this.docker.startContainer(stack, containerName, imageName, flags['persist'],
-          { attached: false, entrypoint: 'bash', args: [] })
+          { attached: false, entrypoint: entrypoint, args: entrypointArgs })
 
         logger.infoWithTime(`Stack "${stack.name}" started`, true)
       } else {
         logger.infoWithTime(`Executing "${command.run}" in stack "${stack.name}"`, true)
-
-        const parsed = parseArgsStringToArgv(command.run)
-        const entrypoint = parsed[0]
-        const entrypointArgs = parsed > 1 ? parsed.slice(1, parsed.length - 1) : []
 
         this.docker.startContainer(stack, containerName, imageName, flags['persist'],
           { attached: true, entrypoint: entrypoint, args: entrypointArgs })
