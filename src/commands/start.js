@@ -50,7 +50,10 @@ class StartCommand extends BaseCommand {
   initStack(ctx, stack, flags) {
     const imageName = this.docker.imageName(ctx.project.id, stack.name)
     const containerName = this.docker.containerName(ctx.project.id, stack.name)
-    const command = stack.runCommands.find(c => c.name === flags['run-command'])
+    const command = flags['run-command'] ?
+      stack.runCommands.find(c => c.name === flags['run-command']) :
+      stack.runCommands.length === 1 ? stack.runCommands[0] :
+      null
 
     if (this.docker.isContainerRunning(containerName)) {
       logger.infoWithTime(`Stack "${stack.name}" is already running`, true)
@@ -74,7 +77,7 @@ class StartCommand extends BaseCommand {
       }
 
     } else {
-      throw new PenguinError(errorMessages.runCommandNotFound(flags['run-command']))
+      throw new PenguinError(errorMessages.COMMAND_NO_FOUND)
     }
   }
 }
@@ -86,8 +89,7 @@ StartCommand.flags = {
     description: `Specify stack name.`
   }),
   'run-command': flags.string({
-    description: `Specify a run command defined in the run.commands list in your stack YAML config file.`,
-    default: 'default'
+    description: `Specify a run command defined in the run.commands list in your stack YAML config file.`
   }),
   'all': flags.boolean({
     description: `Start all stacks in the project.`

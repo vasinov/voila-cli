@@ -46,7 +46,5 @@ module.exports = {
     return `Stack "${stack}" is currently running. Stop it with "penguin stop ${stack}" first`
   },
 
-  runCommandNotFound: command => {
-    return `Command with name "${command}" not found.`
-  }
+  COMMAND_NO_FOUND: `Specify a configured run command with "--run-command".`
 }

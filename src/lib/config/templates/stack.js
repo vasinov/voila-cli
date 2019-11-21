@@ -11,7 +11,7 @@ exports.stackTemplate = (name, hostPath, image) => {
         "stackPath": "/home/root",
         "commands": [
           {
-            "name": "default",
+            "name": "bash",
             "run": "bash",
             "headless": true
           }
