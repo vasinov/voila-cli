@@ -67,6 +67,7 @@ name: STRING
 apiVersion: STRING
 stages:
   build:
+    dockerfile: STRING
     image: STRING
     actions: ARRAY_OF_OBJECTS
   run:
@@ -83,7 +84,7 @@ stages:
       memory:
         max: STRING
         swap: STRING
-    command: STRING
+    command: ARRAY_OF_OBJECTS
 ```
 
 Each stack represents an independent unit that has its own settings and execution context. Stacks have names, environment variables, volumes, ports, and stages. Internally, stacks are Docker containers that are based on an image defined in the config file or optional linked dockerfile.
@@ -152,9 +153,18 @@ volumes:
 
 Open container ports and map them to host ports. For example, `8080:80` opens port `80` in the container and maps it to the host port `8080`. You can also specify IP addresses and TCP, UDP, or SCTP protocols (TCP is the default). For example, `127.0.0.2:80:5000/udp` maps host IP address `127.0.0.2` and port `80` to container port `5000` over UDP.
 
-### `stages.run.command` (optional)
+### `stages.run.commands` (required)
 
-This is a the default bash command that will get executed when the stack starts. Once the command finishes the stack will automatically stop. It overrides any `ENTRYPOINT` defined in the custom dockerfile.
+Define your initial run configurations here. Each command has the following structure:
+
+```yaml
+commands:
+  - name: STRING
+    run: STRING
+    headless: BOOLEAN
+```
+
+When you start a container you can reference your run configurations from this list by name. For example, penguin start python custom-bash` will start stack named "python" with a a run configuration called "custom-config." The `headless` option determines if after starting the stack your terminal session will remain attached to it or not. `headless` set to `true` means that the stack will launch and return immediately. If your command exits (for example, if it's not `bash` or an infinite loop) then the stack will exit as well.
 
 ### `hardware`
 

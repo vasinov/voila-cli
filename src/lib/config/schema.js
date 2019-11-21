@@ -118,11 +118,27 @@ exports.schema = {
                     }
                   }
                 },
-                command: {
-                  type: 'string'
+                commands: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      name: {
+                        type: 'string'
+                      },
+                      run: {
+                        type: 'string'
+                      },
+                      headless: {
+                        type: 'boolean'
+                      }
+                    },
+                    required: ['name', 'run']
+                  },
+                  uniqueItems: true
                 }
               },
-              required: ['hostPath', 'stackPath']
+              required: ['hostPath', 'stackPath', 'commands']
             }
           },
           required: ['build', 'run']

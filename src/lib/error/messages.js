@@ -44,5 +44,9 @@ module.exports = {
 
   stopStackBeforeProceeding: stack => {
     return `Stack "${stack}" is currently running. Stop it with "penguin stop ${stack}" first`
+  },
+
+  runCommandNotFound: command => {
+    return `Command with name "${command}" not found.`
   }
 }

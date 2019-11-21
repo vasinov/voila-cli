@@ -1,9 +1,12 @@
 const {flags} = require('@oclif/command')
+const {parseArgsStringToArgv} = require('string-argv')
 
 const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {runTask} = require('../lib/task-runner')
 const logger = require('../lib/logger')
+const PenguinError = require('../lib/error/penguin-error')
+const errorMessages = require('../lib/error/messages')
 
 class StartCommand extends BaseCommand {
   async run() {
@@ -47,20 +50,31 @@ class StartCommand extends BaseCommand {
   initStack(ctx, stack, flags) {
     const imageName = this.docker.imageName(ctx.project.id, stack.name)
     const containerName = this.docker.containerName(ctx.project.id, stack.name)
-    const command = stack.entrypointCommand
+    const command = stack.runCommands.find(c => c.name === flags['run-command'])
 
     if (this.docker.isContainerRunning(containerName)) {
       logger.infoWithTime(`Stack "${stack.name}" is already running`, true)
     } else if (command) {
-      logger.infoWithTime(`Executing "${command}" in stack "${stack.name}"`, true)
+      if (command.headless) {
+        this.docker.startContainer(stack, containerName, imageName, flags['persist'],
+          { attached: false, entrypoint: 'bash', args: [] })
 
-      this.docker.startContainer(stack, containerName, imageName, flags['persist'], command)
+        logger.infoWithTime(`Stack "${stack.name}" started`, true)
+      } else {
+        logger.infoWithTime(`Executing "${command.run}" in stack "${stack.name}"`, true)
 
-      logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
+        const parsed = parseArgsStringToArgv(command.run)
+        const entrypoint = parsed[0]
+        const entrypointArgs = parsed > 1 ? parsed.slice(1, parsed.length - 1) : []
+
+        this.docker.startContainer(stack, containerName, imageName, flags['persist'],
+          { attached: true, entrypoint: entrypoint, args: entrypointArgs })
+
+        logger.infoWithTime(`Stack "${stack.name}" stopped`, true)
+      }
+
     } else {
-      this.docker.startContainer(stack, containerName, imageName, flags['persist'])
-
-      logger.infoWithTime(`Stack "${stack.name}" started`, true)
+      throw new PenguinError(errorMessages.runCommandNotFound(flags['run-command']))
     }
   }
 }
@@ -70,6 +84,10 @@ StartCommand.description = `Start stacks.`
 StartCommand.flags = {
   'stack-name': flags.string({
     description: `Specify stack name.`
+  }),
+  'run-command': flags.string({
+    description: `Specify a run command defined in the run.commands list in your stack YAML config file.`,
+    default: 'default'
   }),
   'all': flags.boolean({
     description: `Start all stacks in the project.`

@@ -4,6 +4,7 @@ const PenguinError = require('../lib/error/penguin-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 const Job = require('../lib/job')
+const {parseArgsStringToArgv} = require('string-argv')
 const {parseTable} = require('../lib/shell')
 
 class Docker {
@@ -63,12 +64,12 @@ class Docker {
 
   containerStatus = containerName => this.isContainerRunning(containerName) ? 'running' : 'stopped'
 
-  startContainer = (stack, containerName, imageName, persistAfterStop, entrypoint = null) => {
+  startContainer = (stack, containerName, imageName, persistAfterStop, runConfig) => {
     const args = ['run']
 
     if (!persistAfterStop) args.push('--rm')
 
-    if (entrypoint) args.push('-it')
+    if (runConfig.attached) args.push('-it')
     else args.push('-dt')
 
     stack.volumes.forEach(v => args.push(`--volume=${v}`))
@@ -90,14 +91,14 @@ class Docker {
 
     args.push(`--name=${containerName}`)
 
-    if (entrypoint) args.push('--entrypoint=sh')
+    args.push(`--entrypoint=${runConfig.entrypoint}`)
 
     args.push(imageName)
 
-    if (entrypoint) args.push('-c', entrypoint)
+    args.concat(runConfig.args)
 
     return this.runCommandSync(
-      this.dockerPath, args, { stdio: entrypoint ? 'inherit' : 'pipe' }, result => result)
+      this.dockerPath, args, { stdio: runConfig.attached ? 'inherit' : 'pipe' }, result => result)
   }
 
   stopContainer = (localdir, containerName) => {

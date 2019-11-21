@@ -79,10 +79,6 @@ module.exports = class Project {
 
         if (fs.existsSync(dockerfileDir)) {
           dockerfile = fs.readFileSync(dockerfileDir, 'utf8')
-
-          if (stack.stages.run.command) {
-            dockerfile += `\nENTRYPOINT [ "bash", "-c", "${stack.stages.run.command}" ]`
-          }
         } else {
           throw new PenguinError(errorMessages.DOCKERFILE_DOESNT_EXIST)
         }
@@ -126,7 +122,7 @@ module.exports = class Project {
         hardware: stack.stages.run.hardware || {},
         env: stack.stages.run.env || [],
         dockerfile: dockerfile,
-        entrypointCommand: stack.stages.run.command
+        runCommands: stack.stages.run.commands || []
       }
     })
   }

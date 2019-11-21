@@ -8,7 +8,14 @@ exports.stackTemplate = (name, hostPath, image) => {
       },
       "run": {
         "hostPath": hostPath,
-        "stackPath": "/home/root"
+        "stackPath": "/home/root",
+        "commands": [
+          {
+            "name": "default",
+            "run": "bash",
+            "headless": true
+          }
+        ]
       }
     }
   }
