@@ -10,7 +10,7 @@ const {stackTemplateData} = require('../../lib/config/templates/stacks')
 const emptyStackData = require('../../lib/config/templates/stacks/empty').data
 const {createStackConfigFromTemplate} = require('../../lib/config/initializer')
 const {validateStackName} = require('../../lib/config/validator')
-const PenguinError = require('../../lib/error/penguin-error')
+const CliError = require('../../lib/error/cli-error')
 const paths = require('../../lib/paths')
 
 
@@ -30,7 +30,7 @@ class CreateCommand extends BaseCommand {
 
           const validation = validateStackName(stackName)
 
-          if (!validation.isValid) throw new PenguinError(validation.message)
+          if (!validation.isValid) throw new CliError(validation.message)
 
           if (flags['empty']) {
             this.addStack(stackName)

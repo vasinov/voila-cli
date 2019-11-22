@@ -3,7 +3,7 @@ const {flags} = require('@oclif/command')
 const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
-const PenguinError = require('../../lib/error/penguin-error')
+const CliError = require('../../lib/error/cli-error')
 const errorMessages = require('../../lib/error/messages')
 const logger = require('../../lib/logger')
 const Job = require('../../lib/job')
@@ -37,12 +37,12 @@ class StartCommand extends BaseCommand {
       const workdir = (stackPath) ? stackPath : stack.stackPath
 
       if (command === '') {
-        throw new PenguinError(errorMessages.SPECIFY_COMMAND)
+        throw new CliError(errorMessages.SPECIFY_COMMAND)
       } else {
         const job = new Job(ctx.project.id, stack.name, command, true, this.storage)
 
         if (flags['save-output']) {
-          logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is being saved. Log it with "penguin job:log ${job.id}"`)
+          logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is being saved. Log it with "voila job:log ${job.id}"`)
         } else {
           logger.info(`Starting job ${job.id} with "${command}" in ${containerName}:${workdir}\nCommand output is not being saved.`)
         }
@@ -50,7 +50,7 @@ class StartCommand extends BaseCommand {
         this.docker.startJob(containerName, workdir, job.start(), flags['save-output'])
       }
     } else {
-      throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
+      throw new CliError(errorMessages.stackNotRunningError(stack.name))
     }
   }
 }

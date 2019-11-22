@@ -1,4 +1,4 @@
-const PenguinError = require('../error/penguin-error')
+const CliError = require('../error/cli-error')
 const errorMessages = require('../error/messages')
 const {doesCurrentPathContain, relativeStackHostPath} = require('../paths')
 const inquirer = require('inquirer')
@@ -14,7 +14,7 @@ exports.loadStacks = async (ctx, docker, flags, args,
   })
 
   const runningStacksInCurrentPath = stacksInCurrentPath.filter(s => {
-    // match stack name (e.g., "python") with the last segment of container name (e.g., "penguin-jas123-python)
+    // match stack name (e.g., "python") with the last segment of container name (e.g., "voila-jas123-python)
     return runningContainers.find(c => s.name === c.split('-')[2])
   })
 
@@ -34,7 +34,7 @@ exports.loadStacks = async (ctx, docker, flags, args,
     await addStacksFromResponse(
       docker, ctx.project.id, stacks, selectedStacks, ctx.project.stacks)
   } else {
-    throw new PenguinError(errorMessages.SPECIFY_STACK_NAME)
+    throw new CliError(errorMessages.SPECIFY_STACK_NAME)
   }
 
   ctx.stacks = selectedStacks

@@ -1,27 +1,27 @@
-# Penguin CLI
+# Voila CLI
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/gitbucket/gitbucket/blob/master/LICENSE)
 
-Penguin CLI is a command line tool for Mac and Linux that enables HPC engineers and researchers to run their experiments in local and remote containers effortlessly.
+Voila CLI is a command line tool for Mac and Linux that enables HPC engineers and researchers to run their experiments in local and remote containers effortlessly.
 
 ## Installation
 
 ### Mac
 
 - Download and install [Docker Desktop](https://download.docker.com/mac/stable/Docker.dmg).
-- Download the latest distribution of [Penguin CLI](https://penguin-cli-tarballs.s3-us-west-2.amazonaws.com/penguin-darwin-x64.tar.gz).
-- Set an alias for the executable: `alias penguin="/path/to/penguin/bin/penguin"`.
+- Download the latest distribution of [Voila CLI](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-darwin-x64.tar.gz).
+- Set an alias for the executable: `alias voila="/path/to/voila/bin/voila"`.
 
 ### Linux
 
 - Follow Docker [installation instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/) for your distro.
-- Download the latest distribution of Penguin CLI: [Linux ARM](https://penguin-cli-tarballs.s3-us-west-2.amazonaws.com/penguin-linux-arm.tar.gz) or [Linux x64](https://penguin-cli-tarballs.s3-us-west-2.amazonaws.com/penguin-linux-x64.tar.gz).
-- If you running Docker as a root user (i.e., prefixed with `sudo`) then you'll have to run Penguin with `sudo` as well since it makes calls to the Docker CLI in the background. In this case create a symbolic link to Penguin: `ln -s $PATH_TO_PENGUIN/bin/penguin ~/home/$USER/.local/bin/penguin`
-- You can [run Docker as a non-root user](https://docs.docker.com/install/linux/linux-postinstall/). In this case you can either set a symbolic link like in the previous example or simply setup an alias `alias penguin="$PATH_TO_PENGUIN/bin/penguin"`.
+- Download the latest distribution of Voila CLI: [Linux ARM](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-arm.tar.gz) or [Linux x64](https://voila-cli-tarballs.s3-us-west-2.amazonaws.com/voila-linux-x64.tar.gz).
+- If you running Docker as a root user (i.e., prefixed with `sudo`) then you'll have to run Voila with `sudo` as well since it makes calls to the Docker CLI in the background. In this case create a symbolic link to Voila: `ln -s $PATH_TO_VOILA/bin/voila ~/home/$USER/.local/bin/voila`
+- You can [run Docker as a non-root user](https://docs.docker.com/install/linux/linux-postinstall/). In this case you can either set a symbolic link like in the previous example or simply setup an alias `alias voila="$PATH_TO_VOILA/bin/voila"`.
 
 ### Windows
 
-We don't officially support Windows yet but you could use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) in order to start using Penguin CLI.
+We don't officially support Windows yet but you could use the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) in order to start using Voila CLI.
 
 ### Installing from Source
 
@@ -29,36 +29,36 @@ You need [npm](https://nodejs.org/en/) to install the CLI from source.
 
 ```shell
 # First, clone the repo
-git@github.com:getvoila/penguin.git
+git@github.com:getvoila/voila-cli.git
 
 # Install package dependencies
-cd penguin && npm up
+cd voila && npm up
 
 # To run the CLI directly 
 ./cli/bin/run
 
-# To create a link for `penguin`
+# To create a link for `voila`
 npm link
 
 # Initialize a project
 cd /my_project
-penguin init
+voila init
 ```
 
 ## Getting Started
 
-Getting started with Penguin is easy:
+Getting started with Voila is easy:
 
-- Initialize Penguin in your project directory with `penguin init`. That will generate a `.penguin` folder with config files for the project and the first stack.
-- In your project directory run `penguin start` to start stack defined in `.penguin/config.yml`.
-- In your project directory run `penguin $ COMMAND` to run a command in your stack and generate result artifacts in the same directory. For example, `penguin $ ls -al > files.txt`.
-- To check stack status run `penguin status`.
-- To SSH into a running stack run `penguin ssh`.
-- To stop a stack run `penguin stop`.
+- Initialize Voila in your project directory with `voila init`. That will generate a `.voila` folder with config files for the project and the first stack.
+- In your project directory run `voila start` to start stack defined in `.voila/config.yml`.
+- In your project directory run `voila $ COMMAND` to run a command in your stack and generate result artifacts in the same directory. For example, `voila $ ls -al > files.txt`.
+- To check stack status run `voila status`.
+- To SSH into a running stack run `voila ssh`.
+- To stop a stack run `voila stop`.
 
 ## Config Format
 
-After running `penguin init` a `.penguin` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID. In the `.penguin/stacks` folder you'll find YAML config files for each stack.
+After running `voila init` a `.voila` folder gets added to your project. In this directory you'll find a `config.yml` file with the project ID. In the `.voila/stacks` folder you'll find YAML config files for each stack.
 
 All stack config files have the following structure:
 
@@ -95,11 +95,11 @@ Name of the stack. The name has to be unique across the project. It's used to na
 
 ### `stages` (required)
 
-Penguin currently supports two stages: `build` and `run`. The `build` stage corresponds to actions that you'd normally defined in the dockerfile. The `run` stage represents container initialization and start.
+Voila currently supports two stages: `build` and `run`. The `build` stage corresponds to actions that you'd normally defined in the dockerfile. The `run` stage represents container initialization and start.
 
 ### `stages.build.dockerfile` (optional)
 
-You can reference any valid dockerfile inside of your project directory by setting this property to the absolute or relative dockerfile path. Penguin will pick it up and ignore everything else in the `container.stages.build` section of the config. This feature is intended for users that prefer to use Docker directly. Note that if you set `ENTRYPOINT` in your dockerfile it will get overwritten by `stages.run.command`.
+You can reference any valid dockerfile inside of your project directory by setting this property to the absolute or relative dockerfile path. Voila will pick it up and ignore everything else in the `container.stages.build` section of the config. This feature is intended for users that prefer to use Docker directly. Note that if you set `ENTRYPOINT` in your dockerfile it will get overwritten by `stages.run.command`.
 
 ### `stages.build.image` (required)
 
@@ -137,7 +137,7 @@ Represents the host directory that is mounted to `stackPath`. It can be relative
 
 ### `stages.run.stackPath` (required)
 
-Represents the directory in the Docker container (Penguin stack) where `hostPath` is mounted to. Penguin automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
+Represents the directory in the Docker container (Voila stack) where `hostPath` is mounted to. Voila automatically sets `workdir` to this directory unless you are using a custom dockerfile (it can also be changed in the `build` section of the config). It has to be an absolute path.
 
 ### `stages.run.volumes` (optional)
 
@@ -164,7 +164,7 @@ commands:
     headless: BOOLEAN
 ```
 
-When you start a container you can reference your run configurations from this list by name. For example, penguin start python custom-bash` will start stack named "python" with a a run configuration called "custom-config." The `headless` option determines if after starting the stack your terminal session will remain attached to it or not. `headless` set to `true` means that the stack will launch and return immediately. If your command exits (for example, if it's not `bash` or an infinite loop) then the stack will exit as well.
+When you start a container you can reference your run configurations from this list by name. For example, voila start python custom-bash` will start stack named "python" with a a run configuration called "custom-config." The `headless` option determines if after starting the stack your terminal session will remain attached to it or not. `headless` set to `true` means that the stack will launch and return immediately. If your command exits (for example, if it's not `bash` or an infinite loop) then the stack will exit as well.
 
 ### `hardware`
 
@@ -172,4 +172,4 @@ For hardware limit explanations please refer to the [Docker documentation](https
 
 ## CLI Commands
 
-Penguin CLI documentation is part of the CLI itself. To get access to all available commands simply type `penguin`. If you are interested in the details of a specific command add the `--help` flag to it. For example, `penguin ssh --help`
+Voila CLI documentation is part of the CLI itself. To get access to all available commands simply type `voila`. If you are interested in the details of a specific command add the `--help` flag to it. For example, `voila ssh --help`

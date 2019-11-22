@@ -57,7 +57,7 @@ class Job {
   }
 }
 
-Job.containerOutputPath = '/var/log/penguin/jobs/output'
+Job.containerOutputPath = '/var/log/voila/jobs/output'
 
 Job.outputFileName = id => `${Job.containerOutputPath}/${id}.log`
 

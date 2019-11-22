@@ -1,12 +1,12 @@
 {
-  "name": "penguin",
-  "description": "Penguin CLI",
+  "name": "voila",
+  "description": "Voila CLI",
   "version": "0.7.1",
   "author": "Vasily Vasinov @vasinov",
   "bin": {
-    "penguin": "./bin/run"
+    "voila": "./bin/run"
   },
-  "bugs": "https://github.com/getvoila/penguin/issues",
+  "bugs": "https://github.com/getvoila/voila-cli/issues",
   "dependencies": {
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1.13.3",
@@ -40,7 +40,7 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://github.com/getvoila/penguin",
+  "homepage": "https://github.com/getvoila/voila-cli",
   "keywords": [
     "oclif"
   ],
@@ -48,7 +48,7 @@
   "main": "src/index.js",
   "oclif": {
     "commands": "./src/commands",
-    "bin": "penguin",
+    "bin": "voila",
     "plugins": [
       "@oclif/plugin-help",
       "@oclif/plugin-update",
@@ -57,7 +57,7 @@
     ],
     "update": {
       "s3": {
-        "bucket": "penguin-cli-tarballs"
+        "bucket": "voila-cli-tarballs"
       }
     },
     "topics": {
@@ -65,14 +65,14 @@
         "description": "Work with project stacks."
       },
       "settings": {
-        "description": "Show and change Penguin settings."
+        "description": "Show and change Voila settings."
       },
       "job": {
         "description": "Work with asyncronous jobs."
       }
     }
   },
-  "repository": "getvoila/penguin",
+  "repository": "getvoila/voila-cli",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",

@@ -5,7 +5,7 @@ const BaseCommand = require('../base')
 const {buildConfig, loadStacks} = require('../../lib/task-actions')
 const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
-const PenguinError = require('../../lib/error/penguin-error')
+const CliError = require('../../lib/error/cli-error')
 const errorMessages = require('../../lib/error/messages')
 
 class RemoveCommand extends BaseCommand {
@@ -31,7 +31,7 @@ class RemoveCommand extends BaseCommand {
 
   removeStack(ctx, stack) {
     if (this.docker.isContainerRunning(this.docker.containerName(ctx.project.id, stack.name))) {
-      throw new PenguinError(errorMessages.stopStackBeforeProceeding(stack.name))
+      throw new CliError(errorMessages.stopStackBeforeProceeding(stack.name))
     } else {
       fs.unlinkSync(stack.configFile)
       logger.info(`Stack "${stack.name}" removed`)

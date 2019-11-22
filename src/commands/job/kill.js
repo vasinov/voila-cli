@@ -4,7 +4,7 @@ const BaseCommand = require('../base')
 const {runTask} = require('../../lib/task-runner')
 const logger = require('../../lib/logger')
 const Job = require('../../lib/job')
-const PenguinError = require('../../lib/error/penguin-error')
+const CliError = require('../../lib/error/cli-error')
 const errorMessages = require('../../lib/error/messages')
 const {buildConfig} = require('../../lib/task-actions')
 
@@ -32,13 +32,13 @@ class KillCommand extends BaseCommand {
 
                 this.docker.killJob(containerName, job.kill(), flags['signal'])
               } else {
-                throw new PenguinError(errorMessages.JOB_ISNT_RUNNING)
+                throw new CliError(errorMessages.JOB_ISNT_RUNNING)
               }
             } else {
-              throw new PenguinError(errorMessages.stackNotRunningError(job.stackName))
+              throw new CliError(errorMessages.stackNotRunningError(job.stackName))
             }
           } else {
-            throw new PenguinError(errorMessages.JOB_DOESNT_EXIST)
+            throw new CliError(errorMessages.JOB_DOESNT_EXIST)
           }
         }
       }

@@ -1,7 +1,7 @@
 module.exports = {
-  CONFIG_ALREADY_EXISTS: `".penguin" already exists. Run "penguin init --force" to overwrite.`,
-  NO_CONFIG: `Can't find ".penguin". Initialize Penguin with "penguin init" first.`,
-  DEFINE_STACKS: `Define stacks in ".penguin/stacks" first.`,
+  CONFIG_ALREADY_EXISTS: `".voila" already exists. Run "voila init --force" to overwrite.`,
+  NO_CONFIG: `Can't find ".voila". Initialize Voila with "voila init" first.`,
+  DEFINE_STACKS: `Define stacks in ".voila/stacks" first.`,
   SPECIFY_STACK_NAME: `Specify stack name.`,
   STACK_NOT_FOUND: `Stack not found.`,
   SPECIFY_COMMAND: `Specify command to run.`,
@@ -25,15 +25,15 @@ module.exports = {
   jobDoesntExistAfterRestart: (job) => `Can't find log for job "${job.id}"`,
 
   stackNotRunningError: stackName => {
-    return `Stack "${stackName}" is not running. Start it with "penguin start ${stackName}" first.`
+    return `Stack "${stackName}" is not running. Start it with "voila start ${stackName}" first.`
   },
 
-  configExistsInParentError: path => `You can't initialize new Penguin projects inside of an existing project. ".penguin" was found in "${path}".`,
+  configExistsInParentError: path => `You can't initialize new Voila projects inside of an existing project. ".voila" was found in "${path}".`,
 
   multipleConfigsWarning: (paths, loadedFolder) => {
     const pathList = paths.map(p => `${p}\n`).join('')
 
-    return `Multiple ".penguin" config folders were detected in the following directories:\n\n` +
+    return `Multiple ".voila" config folders were detected in the following directories:\n\n` +
       `${pathList}\n\n` +
       `Loading the top level folder: ${loadedFolder}`
   },
@@ -43,7 +43,7 @@ module.exports = {
   },
 
   stopStackBeforeProceeding: stack => {
-    return `Stack "${stack}" is currently running. Stop it with "penguin stop ${stack}" first`
+    return `Stack "${stack}" is currently running. Stop it with "voila stop ${stack}" first`
   },
 
   COMMAND_NO_FOUND: `Specify a configured run command with "--run-command".`

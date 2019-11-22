@@ -2,7 +2,7 @@ const Validator = require('jsonschema').Validator
 const fs = require('fs')
 const generator = require('dockerfile-generator/lib/dockerGenerator')
 
-const PenguinError = require('../error/penguin-error')
+const CliError = require('../error/cli-error')
 const errorMessages = require('../error/messages')
 const paths = require('../paths')
 
@@ -20,7 +20,7 @@ module.exports = class Project {
     if (allowOutsideProject || paths.doesPathContain(absoluteHostPath, paths.absoluteProjectHostPath())) {
       return absoluteHostPath.join('/')
     } else {
-      throw new PenguinError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
+      throw new CliError(errorMessages.HOST_DIR_OUTSIDE_PROJECT)
     }
   }
 
@@ -32,9 +32,9 @@ module.exports = class Project {
     })
 
     if (!paths.isAbsolute(stackPath)) {
-      throw new PenguinError(errorMessages.STACK_PATH_NOT_ABSOLUTE)
+      throw new CliError(errorMessages.STACK_PATH_NOT_ABSOLUTE)
     } else if (paths.doesPathContainPaths(stackPath.split('/'), volumeStackPaths)) {
-      throw new PenguinError(errorMessages.VOLUME_STACK_PATH_INSIDE_STACK_PATH)
+      throw new CliError(errorMessages.VOLUME_STACK_PATH_INSIDE_STACK_PATH)
     } else {
       return stackPath
     }
@@ -47,7 +47,7 @@ module.exports = class Project {
       if (paths.doesPathContain(absoluteDockerfilePath, paths.absoluteProjectHostPath())) {
         return absoluteDockerfilePath
       } else {
-        throw new PenguinError(errorMessages.DOCKERFILE_OUTSIDE_PROJECT)
+        throw new CliError(errorMessages.DOCKERFILE_OUTSIDE_PROJECT)
       }
     } else {
       return null
@@ -80,7 +80,7 @@ module.exports = class Project {
         if (fs.existsSync(dockerfileDir)) {
           dockerfile = fs.readFileSync(dockerfileDir, 'utf8')
         } else {
-          throw new PenguinError(errorMessages.DOCKERFILE_DOESNT_EXIST)
+          throw new CliError(errorMessages.DOCKERFILE_DOESNT_EXIST)
         }
       } else {
         const dockerfileArray = []
@@ -142,7 +142,7 @@ module.exports = class Project {
     if (stack) {
       return stack
     } else {
-      throw new PenguinError(errorMessages.STACK_NOT_FOUND)
+      throw new CliError(errorMessages.STACK_NOT_FOUND)
     }
   }
 }

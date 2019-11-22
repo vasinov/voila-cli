@@ -1,5 +1,5 @@
 const ValidationError = require('jsonschema').ValidationError
-const PenguinError = require('./error/penguin-error')
+const CliError = require('./error/cli-error')
 const logger = require('../lib/logger')
 
 exports.runTask = async (tasks, ctx = {}) => {
@@ -16,7 +16,7 @@ exports.runTask = async (tasks, ctx = {}) => {
   } catch (error) {
     if (error instanceof ValidationError) {
       logger.error(`YAML config validation failed: ${error.stack.replace(/instance/g, 'root')}`)
-    } else if (error instanceof PenguinError) {
+    } else if (error instanceof CliError) {
       logger.error(error.message)
     } else {
       logger.error(error.stack)

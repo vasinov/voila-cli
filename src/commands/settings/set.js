@@ -1,6 +1,6 @@
 const BaseCommand = require('../base')
 const {runTask} = require('../../lib/task-runner')
-const PenguinError = require('../../lib/error/penguin-error')
+const CliError = require('../../lib/error/cli-error')
 const errorMessages = require('../../lib/error/messages')
 
 class SetCommand extends BaseCommand {
@@ -13,7 +13,7 @@ class SetCommand extends BaseCommand {
           if (this.storage.get('settings', args['key'])) {
             this.storage.set('settings', args['key'], args['value'])
           } else {
-            throw new PenguinError(errorMessages.STORAGE_SETTINGS_KEY_DOESNT_EXIST)
+            throw new CliError(errorMessages.STORAGE_SETTINGS_KEY_DOESNT_EXIST)
           }
         }
       }
@@ -23,7 +23,7 @@ class SetCommand extends BaseCommand {
   }
 }
 
-SetCommand.description = `Set a Penguin setting.`
+SetCommand.description = `Set a Voila setting.`
 
 SetCommand.args = [
   {

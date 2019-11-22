@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const PenguinError = require('./error/penguin-error')
+const CliError = require('./error/cli-error')
 const errorMessages = require('./error/messages')
 
 class Storage {
@@ -34,7 +34,7 @@ class Storage {
 
       return table[key]
     } else {
-      throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
+      throw new CliError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
     }
   }
 
@@ -46,7 +46,7 @@ class Storage {
 
       delete table[key]
     } else {
-      throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
+      throw new CliError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
     }
   }
 
@@ -56,7 +56,7 @@ class Storage {
     if (fs.existsSync(fullPath)) {
       return JSON.parse(fs.readFileSync(fullPath))
     } else {
-      throw new PenguinError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
+      throw new CliError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
     }
   }
 

@@ -6,7 +6,7 @@ const crypto = require('crypto')
 const {projectTemplate} = require('./templates/project')
 const {stackTemplate} = require('./templates/stack')
 const {prefixConfigDir, configDirName, stacksDirName, projectConfigFileName} = require('../config/loader')
-const PenguinError = require('../error/penguin-error')
+const CliError = require('../error/cli-error')
 const errorMessages = require('../error/messages')
 const paths = require('../../lib/paths')
 
@@ -28,10 +28,10 @@ exports.init = (force, templates) => {
   }
 
   if (folderExistsInParents) {
-    throw new PenguinError(errorMessages.configExistsInParentError(currentPath.join('/')))
+    throw new CliError(errorMessages.configExistsInParentError(currentPath.join('/')))
   } else {
     if (fs.existsSync(configDirName) && !force) {
-      throw new PenguinError(errorMessages.CONFIG_ALREADY_EXISTS)
+      throw new CliError(errorMessages.CONFIG_ALREADY_EXISTS)
     } else {
       const stacksFolderPath = path.join(configDirName, stacksDirName)
       removeDirectory(configDirName)

@@ -3,7 +3,7 @@ const {flags} = require('@oclif/command')
 const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {runTask} = require('../lib/task-runner')
-const PenguinError = require('../lib/error/penguin-error')
+const CliError = require('../lib/error/cli-error')
 const errorMessages = require('../lib/error/messages')
 const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../lib/paths')
 const logger = require('../lib/logger')
@@ -35,10 +35,10 @@ class SshCommand extends BaseCommand {
 
                 this.docker.sshContainer(containerName, workdir)
               } else {
-                throw new PenguinError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
+                throw new CliError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
               }
             } else {
-              throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
+              throw new CliError(errorMessages.stackNotRunningError(stack.name))
             }
           })
         }

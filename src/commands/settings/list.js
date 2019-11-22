@@ -28,7 +28,7 @@ class ListCommand extends BaseCommand {
   }
 }
 
-ListCommand.description = `List all Penguin settings.`
+ListCommand.description = `List all Voila settings.`
 
 ListCommand.hidden = false
 

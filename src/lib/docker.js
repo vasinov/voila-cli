@@ -1,6 +1,6 @@
 const {spawn, spawnSync, exec, execSync} = require('child_process')
 
-const PenguinError = require('../lib/error/penguin-error')
+const CliError = require('../lib/error/cli-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 const Job = require('../lib/job')
@@ -13,11 +13,11 @@ class Docker {
   }
 
   containerName = (projectName, stackName) => {
-    return `penguin-${projectName}-${stackName}`
+    return `voila-${projectName}-${stackName}`
   }
 
   imageNameWithTag = (projectName, stackName, tag) => {
-    return `penguin-${projectName}-${stackName}:${tag}`
+    return `voila-${projectName}-${stackName}:${tag}`
   }
 
   imageName = (projectId, dockerfileName) => {
@@ -190,9 +190,9 @@ class Docker {
     const result = spawnSync(command, args, options)
 
     if (result.stderr && result.stderr.length > 0) {
-      throw new PenguinError(result.stderr)
+      throw new CliError(result.stderr)
     } else if (result.error) {
-      throw new PenguinError(result.error)
+      throw new CliError(result.error)
     } else if (result.stdout) {
       return action(result.stdout.toString().trim())
     } else {

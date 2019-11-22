@@ -4,7 +4,7 @@ const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {hostToStackAbsolutePath, relativeStackHostPath, doesCurrentPathContain} = require('../lib/paths')
 const {runTask} = require('../lib/task-runner')
-const PenguinError = require('../lib/error/penguin-error')
+const CliError = require('../lib/error/cli-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 
@@ -41,17 +41,17 @@ class $Command extends BaseCommand {
         const workdir = (stackDir) ? stackDir : hostToStackAbsolutePath(stack).join('/')
 
         if (command === '') {
-          throw new PenguinError(errorMessages.SPECIFY_COMMAND)
+          throw new CliError(errorMessages.SPECIFY_COMMAND)
         } else {
           logger.dimInfo(`Executing "${command}" in ${containerName}:${workdir}`)
 
           this.docker.execCommandSync(containerName, workdir, command)
         }
       } else {
-        throw new PenguinError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
+        throw new CliError(errorMessages.wrongStackHostDirError(relativeStackHostPath(stack).join('/')))
       }
     } else {
-      throw new PenguinError(errorMessages.stackNotRunningError(stack.name))
+      throw new CliError(errorMessages.stackNotRunningError(stack.name))
     }
   }
 }

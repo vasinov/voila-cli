@@ -3,10 +3,10 @@ const fs = require('fs')
 
 const path = require('path')
 
-const PenguinError = require('../error/penguin-error')
+const CliError = require('../error/cli-error')
 const errorMessages = require('../error/messages')
 
-exports.configDirName = '.penguin'
+exports.configDirName = '.voila'
 exports.stacksDirName = 'stacks'
 exports.projectConfigFileName = 'config.yml'
 exports.stackFileExtension = '.yml'
@@ -52,7 +52,7 @@ exports.loadUserConfig = () => {
       config: userConfig
     }
   } else {
-    throw new PenguinError(errorMessages.NO_CONFIG)
+    throw new CliError(errorMessages.NO_CONFIG)
   }
 }
 

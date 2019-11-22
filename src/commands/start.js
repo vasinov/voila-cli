@@ -5,7 +5,7 @@ const BaseCommand = require('./base')
 const {buildConfig, loadStacks} = require('../lib/task-actions')
 const {runTask} = require('../lib/task-runner')
 const logger = require('../lib/logger')
-const PenguinError = require('../lib/error/penguin-error')
+const CliError = require('../lib/error/cli-error')
 const errorMessages = require('../lib/error/messages')
 
 class StartCommand extends BaseCommand {
@@ -77,7 +77,7 @@ class StartCommand extends BaseCommand {
       }
 
     } else {
-      throw new PenguinError(errorMessages.COMMAND_NO_FOUND)
+      throw new CliError(errorMessages.COMMAND_NO_FOUND)
     }
   }
 }

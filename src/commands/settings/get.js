@@ -18,7 +18,7 @@ class GetCommand extends BaseCommand {
   }
 }
 
-GetCommand.description = `Get a Penguin setting.`
+GetCommand.description = `Get a Voila setting.`
 
 GetCommand.args = [
   {
