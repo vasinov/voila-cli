@@ -49,6 +49,8 @@ class Storage {
       const table = JSON.parse(fs.readFileSync(fullPath))
 
       delete table[key]
+
+      fs.writeFileSync(fullPath, JSON.stringify(table))
     } else {
       throw new CliError(errorMessages.STORAGE_TABLE_DOESNT_EXIST)
     }
@@ -84,6 +86,7 @@ Storage.defaultTables = {
     dockerPath: 'docker',
     apiUrl: 'https://platform.voila.dev/api'
   },
+  credentials: {},
   jobs: {}
 }
 

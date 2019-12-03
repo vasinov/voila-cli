@@ -5,7 +5,7 @@ const CliError = require('./error/cli-error')
 class ApiClient {
   constructor(storage) {
     const apiUrl = ApiClient.apiUrl(storage)
-    const accessToken = ApiClient.accessToken(storage)
+    const accessToken = ApiClient.getAccessToken(storage)
 
     this.storage = storage
     this.client = axios.create({
@@ -36,7 +36,9 @@ class ApiClient {
   }
 }
 
-ApiClient.accessToken = storage => storage.get('settings', 'accessToken')
+ApiClient.getAccessToken = storage => storage.get('credentials', 'apiAccessToken')
+ApiClient.setAccessToken = (storage, token) => storage.set('credentials', 'apiAccessToken', token)
+ApiClient.removeAccessToken = storage => storage.remove('credentials', 'apiAccessToken')
 ApiClient.apiUrl = storage => storage.get('settings', 'apiUrl')
 
 module.exports = ApiClient

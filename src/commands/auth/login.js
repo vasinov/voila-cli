@@ -13,15 +13,15 @@ class LoginCommand extends BaseCommand {
     const tasks = [
       {
         action: async ctx => {
-          if (ApiClient.accessToken(this.storage)) {
+          if (ApiClient.getAccessToken(this.storage)) {
             logger.warn(`You are already logged in.`)
           } else {
             const email = await cli.prompt(`What's your Voila email?`, { required: true })
             const password = await cli.prompt(`What's your Voila password?`, { type: 'hide', required: true })
-            const tokenName = `${(new Date()).toJSON().slice(0, 10)}-${os.hostname()}`
+            const tokenName = `${(new Date()).toJSON().slice(0, 10)}-voila-cli-${os.hostname()}`
             const response = await this.apiClient.postTokens(email, password, tokenName)
 
-            this.storage.set('settings', 'accessToken', response.data.token)
+            ApiClient.setAccessToken(this.storage, response.data.token)
 
             logger.info(`You are now logged in.`)
           }
