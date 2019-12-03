@@ -21,7 +21,7 @@ class LoginCommand extends BaseCommand {
             const tokenName = `${(new Date()).toJSON().slice(0, 10)}-voila-cli-${os.hostname()}`
             const response = await this.apiClient.postTokens(email, password, tokenName)
 
-            ApiClient.setAccessToken(this.storage, response.data.token)
+            ApiClient.setAccessToken(this.storage, response)
 
             logger.info(`You are now logged in.`)
           }

@@ -15,7 +15,7 @@ class ApiClient {
     })
 
     if (accessToken) {
-      this.client.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+      this.client.defaults.headers.common['Authorization'] = `Bearer ${accessToken.token}`
     }
   }
 
@@ -29,6 +29,14 @@ class ApiClient {
         name: tokenName
       }
     }).catch(error => {
+      throw new CliError(error.response.data.error)
+    })
+
+    return response.data
+  }
+
+  deleteTokens = async token => {
+    const response = await this.client.delete(`/tokens/${token.id}`).catch(error => {
       throw new CliError(error.response.data.error)
     })
 
