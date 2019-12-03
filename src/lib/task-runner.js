@@ -17,7 +17,7 @@ exports.runTask = async (tasks, ctx = {}) => {
     if (error instanceof ValidationError) {
       logger.error(`YAML config validation failed: ${error.stack.replace(/instance/g, 'root')}`)
     } else if (error instanceof CliError) {
-      logger.error(error.message)
+      logger.error(error.message.trim())
     } else {
       logger.error(error.stack)
     }

@@ -4,7 +4,6 @@ const CliError = require('../lib/error/cli-error')
 const errorMessages = require('../lib/error/messages')
 const logger = require('../lib/logger')
 const Job = require('../lib/job')
-const {parseArgsStringToArgv} = require('string-argv')
 const {parseTable} = require('../lib/shell')
 
 class Docker {

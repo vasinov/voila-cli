@@ -20,7 +20,11 @@ class Storage {
     Object.entries(Storage.defaultTables).forEach(t => {
       const fullPath = this.fullPathTable(t[0])
 
-      if (!fs.existsSync(fullPath)) {
+      if (fs.existsSync(fullPath)) {
+        Object.entries(t[1]).forEach(p => {
+          if (!this.get(t[0], p[0])) this.set(t[0], p[0], p[1])
+        })
+      } else {
         fs.writeFileSync(fullPath, JSON.stringify(t[1]))
       }
     })
@@ -77,11 +81,10 @@ class Storage {
 
 Storage.defaultTables = {
   settings: {
-    dockerPath: 'docker'
+    dockerPath: 'docker',
+    apiUrl: 'https://platform.voila.dev/api'
   },
-  jobs: {
-
-  }
+  jobs: {}
 }
 
 module.exports = Storage
