@@ -13,6 +13,18 @@ class ApiClient {
       headers: {'Content-Type': 'application/json'},
       responseType: 'json'
     })
+    this.responseInterceptor = this.client.interceptors.response.use(
+      response => {
+        return response
+      }, (error) => {
+        if (error.response.status === 401) {
+          ApiClient.removeAccessToken(this.storage)
+
+          error.response.data.error += ' Local access token was deleted.'
+        }
+
+        return Promise.reject(error)
+      })
 
     if (accessToken) {
       this.client.defaults.headers.common['Authorization'] = `Bearer ${accessToken.token}`

@@ -14,7 +14,7 @@ class TestCommand extends BaseCommand {
       {
         action: async ctx => {
           if (ApiClient.getAccessToken(this.storage)) {
-            this.apiClient.getTokensTest().then(r => logger.info(r.message))
+            await this.apiClient.getTokensTest().then(r => logger.info(r.message))
           } else {
             logger.warn(`You are not logged in.`)
           }
