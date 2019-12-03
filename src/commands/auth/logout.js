@@ -15,9 +15,9 @@ class LogoutCommand extends BaseCommand {
         action: async ctx => {
           const token = ApiClient.getAccessToken(this.storage)
           if (token) {
-            await this.apiClient.deleteTokens(token).then(r => ApiClient.removeAccessToken(this.storage))
-
-            logger.info(`You are now logged out.`)
+            this.apiClient.deleteTokens(token)
+              .then(r => ApiClient.removeAccessToken(this.storage))
+              .then(r => logger.info(`You are now logged out.`))
           } else {
             logger.warn(`You are not logged in.`)
           }

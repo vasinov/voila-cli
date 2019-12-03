@@ -42,6 +42,14 @@ class ApiClient {
 
     return response.data
   }
+
+  getTokensTest = async () => {
+    const response = await this.client.get(`/tokens/test`).catch(error => {
+      throw new CliError(error.response.data.error)
+    })
+
+    return response.data
+  }
 }
 
 ApiClient.getAccessToken = storage => storage.get('credentials', 'apiAccessToken')
